@@ -18,7 +18,7 @@ library(data.table)
 library(scales)
 ```
 
-For **Figure 1a** you then load the following datasets, which represent the fraction of liquid, mixed phase, and ice clouds in the study region/period:
+For **Figure 1a** we loaded the following datasets, which represent the fraction of liquid, mixed phase, and ice clouds in the study region/period:
 
 ```{r}
 load("../../data/derived_data/fCliq.RData")
@@ -46,119 +46,10 @@ text(80,1.5, substitute(paste(bold('(a)'))), cex=1.5)
 
 
 
-For **Figure 1b** , we specified the bin sizes and meteorological parameters we wanted to plot by: 
+For **Figure 1b**, we loaded the following datasets, which represent the estimated dust-driven increases in cloud glaciation in different meteorological conditions and the corresponding dataset that represents whether these differences were significant (p< 0.05):
 
 ```{r}
-merTrange<-seq(-70,30,7.5/2)
-merQVrange<-seq(0,0.0145, 0.001) 
-temprange<-seq(-70,30,7.5/2)
-
-var1range<-merTrange
-var2range<-temprange
-var3range<-merQVrange
-var1<-"merT"
-var2<-"temp"
-var3<-"merQV"
-
+load("../../data/derived_data/fCliq.RData")
+load("../../data/derived_data/fCmpc.RData")
+load("../../data/derived_data/fCice.RData")
 ```
-
-We specified that we were going to use FLEXPART dust as the aerosol type for determining background conditions, and the FLEXPART dust background cutoff in ng/m3:
-
-```{r}
-atypes<-c("fdust")
-fdustcutoff<- 93 
-acutoff<-c(fdustcutoff)
-i=1
-a1name<-atypes[i]
-b1<-acutoff[i]
-```
-
-Next we set the conditions for determining the subset of interest (over ocean, over sea ice), and the altitude in km, j, of the data we wanted to plot:
-
-```{r}
-conditions <- "ocean==1&seaice>=0.9"
-j<-3
-```
-
-Then we loaded the data, and cleaned it up a bit by changing cloud phase (CP) values to NA if they were undetermined or uncertain, changing the altitude layer to a numeric value, and cleaning up the sea ice data:
-
-```{r}
-eval(parse(t=paste0(" load('../../data/derived_data/lev",j,"_v4c.RData')")))
-la3$CP[la3$CP==0]<-NA  #Values are either 1 (ice), 2 (mixed phase), 3 (liquid), or 0 (undetermined). Convert undetermined to NA.
-la3$CP[la3$CPqf==1]<-NA #convert CP values that are uncertain to NAs. 
-la3$alt_layer<-as.numeric(la3$alt_layer)
-la3[seaice>1, seaice:=NA]  #NSIDC sea ice values are from 0 to 1. Higher values indicate quality flags.
-```
-
-We then reduced the data to the subset of interest defined above:
-
-```{r}
-eval(parse(t=paste0("la3<-lev",j,"[",conditions,"]")))
-```
-
-
-Next, we specified a quality control variable (min), the minimum number of both clean and non-clean data in each meteorological bin allowable for the data to be plotted:
-
-```{r}
-min<-40  
-```
-
-Add some new variables to the dataset:
-
-```{r}
-	la3[, a1:=.SD, .SDcols=a1name]  #The value of aerosol tracer of interest in the given meteorological bin
-	la3[,var1bin:=findInterval(eval(parse(t=paste0(var1))),var1range)]
-	la3[,var2bin:=findInterval(eval(parse(t=paste0(var2))),var2range)]
-	la3[,var3bin:=findInterval(eval(parse(t=paste0(var3))),var3range)]
-	la3[,test.this:=as.numeric(!(is.na(conv)))] #is there (1) or is there not (0) any kind of cloud?
-	la3[,all:=ifelse(!is.na(a1),1,0)]
-	la3[,clean:=ifelse(a1<b1,1,0)]
-	la3[,notclean:=ifelse(a1>=b1,1,0)]
-	la3[,cleancloud:=ifelse(clean==1&test.this==1,1,0)]
-	la3[,notcleancloud:=ifelse(notclean==1&test.this==1,1,0)]
-	la3[,cleanncloud:=sum(cleancloud,na.rm=T),by=.(var1bin,var2bin,var3bin)] 	   
-	la3[,notcleanncloud:=sum(notcleancloud,na.rm=T),by=.(var1bin,var2bin,var3bin)]
-	la3[,fi:=(1 - ((CP-1)/2))*100] #glaciation
-	la3[,alln:=sum(all,na.rm=T),by=.(var1bin,var2bin,var3bin)] #number of aerosol observations in the meteorological bin
-	la3[,cleann:=sum(clean,na.rm=T),by=.(var1bin,var2bin,var3bin)] #number of times aerosol conditons are clean in the meteorological bin
-	la3[,notcleann:=sum(notclean,na.rm=T),by=.(var1bin,var2bin,var3bin)] #number of times aerosol conditions are not clean in the meteorological bin
-	la3[,cleanncloud:=sum(cleancloud,na.rm=T),by=.(var1bin,var2bin,var3bin)] #number clean clouds in the meteorological bin
-	la3[,notcleanncloud:=sum(notcleancloud,na.rm=T),by=.(var1bin,var2bin,var3bin)] #number of not clean clouds in the meteorological bin
-	la3[,uniccf:=length(unique(date[clean==1])), by=.(var1bin,var2bin,var3bin)] #unique clean days in each meteorological bin
-	la3[,unic:=length(unique(date[cleancloud==1])),by=.(var1bin,var2bin,var3bin)] #unique days with clean clouds in the meteorological bin
-	la3[,uniacf:=length(unique(date[notclean==1])),by=.(var1bin,var2bin,var3bin)] #unique non clean days in the meteorological bin
-	la3[,unia:=length(unique(date[notcleancloud==1])),by=.(var1bin,var2bin,var3bin)] #unique days with non clean clouds in the meteorological bin
-	la3[,dfi:=mean(fi[test.this==1], na.rm=T)-mean(fi[cleancloud==1], na.rm=T), by=.(var1bin,var2bin,var3bin)]# the glaciation difference between all and background clouds in the meteorological bin 
-```
-
-Then group mean difference in cloud glaciation (dfi) and thickness (dCth) into meteorological bins and get sample number (alln) within the bins. Then fill in empty grids with NAs:
-
-```{r}
-del1<-la3[unic>=min4&unia>=min4&cleanncloud>=min & notcleanncloud>=min , 
-		.(
-		dfi=mean(fi[test.this==1],na.rm=T)-mean(fi[cleancloud==1], na.rm=T),
-		dCth=mean(th[test.this==1], na.rm=T)-mean(th[cleancloud==1], na.rm=T),
-		alln=sum(test.this,na.rm=T)
-		) ,
-		by=.(var1bin, var2bin,var3bin)] 	
-		
- setDT(del1)
- 
-del2<-expand.grid(var1bin=min(del1$var1bin,na.rm=T):max(del1$var1bin,na.rm=T),var3bin=min(del1$var3bin,na.rm=T):max(del1$var3bin,na.rm=T),dfi=NA,dCth=NA,alln=NA,var2bin=NA) 
-del2<-rbind(del1,del2)
-```
-
-Next, find which of the differences are significant (p<0.05):
-
-```{r}
-del1p<-la3[unic>=min4&unia>=min4&cleanncloud>=min & notcleanncloud>=min , 
-		.(
-		dfip=as.numeric(try(wilcox.test(fi[test.this==1],fi[cleancloud==1])$p.value)),
-		dCthp=as.numeric(try(wilcox.test(th[test.this==1], th[cleancloud==1])$p.value))
-				) ,
-		by=.(var1bin,var3bin)] 
-# Add in the missing bins for plotting purposess
-del2p<-expand.grid(var1bin=min(del1p$var1bin,na.rm=T):max(del1p$var1bin,na.rm=T),var3bin=min(del1p$var3bin,na.rm=T):max(del1p$var3bin,na.rm=T),dfip=NA,dCthp=NA)
-del2p<-rbind(del1p,del2p)
-```
-
