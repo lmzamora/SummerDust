@@ -14,31 +14,29 @@ classoption: "draft,linenumbers"
 # abbreviations only if they are defined in the abstract. Titles that
 # start with general keywords then specific terms are optimized in
 # searches
-title: "The title of my paper"
+title: "Dust-driven cloud glaciation over summertime Arctic sea ice"
 # First name or initial followed by last name
 # Authors are individuals who have significantly contributed to the
 # research and preparation of the article. Group authors are allowed, if
 # each author in the group is separately identified in an appendix.
 # Additional author notes should be indicated with
 authors:
-  - name: Andrew N. Other
-    affil: 1
-    thanks: Andrew's thanks
-  - name: Fred T. Secondauthor
-    affil: 1
-    thanks: "Current address: Some other place, Germany"
-  - name: I. Ken Groupleader
+  - name: L. M. Zamora
     affil: "1, 2"
+  - name: R. A. Kahn
+    affil: "3, 2"
 affiliations:
   - number: 1
-    name: "The first affiliation"
+    name: "Earth System Science Interdisciplinary Center, University of Maryland, College Park, College Park, Maryland, USA"
   - number: 2
-    name: "The second affiliation"
+    name: "NASA Goddard Space Flight Center, Greenbelt, Maryland, USA"
+  - number: 3
+    name: "University of Colorado Boulder, Boulder, USA"
 # More than one corresponding author is allowed in this LaTeX file and for
 # publication; but only one corresponding author is allowed in our editorial system.
 corresponding_author:
-  - name: I. Ken Groupleader
-    email: groupleader@fancy.university.com
+  - name: Lauren Zamora
+    email: lauren.m.zamora@nasa.gov
 keypoints:  
   - "List up to three key points (at least one is required)"
   - "Key Points summarize the main points and conclusions of the article"

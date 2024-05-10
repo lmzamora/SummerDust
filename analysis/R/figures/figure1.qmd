@@ -1,0 +1,30 @@
+---
+title: "Create Figure 1"
+author: "Lauren Zamora"
+format: html
+editor: visual
+---
+
+## Figure 1
+
+This figure shows, over sea ice, (a) The likelihood of Arctic clouds at different altitudes being classified by CloudSat as either liquid, mixed, or ice phase. (b) The estimated dust-driven increases in cloud glaciation in different meteorological conditions. (c) The meteorological and aerosol parameters that best predict how glaciation changes within meteorological bins, based on deviance explained in a generalized additive model.
+
+## Running Code
+
+For **Figure 1** you first load the following libraries:
+
+```{r}
+library(RColorBrewer)
+library(colorBlindness)
+```
+
+For **Figure 1a** you then load the following datasets:
+
+```{r}
+#| echo: false
+load("../../data/derived_data/fCliq.RData")
+load("../../data/derived_data/fCmpc.RData")
+load("../../data/derived_data/fCice.RData")
+```
+
+The `echo: false` option disables the printing of code (only output is displayed).

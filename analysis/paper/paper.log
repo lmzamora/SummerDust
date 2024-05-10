@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2024.5.7)  10 MAY 2024 14:07
+This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2024.5.7)  10 MAY 2024 15:06
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -242,84 +242,84 @@ LaTeX Info: Redefining \BPBI on input line 129.
 LaTeX Info: Redefining \BHBI on input line 130.
 )
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <7> on input line 121.
+(Font)              <7> on input line 117.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <5> on input line 121.
+(Font)              <5> on input line 117.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <8> on input line 121.
+(Font)              <8> on input line 126.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <6> on input line 121.
+(Font)              <6> on input line 126.
 [1{/Users/lzamora/Library/TinyTeX/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]
-Overfull \hbox (25.01576pt too wide) in paragraph at lines 178--183
+Overfull \hbox (25.01576pt too wide) in paragraph at lines 176--181
 \OT1/cmr/m/n/10 A good ab-stract will be-gin with a short de-scrip-tion of the prob-lem be-ing ad-dressed, briefly 
  []
 
 
-Overfull \hbox (1.43231pt too wide) in paragraph at lines 178--183
+Overfull \hbox (1.43231pt too wide) in paragraph at lines 176--181
 \OT1/cmr/m/n/10 de-scribe the new data or anal-y-ses, then briefly states the main con-clu-sion(s) and how 
  []
 
 
-Overfull \hbox (28.84923pt too wide) in paragraph at lines 186--188
+Overfull \hbox (28.84923pt too wide) in paragraph at lines 184--186
 \OT1/cmr/m/n/10 Some jour-nals re-quire a plain lan-guage sum-mary. See: https://publications.agu.org/author- 
  []
 
 
 LaTeX Font Warning: Font shape `OT1/cmr/m/n' in size <10.5> not available
-(Font)              size <10.95> substituted on input line 191.
+(Font)              size <10.95> substituted on input line 189.
 
 
 LaTeX Font Warning: Font shape `OT1/cmr/bx/n' in size <10.5> not available
-(Font)              size <10.95> substituted on input line 191.
+(Font)              size <10.95> substituted on input line 189.
 
 
-Overfull \hbox (24.18239pt too wide) in paragraph at lines 193--196
+Overfull \hbox (24.18239pt too wide) in paragraph at lines 191--194
 []\OT1/cmr/m/n/10 The main text should start with an in-tro-duc-tion. Ex-cept for short manuscripts (such 
  []
 
 
-Overfull \hbox (26.09898pt too wide) in paragraph at lines 193--196
+Overfull \hbox (26.09898pt too wide) in paragraph at lines 191--194
 \OT1/cmr/m/n/10 as com-ments and replies), the text should be di-vided into sec-tions, each with its own head- 
  []
 
 
-Overfull \hbox (1.43224pt too wide) in paragraph at lines 197--201
+Overfull \hbox (1.43224pt too wide) in paragraph at lines 195--199
 []\OT1/cmr/m/n/10 Headings should be sen-tence frag-ments and do not be-gin with a low-er-case let-ter 
  []
 
 
-Overfull \hbox (16.3768pt too wide) in paragraph at lines 197--201
+Overfull \hbox (16.3768pt too wide) in paragraph at lines 195--199
 \OT1/cmr/m/n/10 or num-ber. Cap-i-tal-ize the first let-ter of each word (ex-cept for prepo-si-tions, con-junc-tions, 
  []
 
 
-Overfull \hbox (2.01555pt too wide) in paragraph at lines 206--208
+Overfull \hbox (2.01555pt too wide) in paragraph at lines 204--206
 []\OT1/cmr/m/n/10 Do not use bul-leted lists; enu-mer-ated lists are okay. Use #. for list for a cleaner 
  []
 
-LaTeX Font Info:    Trying to load font information for OMS+cmr on input line 218.
+LaTeX Font Info:    Trying to load font information for OMS+cmr on input line 216.
 (/Users/lzamora/Library/TinyTeX/texmf-dist/tex/latex/base/omscmr.fd
 File: omscmr.fd 2023/04/13 v2.5m Standard LaTeX font definitions
 )
 LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <10> not available
-(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 218.
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 216.
 
-Overfull \hbox (12.09886pt too wide) in paragraph at lines 218--226
+Overfull \hbox (12.09886pt too wide) in paragraph at lines 216--224
 []\OT1/cmr/m/n/10 Please use ONLY \OMS/cmsy/m/n/10 n\OT1/cmr/m/n/10 citet and \OMS/cmsy/m/n/10 n\OT1/cmr/m/n/10 citep for ref-er-ence ci-ta-tions. DO NOT use other cite 
  []
 
 
-Overfull \hbox (21.23793pt too wide) in paragraph at lines 218--226
+Overfull \hbox (21.23793pt too wide) in paragraph at lines 216--224
 \OT1/cmr/m/n/10 com-mands (e.g., \OMS/cmsy/m/n/10 n\OT1/cmr/m/n/10 cite, \OMS/cmsy/m/n/10 n\OT1/cmr/m/n/10 citeyear, \OMS/cmsy/m/n/10 n\OT1/cmr/m/n/10 nocite, \OMS/cmsy/m/n/10 n\OT1/cmr/m/n/10 citealp, etc.). Ex-am-ple \OMS/cmsy/m/n/10 n\OT1/cmr/m/n/10 citet and \OMS/cmsy/m/n/10 n\OT1/cmr/m/n/10 citep: ...as 
  []
 
 
-Overfull \hbox (15.76576pt too wide) in paragraph at lines 218--226
+Overfull \hbox (15.76576pt too wide) in paragraph at lines 216--224
 \OT1/cmr/m/n/10 shown by Lev-i-tus et al.[] (2012), Nun-cio, Luis, and Yuan (2011) and Raphael (2004) ...as 
  []
 
 
-Overfull \hbox (23.40463pt too wide) in paragraph at lines 218--226
+Overfull \hbox (23.40463pt too wide) in paragraph at lines 216--224
 \OT1/cmr/m/n/10 shown by (Lev-i-tus et al.[], 2012), (Nun-cio et al.[], 2011), (Raphael, 2004). ...has been shown 
  []
 
@@ -327,27 +327,27 @@ Overfull \hbox (23.40463pt too wide) in paragraph at lines 218--226
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
 [2]
-Overfull \hbox (16.18227pt too wide) in paragraph at lines 231--233
+Overfull \hbox (16.18227pt too wide) in paragraph at lines 229--231
 []\OT1/cmr/m/n/10 As of 2018 we rec-om-mend use of the TrackChanges pack-age to mark re-vi-sions. The 
  []
 
 
-Overfull \hbox (5.59889pt too wide) in paragraph at lines 250--254
+Overfull \hbox (5.59889pt too wide) in paragraph at lines 248--252
 []\OT1/cmr/m/n/10 Enter Fig-ures and Ta-bles near as pos-si-ble to where they are first men-tioned: DO 
  []
 
 
-Overfull \hbox (37.21027pt too wide) in paragraph at lines 250--254
+Overfull \hbox (37.21027pt too wide) in paragraph at lines 248--252
 \OT1/cmr/m/n/10 NOT USE \OMS/cmsy/m/n/10 n\OT1/cmr/m/n/10 psfrag or \OMS/cmsy/m/n/10 n\OT1/cmr/m/n/10 subfigure com-mands. DO NOT USE \OMS/cmsy/m/n/10 n\OT1/cmr/m/n/10 newcommand, \OMS/cmsy/m/n/10 n\OT1/cmr/m/n/10 renewcommand, 
  []
 
-<paper_files/figure-latex/unnamed-chunk-2-1.pdf, id=24, 469.755pt x 325.215pt>
+<paper_files/figure-latex/unnamed-chunk-2-1.pdf, id=22, 469.755pt x 325.215pt>
 File: paper_files/figure-latex/unnamed-chunk-2-1.pdf Graphic file (type pdf)
 <use paper_files/figure-latex/unnamed-chunk-2-1.pdf>
-Package pdftex.def Info: paper_files/figure-latex/unnamed-chunk-2-1.pdf  used on input line 256.
+Package pdftex.def Info: paper_files/figure-latex/unnamed-chunk-2-1.pdf  used on input line 254.
 (pdftex.def)             Requested size: 469.75386pt x 325.2142pt.
 
-Overfull \hbox (72.26888pt too wide) in paragraph at lines 256--256
+Overfull \hbox (72.26888pt too wide) in paragraph at lines 254--254
 [][] 
  []
 
@@ -355,49 +355,49 @@ Overfull \hbox (72.26888pt too wide) in paragraph at lines 256--256
 LaTeX Warning: `h' float specifier changed to `ht'.
 
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <9> on input line 262.
+(Font)              <9> on input line 260.
 
-Overfull \hbox (2.25162pt too wide) in paragraph at lines 281--283
+Overfull \hbox (2.25162pt too wide) in paragraph at lines 279--281
 []\OT1/cmr/m/n/10 AGU prefers the use of \OMS/cmsy/m/n/10 f\OT1/cmr/m/n/10 sidewaystable\OMS/cmsy/m/n/10 g \OT1/cmr/m/n/10 over \OMS/cmsy/m/n/10 f\OT1/cmr/m/n/10 landscapetable\OMS/cmsy/m/n/10 g \OT1/cmr/m/n/10 as it causes fewer 
  []
 
-<paper_files/figure-latex/unnamed-chunk-3-1.pdf, id=25, 469.755pt x 325.215pt>
+<paper_files/figure-latex/unnamed-chunk-3-1.pdf, id=23, 469.755pt x 325.215pt>
 File: paper_files/figure-latex/unnamed-chunk-3-1.pdf Graphic file (type pdf)
 <use paper_files/figure-latex/unnamed-chunk-3-1.pdf>
-Package pdftex.def Info: paper_files/figure-latex/unnamed-chunk-3-1.pdf  used on input line 285.
+Package pdftex.def Info: paper_files/figure-latex/unnamed-chunk-3-1.pdf  used on input line 283.
 (pdftex.def)             Requested size: 469.75386pt x 325.2142pt.
 
-Overfull \hbox (2.2657pt too wide) in paragraph at lines 297--300
+Overfull \hbox (2.2657pt too wide) in paragraph at lines 295--298
 []\OT1/cmr/m/n/10 If us-ing num-bered lines, please sur-round equa-tions with \OMS/cmsy/m/n/10 n\OT1/cmr/m/n/10 begin\OMS/cmsy/m/n/10 f\OT1/cmr/m/n/10 linenomath*\OMS/cmsy/m/n/10 g\OT1/cmr/m/n/10 ... 
  []
 
 [3] [4 <./paper_files/figure-latex/unnamed-chunk-2-1.pdf>] [5 <./paper_files/figure-latex/unnamed-chunk-3-1.pdf>]
-Overfull \hbox (4.35988pt too wide) in paragraph at lines 339--343
+Overfull \hbox (4.35988pt too wide) in paragraph at lines 337--341
 []\OT1/cmr/m/n/10 Equation in German-born physi-cist Al-bert Ein-stein's the-ory of spe-cial rel-a- 
  []
 
 
-Overfull \hbox (8.43468pt too wide) in paragraph at lines 339--343
+Overfull \hbox (8.43468pt too wide) in paragraph at lines 337--341
 \OT1/cmr/m/n/10 tiv-ity that showed that the in-creased rel-a-tivis-tic mass ($\OML/cmm/m/it/10 m$\OT1/cmr/m/n/10 ) of a body comes from 
  []
 
 
-Overfull \hbox (11.25182pt too wide) in paragraph at lines 339--343
+Overfull \hbox (11.25182pt too wide) in paragraph at lines 337--341
 \OT1/cmr/m/n/10 the en-ergy of mo-tion of the body|that is, its ki-netic en-ergy ($\OML/cmm/m/it/10 E$\OT1/cmr/m/n/10 )|divided by the 
  []
 
 
-Overfull \hbox (1.70999pt too wide) in paragraph at lines 347--350
+Overfull \hbox (1.70999pt too wide) in paragraph at lines 345--348
 []\OT1/cmr/m/n/10 The ac-knowl-edg-ments must list: A state-ment that in-di-cates to the reader where 
  []
 
 
-Overfull \hbox (10.46014pt too wide) in paragraph at lines 347--350
+Overfull \hbox (10.46014pt too wide) in paragraph at lines 345--348
 \OT1/cmr/m/n/10 the data sup-port-ing the con-clu-sions can be ob-tained (for ex-am-ple, in the ref-er-ences, ta- 
  []
 
 
-Overfull \hbox (6.2935pt too wide) in paragraph at lines 355--357
+Overfull \hbox (6.2935pt too wide) in paragraph at lines 353--355
 []\OT1/cmr/m/n/10 Other af-fil-i-a-tions for any au-thor that may be per-ceived as hav-ing a con-flict of in- 
  []
 
@@ -450,18 +450,18 @@ LaTeX Font Warning: Size substitutions with differences
 
  ) 
 Here is how much of TeX's memory you used:
- 4419 strings out of 476010
- 71065 string characters out of 5790701
+ 4413 strings out of 476010
+ 70985 string characters out of 5790701
  1936751 words of memory out of 5000000
- 26510 multiletter control sequences out of 15000+600000
- 567506 words of font info for 68 fonts, out of 8000000 for 9000
+ 26506 multiletter control sequences out of 15000+600000
+ 566827 words of font info for 66 fonts, out of 8000000 for 9000
  20 hyphenation exceptions out of 8191
  85i,10n,93p,320b,373s stack positions out of 10000i,1000n,20000p,200000b,200000s
- </Users/lzamora/Library/TinyTeX/texmf-var/fonts/pk/ljfour/jknappen/ec/tcrm0600.600pk> </Users/lzamora/Library/TinyTeX/texmf-var/fonts/pk/ljfour/jknappen/ec/tcrm0700.600pk></Users/lzamora/Library/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></Users/lzamora/Library/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></Users/lzamora/Library/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx7.pfb></Users/lzamora/Library/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx9.pfb></Users/lzamora/Library/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></Users/lzamora/Library/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi6.pfb></Users/lzamora/Library/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></Users/lzamora/Library/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmmib10.pfb></Users/lzamora/Library/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></Users/lzamora/Library/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb></Users/lzamora/Library/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></Users/lzamora/Library/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></Users/lzamora/Library/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmr9.pfb></Users/lzamora/Library/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmss8.pfb></Users/lzamora/Library/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></Users/lzamora/Library/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy5.pfb></Users/lzamora/Library/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb></Users/lzamora/Library/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmti9.pfb></Users/lzamora/Library/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb></Users/lzamora/Library/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt9.pfb>
-Output written on paper.pdf (8 pages, 251447 bytes).
+</Users/lzamora/Library/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></Users/lzamora/Library/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></Users/lzamora/Library/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx7.pfb></Users/lzamora/Library/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx9.pfb></Users/lzamora/Library/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></Users/lzamora/Library/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi6.pfb></Users/lzamora/Library/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></Users/lzamora/Library/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmmib10.pfb></Users/lzamora/Library/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></Users/lzamora/Library/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb></Users/lzamora/Library/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></Users/lzamora/Library/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></Users/lzamora/Library/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmr9.pfb></Users/lzamora/Library/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmss8.pfb></Users/lzamora/Library/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></Users/lzamora/Library/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy5.pfb></Users/lzamora/Library/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb></Users/lzamora/Library/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmti9.pfb></Users/lzamora/Library/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb></Users/lzamora/Library/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt9.pfb>
+Output written on paper.pdf (8 pages, 251388 bytes).
 PDF statistics:
- 155 PDF objects out of 1000 (max. 8388607)
- 96 compressed objects within 1 object stream
+ 143 PDF objects out of 1000 (max. 8388607)
+ 88 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
  11 words of extra memory for PDF output out of 10000 (max. 10000000)
 
