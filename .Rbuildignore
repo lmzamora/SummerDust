@@ -1,3 +1,5 @@
+^renv$
+^renv\.lock$
 ^SummerDust\.Rproj$
 ^\.Rproj\.user$
 ^README\.Rmd$
@@ -7,3 +9,5 @@
 ^\.binder/Dockerfile$
 ^\.binder$
 analysis
+^Dockerfile$
+^render-in-docker\.yaml$
