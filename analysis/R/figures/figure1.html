@@ -108,29 +108,62 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="running-code" class="level2">
 <h2 class="anchored" data-anchor-id="running-code">Running Code</h2>
 <p>For <strong>Figure 1</strong> you first load the following libraries:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(data.table)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(scales)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 <p>For <strong>Figure 1a</strong> you then load the following datasets, which represent the fraction of liquid, mixed phase, and ice clouds in the study region/period:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="st">"../../data/derived_data/fCliq.RData"</span>)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="st">"../../data/derived_data/fCmpc.RData"</span>)</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="st">"../../data/derived_data/fCice.RData"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="st">"../../data/derived_data/fCliq.RData"</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="st">"../../data/derived_data/fCmpc.RData"</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="st">"../../data/derived_data/fCice.RData"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>We are going to plot the fractions at average altitudes of 1-8 km, and find the maximum values for the x-axis of Figure 1a:</p>
+<p>We plotted the fractions at average altitudes of 1-8 km, and found the maximum values for the x-axis of Figure 1a:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>alt<span class="ot">&lt;-</span><span class="dv">1</span><span class="sc">:</span><span class="dv">8</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>xmax<span class="ot">&lt;-</span><span class="fu">max</span>(si_fCliq,si_fCmpc,si_fCice)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>alt<span class="ot">&lt;-</span><span class="dv">1</span><span class="sc">:</span><span class="dv">8</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>xmax<span class="ot">&lt;-</span><span class="fu">max</span>(si_fCliq,si_fCmpc,si_fCice)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Then we can look at the data for Figure 1 a:</p>
+<p>Then we looked at the data for Figure 1 a:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(si_fCliq,alt,<span class="at">ty=</span><span class="st">"l"</span>,<span class="at">col=</span><span class="st">"#d7191c"</span>,<span class="at">xlim=</span><span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">100</span>), <span class="at">lwd=</span><span class="dv">5</span>,<span class="at">yaxs=</span><span class="st">"i"</span>,<span class="at">las=</span><span class="dv">1</span>,<span class="at">xaxs=</span><span class="st">"i"</span>,<span class="at">cex.axis=</span><span class="fl">1.4</span>,<span class="at">cex.lab=</span><span class="fl">1.4</span>, <span class="at">ylab=</span><span class="st">"Altitude (km)"</span>, <span class="at">xlab=</span><span class="st">"Cloud phase frequency (%)"</span>)</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">points</span>(si_fCmpc,alt,<span class="at">ty=</span><span class="st">"l"</span>,<span class="at">col=</span><span class="st">"#fdae61"</span>, <span class="at">lwd=</span><span class="dv">5</span>)</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="fu">points</span>(si_fCice,alt,<span class="at">ty=</span><span class="st">"l"</span>,<span class="at">col=</span><span class="st">"#2c7bb6"</span>, <span class="at">lwd=</span><span class="dv">5</span>)</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="dv">53</span>, <span class="dv">4</span>, <span class="at">legend=</span><span class="fu">c</span>(<span class="st">"Liquid"</span>, <span class="st">"Mixed"</span>,<span class="st">"Ice"</span>), <span class="at">col=</span><span class="fu">c</span>(<span class="st">"#d7191c"</span>, <span class="st">"#fdae61"</span>, <span class="st">"#2c7bb6"</span>), <span class="at">lty=</span><span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>, <span class="at">cex=</span><span class="fl">0.8</span>,<span class="at">lwd=</span><span class="dv">5</span>)</span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="fu">text</span>(<span class="dv">80</span>,<span class="fl">1.5</span>, <span class="fu">substitute</span>(<span class="fu">paste</span>(<span class="fu">bold</span>(<span class="st">'(a)'</span>))), <span class="at">cex=</span><span class="fl">1.5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(si_fCliq,alt,<span class="at">ty=</span><span class="st">"l"</span>,<span class="at">col=</span><span class="st">"#d7191c"</span>,<span class="at">xlim=</span><span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">100</span>), <span class="at">lwd=</span><span class="dv">5</span>,<span class="at">yaxs=</span><span class="st">"i"</span>,<span class="at">las=</span><span class="dv">1</span>,<span class="at">xaxs=</span><span class="st">"i"</span>,<span class="at">cex.axis=</span><span class="fl">1.4</span>,<span class="at">cex.lab=</span><span class="fl">1.4</span>, <span class="at">ylab=</span><span class="st">"Altitude (km)"</span>, <span class="at">xlab=</span><span class="st">"Cloud phase frequency (%)"</span>)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">points</span>(si_fCmpc,alt,<span class="at">ty=</span><span class="st">"l"</span>,<span class="at">col=</span><span class="st">"#fdae61"</span>, <span class="at">lwd=</span><span class="dv">5</span>)</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="fu">points</span>(si_fCice,alt,<span class="at">ty=</span><span class="st">"l"</span>,<span class="at">col=</span><span class="st">"#2c7bb6"</span>, <span class="at">lwd=</span><span class="dv">5</span>)</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="dv">53</span>, <span class="dv">4</span>, <span class="at">legend=</span><span class="fu">c</span>(<span class="st">"Liquid"</span>, <span class="st">"Mixed"</span>,<span class="st">"Ice"</span>), <span class="at">col=</span><span class="fu">c</span>(<span class="st">"#d7191c"</span>, <span class="st">"#fdae61"</span>, <span class="st">"#2c7bb6"</span>), <span class="at">lty=</span><span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>, <span class="at">cex=</span><span class="fl">0.8</span>,<span class="at">lwd=</span><span class="dv">5</span>)</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="fu">text</span>(<span class="dv">80</span>,<span class="fl">1.5</span>, <span class="fu">substitute</span>(<span class="fu">paste</span>(<span class="fu">bold</span>(<span class="st">'(a)'</span>))), <span class="at">cex=</span><span class="fl">1.5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="figure1_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
-<p>Next, we</p>
+<p>For <strong>Figure 1b</strong> , we specified the bin sizes and meteorological parameters we wanted to plot by:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>merTrange<span class="ot">&lt;-</span><span class="fu">seq</span>(<span class="sc">-</span><span class="dv">70</span>,<span class="dv">30</span>,<span class="fl">7.5</span><span class="sc">/</span><span class="dv">2</span>)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>merQVrange<span class="ot">&lt;-</span><span class="fu">seq</span>(<span class="dv">0</span>,<span class="fl">0.0145</span>, <span class="fl">0.001</span>) </span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>temprange<span class="ot">&lt;-</span><span class="fu">seq</span>(<span class="sc">-</span><span class="dv">70</span>,<span class="dv">30</span>,<span class="fl">7.5</span><span class="sc">/</span><span class="dv">2</span>)</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>var1range<span class="ot">&lt;-</span>merTrange</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>var2range<span class="ot">&lt;-</span>temprange</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>var3range<span class="ot">&lt;-</span>merQVrange</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>var1<span class="ot">&lt;-</span><span class="st">"merT"</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>var2<span class="ot">&lt;-</span><span class="st">"temp"</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>var3<span class="ot">&lt;-</span><span class="st">"merQV"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>We specified that we were going to use FLEXPART dust as the aerosol type for determining background conditions, and the FLEXPART dust background cutoff in ng/m3:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>atypes<span class="ot">&lt;-</span><span class="fu">c</span>(<span class="st">"fdust"</span>)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>fdustcutoff<span class="ot">&lt;-</span> <span class="dv">93</span> </span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>acutoff<span class="ot">&lt;-</span><span class="fu">c</span>(fdustcutoff)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Next we set the conditions for determining the subset of interest (over ocean, over sea ice), and the altitude in km, j, of the data we wanted to plot:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>conditions <span class="ot">&lt;-</span> <span class="st">"ocean==1&amp;seaice&gt;=0.9"</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>j<span class="ot">&lt;-</span><span class="dv">3</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Then we loaded the data, and reduced it to the subset of interest defined above:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">eval</span>(<span class="fu">parse</span>(<span class="at">t=</span><span class="fu">paste0</span>(<span class="st">" load('../../data/derived_data/lev"</span>,j,<span class="st">"_v4c.RData')"</span>)))</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">eval</span>(<span class="fu">parse</span>(<span class="at">t=</span><span class="fu">paste0</span>(<span class="st">"la3&lt;-lev"</span>,j,<span class="st">"["</span>,conditions,<span class="st">"]"</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Then we</p>
 </section>
 
 </main>
