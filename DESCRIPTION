@@ -1,9 +1,9 @@
 Package: SummerDust
-Title: What the Package Does (One Line, Title Case)
+Title: Code for Zamora & Kahn (2024)
 Version: 0.0.0.9000
 Authors@R:
-    person("First", "Last", , "first.last@example.com", role = c("aut", "cre"))
-Description: What the package does (one paragraph).
+    person("Lauren", "Zamora", , "lauren.m.zamora@nasa.gov", role = c("aut", "cre"))
+Description: Data for the plots shown in Zamora & Kahn (2024).
 License: MIT + file LICENSE
 ByteCompile: true
 Encoding: UTF-8
