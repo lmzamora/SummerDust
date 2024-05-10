@@ -7,7 +7,7 @@ editor: visual
 
 ## Figure 1
 
-This figure shows, over sea ice, (a) The likelihood of Arctic clouds at different altitudes being classified by CloudSat as either liquid, mixed, or ice phase. (b) The estimated dust-driven increases in cloud glaciation in different meteorological conditions. (c) The meteorological and aerosol parameters that best predict how glaciation changes within meteorological bins, based on deviance explained in a generalized additive model.
+This figure shows, over Arctic sea ice, (a) The likelihood of clouds at different altitudes being classified by CloudSat as either liquid, mixed, or ice phase, (b) the estimated dust-driven increases in cloud glaciation in different meteorological conditions, and (c) the meteorological and aerosol parameters that best predict how glaciation changes within meteorological bins, based on deviance explained in a generalized additive model.
 
 ## Running Code
 
