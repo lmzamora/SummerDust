@@ -7,22 +7,23 @@
 
 This repository contains the data and code for our paper:
 
-> Authors, (YYYY). *Title of your paper goes here*. Name of journal/book
+> Zamora, L.M., Kahn, R.A., (2024). *Dust-driven cloud glaciation over
+> summertime Arctic sea ice*. Name of journal/book
 > <https://doi.org/xxx/xxx>
 
 Our pre-print is online here:
 
-> Authors, (YYYY). *Title of your paper goes here*. Name of
-> journal/book, Accessed 10 May 2024. Online at
-> <https://doi.org/xxx/xxx>
+> Zamora, L.M., Kahn, R.A., (2024). *Dust-driven cloud glaciation over
+> summertime Arctic sea ice*. Name of journal/book, Accessed 10 May
+> 2024. Online at <https://doi.org/xxx/xxx>
 
 ### How to cite
 
 Please cite this compendium as:
 
-> Authors, (2024). *Compendium of R code and data for Title of your
-> paper goes here*. Accessed 10 May 2024. Online at
-> <https://doi.org/xxx/xxx>
+> Zamora, L.M., Kahn, R.A. (2024), (2024). *Compendium of R code and
+> data for Dust-driven cloud glaciation over summertime Arctic sea ice*.
+> Accessed 10 May 2024. Online at <https://doi.org/xxx/xxx>
 
 ## Contents
 

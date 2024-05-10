@@ -11,7 +11,7 @@ knitr::opts_chunk$set(
   fig.path = "README-"
 )
 # Please put your title here to include it in the file below.
-Title <- "Title of your paper goes here"
+Title <- "Dust-driven cloud glaciation over summertime Arctic sea ice"
 ```
 
 # SummerDust
@@ -20,18 +20,18 @@ Title <- "Title of your paper goes here"
 
 This repository contains the data and code for our paper:
 
-> Authors, (YYYY). _`r Title`_. Name of journal/book <https://doi.org/xxx/xxx>
+> Zamora, L.M., Kahn, R.A., (2024). _`r Title`_. Name of journal/book <https://doi.org/xxx/xxx>
 
 Our pre-print is online here:
 
-> Authors, (YYYY). _`r Title`_. Name of journal/book, Accessed `r format(Sys.Date(), "%d %b %Y")`. Online at <https://doi.org/xxx/xxx>
+> Zamora, L.M., Kahn, R.A., (2024). _`r Title`_. Name of journal/book, Accessed `r format(Sys.Date(), "%d %b %Y")`. Online at <https://doi.org/xxx/xxx>
 
 
 ### How to cite
 
 Please cite this compendium as:
 
-> Authors, (`r format(Sys.Date(), "%Y")`). _Compendium of R code and data for `r Title`_. Accessed `r format(Sys.Date(), "%d %b %Y")`. Online at <https://doi.org/xxx/xxx>
+> Zamora, L.M., Kahn, R.A. (2024), (`r format(Sys.Date(), "%Y")`). _Compendium of R code and data for `r Title`_. Accessed `r format(Sys.Date(), "%d %b %Y")`. Online at <https://doi.org/xxx/xxx>
 
 ## Contents
 
