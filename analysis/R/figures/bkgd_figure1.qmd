@@ -170,7 +170,8 @@ sizegrid<-gridn/max(gridn,na.rm=T)*4.5
 Save the files needed to plot **Figure 1b**.
 
 ```{r}
+save(del2, file="../../data/derived_data/del2.Rdata")
 save(grid2, file="../../data/derived_data/grid2.Rdata")
 save(grid2p, file="../../data/derived_data/grid2p.Rdata")
-save(del2p, file="../../data/derived_data/sizegrid.Rdata")
+save(sizegrid, file="../../data/derived_data/sizegrid.Rdata")
 ```
