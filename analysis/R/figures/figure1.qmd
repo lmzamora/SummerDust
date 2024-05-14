@@ -49,7 +49,7 @@ text(80,1.5, substitute(paste(bold('(a)'))), cex=1.5)
 For **Figure 1b**, we loaded the following datasets, which represent the estimated dust-driven increases in cloud glaciation in different meteorological conditions and the corresponding dataset that represents whether these differences were significant (p< 0.05):
 
 ```{r}
-load("../../data/derived_data/fCliq.RData")
-load("../../data/derived_data/fCmpc.RData")
-load("../../data/derived_data/fCice.RData")
+load("../../data/derived_data/del2.RData")
+load("../../data/derived_data/del2p.RData")
 ```
+

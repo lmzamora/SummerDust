@@ -1,11 +1,11 @@
 ---
-title: "bkgd_figure1"
+title: "bkgd_figure1b"
 author: "Lauren Zamora"
 format: html
 editor: visual
 ---
 
-For **Figure 1b** , we specified the bin sizes and meteorological parameters we wanted to plot by: 
+For **Figure 1b** , we specified the bin sizes and meteorological parameters we wanted to plot by:
 
 ```{r}
 merTrange<-seq(-70,30,7.5/2)
@@ -55,14 +55,14 @@ We then reduced the data to the subset of interest defined above:
 eval(parse(t=paste0("la3<-lev",j,"[",conditions,"]")))
 ```
 
-
-Next, we specified a quality control variable (min), the minimum number of both clean and non-clean data in each meteorological bin allowable for the data to be plotted:
+Next, we specified quality control variables. We focused the analysis on those meteorological bins where there were at least 40 (min) cloud observations in both background and non-background conditions. We also focused on bins where there were at least 5 (min4) unique days of observations to minimize any potential autocorrelation resulting from many observations being taken from the same cloud:
 
 ```{r}
-min<-40  
+min<-40
+min4<-5
 ```
 
-Add some new variables to the dataset:
+Add some new variables to the dataset. Add, for every observation, which meteorological bin the observation was in, if the air and cloud observation was or was not in background dust conditions, and the glaciation state of any observed cloud:
 
 ```{r}
 	la3[, a1:=.SD, .SDcols=a1name]  #The value of aerosol tracer of interest in the given meteorological bin
@@ -75,9 +75,12 @@ Add some new variables to the dataset:
 	la3[,notclean:=ifelse(a1>=b1,1,0)]
 	la3[,cleancloud:=ifelse(clean==1&test.this==1,1,0)]
 	la3[,notcleancloud:=ifelse(notclean==1&test.this==1,1,0)]
-	la3[,cleanncloud:=sum(cleancloud,na.rm=T),by=.(var1bin,var2bin,var3bin)] 	   
-	la3[,notcleanncloud:=sum(notcleancloud,na.rm=T),by=.(var1bin,var2bin,var3bin)]
 	la3[,fi:=(1 - ((CP-1)/2))*100] #glaciation
+```
+
+Add some new variables to the dataset. Add, for every observation, some relevant information about the characteristics of the meteorological bin it belonged to:
+
+```{r}
 	la3[,alln:=sum(all,na.rm=T),by=.(var1bin,var2bin,var3bin)] #number of aerosol observations in the meteorological bin
 	la3[,cleann:=sum(clean,na.rm=T),by=.(var1bin,var2bin,var3bin)] #number of times aerosol conditons are clean in the meteorological bin
 	la3[,notcleann:=sum(notclean,na.rm=T),by=.(var1bin,var2bin,var3bin)] #number of times aerosol conditions are not clean in the meteorological bin
@@ -90,7 +93,7 @@ Add some new variables to the dataset:
 	la3[,dfi:=mean(fi[test.this==1], na.rm=T)-mean(fi[cleancloud==1], na.rm=T), by=.(var1bin,var2bin,var3bin)]# the glaciation difference between all and background clouds in the meteorological bin 
 ```
 
-Then group mean difference in cloud glaciation (dfi) and thickness (dCth) into meteorological bins and get sample number (alln) within the bins. Then fill in empty grids with NAs:
+Group mean difference in cloud glaciation (dfi) and thickness (dCth) into meteorological bins and get sample number (alln) within the bins for cases that satisfy the quality control elements . Then fill out the grid, adding NAs to any empty bins for the two variables the plot will be flattened onto. In this case, var1 is MERRA-2 T and var3 is MERRA-2 Qv:
 
 ```{r}
 del1<-la3[unic>=min4&unia>=min4&cleanncloud>=min & notcleanncloud>=min , 
@@ -99,7 +102,7 @@ del1<-la3[unic>=min4&unia>=min4&cleanncloud>=min & notcleanncloud>=min ,
 		dCth=mean(th[test.this==1], na.rm=T)-mean(th[cleancloud==1], na.rm=T),
 		alln=sum(test.this,na.rm=T)
 		) ,
-		by=.(var1bin, var2bin,var3bin)] 	
+		by=.(var1bin, var2bin, var3bin)] 	
 		
  setDT(del1)
  
@@ -107,7 +110,7 @@ del2<-expand.grid(var1bin=min(del1$var1bin,na.rm=T):max(del1$var1bin,na.rm=T),va
 del2<-rbind(del1,del2)
 ```
 
-Next, find which of the differences are significant (p<0.05):
+Find which of the differences in cloud glaciation in each meteorological bin are significant (p\<0.05) using a Wilcoxon rank test. As before, fill out the grid, adding NAs to any empty bins for the two variables the plot will be flattened onto:
 
 ```{r}
 del1p<-la3[unic>=min4&unia>=min4&cleanncloud>=min & notcleanncloud>=min , 
@@ -121,3 +124,9 @@ del2p<-expand.grid(var1bin=min(del1p$var1bin,na.rm=T):max(del1p$var1bin,na.rm=T)
 del2p<-rbind(del1p,del2p)
 ```
 
+Save the files needed to plot **Figure 1b**.
+
+```{r}
+save(del2, file="../../data/derived_data/del2.Rdata")
+save(del2p, file="../../data/derived_data/del2p.Rdata")
+```
