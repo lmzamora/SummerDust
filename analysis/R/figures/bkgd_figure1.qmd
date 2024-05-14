@@ -5,7 +5,13 @@ format: html
 editor: visual
 ---
 
-For **Figure 1b** , we specified the bin sizes and meteorological parameters we wanted to plot by:
+For **Figure 1b** first load the following libraries:
+
+```{r}
+library(data.table)
+```
+
+Specify the bin sizes and meteorological parameters to plot by:
 
 ```{r}
 merTrange<-seq(-70,30,7.5/2)
@@ -21,7 +27,7 @@ var3<-"merQV"
 
 ```
 
-We specified that we were going to use FLEXPART dust as the aerosol type for determining background conditions, and the FLEXPART dust background cutoff in ng/m3:
+Specify that we are going to use FLEXPART dust as the aerosol type for determining background conditions, and the FLEXPART dust background cutoff in ng/m3:
 
 ```{r}
 atypes<-c("fdust")
@@ -32,30 +38,30 @@ a1name<-atypes[i]
 b1<-acutoff[i]
 ```
 
-Next we set the conditions for determining the subset of interest (over ocean, over sea ice), and the altitude in km, j, of the data we wanted to plot:
+Set the conditions for determining the subset of interest (over ocean, over sea ice), and the altitude in km, j, of the data we want to plot:
 
 ```{r}
 conditions <- "ocean==1&seaice>=0.9"
 j<-3
 ```
 
-Then we loaded the data, and cleaned it up a bit by changing cloud phase (CP) values to NA if they were undetermined or uncertain, changing the altitude layer to a numeric value, and cleaning up the sea ice data:
+Load the data. Reduce the data to the subset of interest defined above:
 
 ```{r}
 eval(parse(t=paste0(" load('../../data/derived_data/lev",j,"_v4c.RData')")))
+eval(parse(t=paste0("la3<-lev",j,"[",conditions,"]")))
+```
+
+Clean up the data a bit by changing cloud phase (CP) values to NA if they are undetermined or uncertain, changing the altitude layer to a numeric value, and cleaning up the sea ice data
+
+```{r}
 la3$CP[la3$CP==0]<-NA  #Values are either 1 (ice), 2 (mixed phase), 3 (liquid), or 0 (undetermined). Convert undetermined to NA.
 la3$CP[la3$CPqf==1]<-NA #convert CP values that are uncertain to NAs. 
 la3$alt_layer<-as.numeric(la3$alt_layer)
 la3[seaice>1, seaice:=NA]  #NSIDC sea ice values are from 0 to 1. Higher values indicate quality flags.
 ```
 
-We then reduced the data to the subset of interest defined above:
-
-```{r}
-eval(parse(t=paste0("la3<-lev",j,"[",conditions,"]")))
-```
-
-Next, we specified quality control variables. We focused the analysis on those meteorological bins where there were at least 40 (min) cloud observations in both background and non-background conditions. We also focused on bins where there were at least 5 (min4) unique days of observations to minimize any potential autocorrelation resulting from many observations being taken from the same cloud:
+Specify quality control variables. We focused the analysis on those meteorological bins where there were at least 40 (min) cloud observations in both background and non-background conditions. We also focused on bins where there were at least 5 (min4) unique days of observations to minimize any potential autocorrelation resulting from many observations being taken from the same cloud:
 
 ```{r}
 min<-40
@@ -78,7 +84,7 @@ Add some new variables to the dataset. Add, for every observation, which meteoro
 	la3[,fi:=(1 - ((CP-1)/2))*100] #glaciation
 ```
 
-Add some new variables to the dataset. Add, for every observation, some relevant information about the characteristics of the meteorological bin it belonged to:
+Add some new variables to the dataset. For every observation, add relevant information about the characteristics of the meteorological bin it belonged to:
 
 ```{r}
 	la3[,alln:=sum(all,na.rm=T),by=.(var1bin,var2bin,var3bin)] #number of aerosol observations in the meteorological bin
@@ -110,7 +116,7 @@ del2<-expand.grid(var1bin=min(del1$var1bin,na.rm=T):max(del1$var1bin,na.rm=T),va
 del2<-rbind(del1,del2)
 ```
 
-Find which of the differences in cloud glaciation in each meteorological bin are significant (p\<0.05) using a Wilcoxon rank test. As before, fill out the grid, adding NAs to any empty bins for the two variables the plot will be flattened onto:
+Find which of the differences in cloud glaciation in each meteorological bin are significant (p <0.05) using a Wilcoxon rank test. As before, fill out the grid, adding NAs to any empty bins for the two variables the plot will be flattened onto:
 
 ```{r}
 del1p<-la3[unic>=min4&unia>=min4&cleanncloud>=min & notcleanncloud>=min , 
@@ -122,6 +128,35 @@ del1p<-la3[unic>=min4&unia>=min4&cleanncloud>=min & notcleanncloud>=min ,
 # Add in the missing bins for plotting purposess
 del2p<-expand.grid(var1bin=min(del1p$var1bin,na.rm=T):max(del1p$var1bin,na.rm=T),var3bin=min(del1p$var3bin,na.rm=T):max(del1p$var3bin,na.rm=T),dfip=NA,dCthp=NA)
 del2p<-rbind(del1p,del2p)
+```
+
+Remove rows in the dataset where there are no data for variables 1 and 3 (which are the two variables we will plot the 2-D data on). In this case variable 1 is MERRA-2 temperature, and variable 3 is MERRA-2 specific humidity.
+
+```{r}
+del2<-del2[!is.na(del2$var1bin),]
+del2<-del2[!is.na(del2$var3bin),]
+del2p<-del2p[!is.na(del2p$var1bin),]
+del2p<-del2p[!is.na(del2p$var3bin),]
+
+```
+
+Average across all AIRS T bins, so that we have a new 2D dataset for MERRA-2 temperature and Qv bins that includes the weighted mean of the change in glaciation, weighted by sample number in the bin. 
+
+```{r}
+test<-del2[, weighted.mean(dfi,alln,na.rm=T), by=.(var1bin,var3bin)][, dcast(.SD, var1bin~var3bin)]    
+grid2<-as.matrix(test)[,-1]
+
+testp<-dcast(del2p, var1bin~var3bin,value.var='dfip',fun=mean,na.rm=T,fill=NA) #this will cause trouble if there is more than 1 real value, but there shouldn't be.
+grid2p<-as.matrix(testp)[,-1]
+```
+
+Add in the actual values of the bins for reference:
+
+```{r}
+del2[,merT:=var1range[var1bin]]
+del2[,temp:=var2range[var2bin]]
+del2[,merQV:=var3range[var3bin]]
+
 ```
 
 Save the files needed to plot **Figure 1b**.
