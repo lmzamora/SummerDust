@@ -67,7 +67,7 @@ var3range<-seq(0,0.0145, 0.001)
 Plot the figure:
 
 ```{r}
-source("/Users/lzamora/Library/CloudStorage/OneDrive-NASA/NASA_Science/8000-5_R+D_project_files/ACMAP3/code/data_analysis/image.scale.2.R")
+source("/analysis/R/figures/image.scale.2.R")
 pal=colorRampPalette(rev(c("deepskyblue4","deepskyblue3","deepskyblue2","grey","orangered","red","darkred")))
 ncol=100
 colors<-pal(ncol)
@@ -93,7 +93,7 @@ cvals[cvals>=101]<-100
 color<-colors[cvals]
 color<-matrix(color,dim(grid2)[1],dim(grid2)[2])
 
-# eval(parse(t=paste0("png('dcP_",atypes[i],"_",var1,"_",var3,"_p_l",k,"_si_v6.png', width=5, height=4, units='in', res=200)")))
+#eval(parse(t=paste0("png('dcP_fdust_",var1,"_",var3,"_p_l3_si.png', width=5, height=4, units='in', res=200)")))
 layout(matrix(c(1,2), nrow=1, ncol=2), widths=c(4,1), heights=c(4,4))
 layout.show(2)
 par(mar=c(4,4,2,2))
@@ -123,6 +123,6 @@ breaks <- seq(zlim[1],zlim[2],length.out=11)
 image.scale(grid2, col=pal(ncol),zlim=zlim, axis.pos=2,add.axis=F)
 axis(4,at=breaks, las=2)
 box()
-# dev.off()
+#dev.off()
 
 ```
