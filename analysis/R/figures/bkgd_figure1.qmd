@@ -76,7 +76,7 @@ la3$alt_layer<-as.numeric(la3$alt_layer)
 la3[seaice>1, seaice:=NA]  #NSIDC sea ice values are from 0 to 1. Higher values indicate quality flags.
 ```
 
-Add some new variables to the dataset. Add, for every observation, which meteorological bin the observation was in, if the air and cloud observation was or was not in background dust conditions, and the glaciation state of any observed cloud:
+Add some new variables to the data set. Add, for every observation, which meteorological bin the observation was in, if the air and cloud observation was or was not in background dust conditions, and the glaciation state of any observed cloud:
 
 ```{r}
 	la3[, a1:=.SD, .SDcols=a1name]  #The value of aerosol tracer of interest in the given meteorological bin
@@ -92,7 +92,7 @@ Add some new variables to the dataset. Add, for every observation, which meteoro
 	la3[,fi:=(1 - ((CP-1)/2))*100] #glaciation
 ```
 
-Add some new variables to the dataset that listed at every observation, but that show the sum, sample number, or mean of the variable within that observation's meteorological bin as defined by the 3 variables. For every observation, add relevant information about the characteristics of the meteorological bin it belonged to:
+Add some new variables to the data set that listed at every observation, but that show the sum, sample number, or mean of the variable within that observation's meteorological bin as defined by the 3 variables. For every observation, add relevant information about the characteristics of the meteorological bin it belonged to:
 
 ```{r}
 	la3[,alln:=sum(all,na.rm=T),by=.(var1bin,var2bin,var3bin)] #number of aerosol observations in the meteorological bin
@@ -147,7 +147,7 @@ del2[,merQV:=var3range[var3bin]]
 
 ```
 
-Remove rows in the dataset where there are no data for variables 1 and 3 (which are the two variables we will plot the 2-D data on). In this case variable 1 is MERRA-2 temperature, and variable 3 is MERRA-2 specific humidity.
+Remove rows in the data set where there are no data for variables 1 and 3 (which are the two variables we will plot the 2-D data on). In this case variable 1 is MERRA-2 temperature, and variable 3 is MERRA-2 specific humidity.
 
 ```{r}
 del2<-del2[!is.na(del2$var1bin),]
@@ -157,7 +157,7 @@ del2p<-del2p[!is.na(del2p$var3bin),]
 
 ```
 
-Average across all AIRS T bins, so that we have a new 2D dataset for MERRA-2 temperature and Qv bins that includes the weighted mean of the change in glaciation, weighted by sample number in the bin.
+Average across all AIRS T bins, so that we have a new 2D data set for MERRA-2 temperature and Qv bins that includes the weighted mean of the change in glaciation, weighted by sample number in the bin.
 
 ```{r}
 test<-del2[, weighted.mean(dfi,alln,na.rm=T), by=.(var1bin,var3bin)][, dcast(.SD, var1bin~var3bin)]    
@@ -204,39 +204,40 @@ Set new conditions for determining the subset of interest (over ocean, over sea 
 
 ```{r}
 conditions <- "ocean==1&seaice>=0.9&merT<=0&merT>=(-38.5)"
-eval(parse(t=paste0("la3<-lev",j,"[",conditions,"]")))
+eval(parse(t=paste0("la2<-lev",j,"[",conditions,"]")))
 ```
 
 Clean up the data a bit by changing cloud phase (CP) values to NA if they are undetermined or uncertain, changing the altitude layer to a numeric value, and cleaning up the sea ice data
 
 ```{r}
-la3$CP[la3$CP==0]<-NA  #Values are either 1 (ice), 2 (mixed phase), 3 (liquid), or 0 (undetermined). Convert undetermined to NA.
-la3$CP[la3$CPqf==1]<-NA #convert CP values that are uncertain to NAs. 
-la3$alt_layer<-as.numeric(la3$alt_layer)
-la3[seaice>1, seaice:=NA]  #NSIDC sea ice values are from 0 to 1. Higher values indicate quality flags.
+eval(parse(t=paste0("lev",l,"[seaice>1, seaice:=NA]")))
+eval(parse(t=paste0("la2<-lev",l)))
+eval(parse(t=paste0("rm(lev",l,")")))
+la2<-la2[eval(parse(text = conditions))]
 ```
 
-Add some new variables to the dataset. Add, for every observation, which meteorological bin the observation was in, if the air and cloud observation was or was not in background dust conditions, and the glaciation state of any observed cloud:
+Add some new variables to the data set. Add, for every observation, which meteorological bin the observation was in, if the air and cloud observation was or was not in background dust conditions, and the glaciation state of any observed cloud:
 
 ```{r}
-	la3[, a1:=.SD, .SDcols=a1name]  #The value of aerosol tracer of interest in the given meteorological bin
-	la3[,var1bin:=findInterval(eval(parse(t=paste0(var1))),var1range)]
-	la3[,var2bin:=findInterval(eval(parse(t=paste0(var2))),var2range)]
-	la3[,var3bin:=findInterval(eval(parse(t=paste0(var3))),var3range)]
-	la3[,test.this:=as.numeric(!(is.na(conv)))] #is there (1) or is there not (0) any kind of cloud?
-	la3[,all:=ifelse(!is.na(a1),1,0)]
-	la3[,clean:=ifelse(a1<b1,1,0)]
-	la3[,notclean:=ifelse(a1>=b1,1,0)]
-	la3[,cleancloud:=ifelse(clean==1&test.this==1,1,0)]
-	la3[,notcleancloud:=ifelse(notclean==1&test.this==1,1,0)]
-	la3[,fi:=(1 - ((CP-1)/2))*100] #glaciation
+	la2[, a1:=.SD, .SDcols=a1name]  #The value of aerosol tracer of interest in the given ji bin
+	la2[,var1bin:=findInterval(eval(parse(t=paste0(var1))),var1range)]
+	la2[,var2bin:=findInterval(eval(parse(t=paste0(var2))),var2range)]
+	la2[,var3bin:=findInterval(eval(parse(t=paste0(var3))),var3range)]
+	la2[,test.this:=as.numeric(!(is.na(conv)))] #is there (1) or is there not (0) any kind of cloud?
+	la2[is.na(conv),test.this:=0] # is there (1) or is there not (0) a cloud type of interest?
+	la2[,all:=ifelse(!is.na(a1),1,0)] #are there aerosol observations?
+	la2[,clean:=ifelse(a1<b1,1,0)] #Are aerosol conditions clean?
+	la2[,notclean:=ifelse(a1>=b1,1,0)] #Are aerosol conditions not clean?
+	la2[,cleancloud:=ifelse(clean==1&test.this==1,1,0)] #Is the cloud clean?
+	la2[,notcleancloud:=ifelse(notclean==1&test.this==1,1,0)] #Is the cloud not clean?
+	la2[,fi:=(1 - ((CP-1)/2))*100] 
 ```
 
-Add some new variables to the dataset that listed at every observation, but that show the sum, sample number, or mean of the variable within that observation's meteorological bin as defined by the 3 variables and within the 400 km2 grid cell the observation falls in. This includes
+Add some new variables to the data set. These are listed at every observation, but show the sum, sample number, or mean of the variable defined within that observation's meteorological bin and 400 km2 grid cell that the observation falls in. This includes the mean change in each meteorological or aerosol variable, X, between all conditions and those below the dust threshold.
 
 ```{r}
 	la2[,alln:=sum(all,na.rm=T),by=.(var1bin,var2bin,var3bin,gridcell)] #number of aerosol observations in the ij bin
-	la2[,cleann:=sum(clean,na.rm=T),by=.(var1bin,var2bin,var3bin,gridcell)] #number of times aerosol conditions are clean in the ij bin
+	la2[,cleann:=sum(clean,na.rm=T),by=.(var1bin,var2bin,var3bin,gridcell)] #number of times aerosol conditons are clean in the ij bin
 	la2[,notcleann:=sum(notclean,na.rm=T),by=.(var1bin,var2bin,var3bin,gridcell)] #number of times aerosol conditions are not clean in the ij bin
 	la2[,cleanncloud:=sum(cleancloud,na.rm=T),by=.(var1bin,var2bin,var3bin,gridcell)] #number clean clouds in the ij bin
 	la2[,notcleanncloud:=sum(notcleancloud,na.rm=T),by=.(var1bin,var2bin,var3bin,gridcell)] #number of not clean clouds in the ij bin
@@ -246,7 +247,88 @@ Add some new variables to the dataset that listed at every observation, but that
 	la2[,unia:=length(unique(date[notcleancloud==1])),by=.(var1bin,var2bin,var3bin,gridcell)] #unique days with non clean clouds in the ij bin
 	la2[,dfi:=mean(fi[test.this==1], na.rm=T)-mean(fi[cleancloud==1], na.rm=T), by=.(var1bin,var2bin,var3bin,gridcell)]# create a variable in la2 "fraction of fully ice-dominated clouds" 
 	la2[,nonzeroCP:=length(unique(gridcell[abs(dfi)>0])), by=.(var1bin,var2bin,var3bin)] 
-	for(j in 1:length(groups)) {
-		eval(parse(t=paste0("la2[,d",groups[j],":=mean(",groups[j],"[test.this==1], na.rm=T)-mean(",groups[j],"[cleancloud==1], na.rm=T), by=.(var1bin,var2bin,var3bin,gridcell)]")))
+	for(i in 1:length(groups)) {
+		eval(parse(t=paste0("la2[,d",groups[i],":=mean(",groups[i],"[test.this==1], na.rm=T)-mean(",groups[i],"[cleancloud==1], na.rm=T), by=.(var1bin,var2bin,var3bin,gridcell)]")))
 	} 
 ```
+
+Then take the subset of data that meets the quality control parameters and find fraction of clouds used for the attribution step::
+
+```{r}
+test<-la2[cleanncloud>=min & notcleanncloud>=min&unic>=min4&unia>=min4&nonzeroCP>=minj,]
+dim(test[test.this==1])[1]/length(la2$test.this[la2$test.this==1])
+
+```
+
+Find top bins with the most data:
+
+```{r}
+pick2<-test[, 
+		.(
+        alln=sum(all,na.rm=T)
+		) ,
+		by=.(var1bin,var2bin,var3bin)] 	
+pick2<-na.omit(pick2)
+pick<- order(pick2$alln, decreasing = TRUE)
+
+```
+
+It was necessary to improve signal-to-noise ratios by grouping the data into 10% quantile bins for the change in glaciation (dfi below) and remove points at quantiles with < 100 observations. 
+
+```{r}
+int<-quantile(test$dfi,seq(0.1,1,0.1))  
+Nval<-100
+
+ladfi_1<-list()
+for(i in 1) {
+vb1<-pick2[pick,]$var1bin[i]
+vb2<-pick2[pick,]$var2bin[i]
+vb3<-pick2[pick,]$var3bin[i]
+ladfi_1[[1]]<-test[var1bin==vb1&var2bin==vb2&var3bin==vb3][,.(idfi=mean(dfi,na.rm=T),N=.N),keyby=.(bin=findInterval(dfi, int))][N>Nval,.SD]
+}
+
+for(i in 2:length(pick)) {  #For each j bin, starting from most populous
+vb1<-pick2[pick,]$var1bin[i]
+vb2<-pick2[pick,]$var2bin[i]
+vb3<-pick2[pick,]$var3bin[i]
+ladfi_1[[i]]<-test[var1bin==vb1&var2bin==vb2&var3bin==vb3][,.(idfi=mean(dfi,na.rm=T),N=.N),keyby=.(bin=findInterval(dfi, int))][N>Nval,.SD]}
+ladfi<-rbindlist(ladfi_1, idcol=T)
+
+for(j in 1:length(groups)) {  #For each individual met and aerosol variable
+eval(parse(t=paste0("la",groups[j],"_1<-list()")))
+
+for(i in 1) {
+vb1<-pick2[pick,]$var1bin[i]
+vb2<-pick2[pick,]$var2bin[i]
+vb3<-pick2[pick,]$var3bin[i]
+eval(parse(t=paste0("la",groups[j],"_1[[1]]<-test[var1bin==vb1&var2bin==vb2&var3bin==vb3][,.(id",groups[j],"=mean(d",groups[j],",na.rm=T),N=.N),keyby=.(bin=findInterval(dfi, int))][N>Nval,.SD]")))
+}
+
+for(i in 2:length(pick)) {  #For each j bin, starting from most populous
+vb1<-pick2[pick,]$var1bin[i]
+vb2<-pick2[pick,]$var2bin[i]
+vb3<-pick2[pick,]$var3bin[i]
+eval(parse(t=paste0("la",groups[j],"_1[[i]]<-test[var1bin==vb1&var2bin==vb2&var3bin==vb3][,.(id",groups[j],"=mean(d",groups[j],",na.rm=T),N=.N),keyby=.(bin=findInterval(dfi, int))][N>Nval,.SD]")))
+}
+eval(parse(t=paste0("la",groups[j],"<-rbindlist(la",groups[j],"_1, idcol=T)")))
+}
+
+```
+
+We added the resulting data into one data table:
+
+```{r}
+tog<-ladfi
+for(j in 1:length(groups)) {  
+eval(parse(t=paste0("tog$d",groups[j],"<-la",groups[j],"$id",groups[j])))
+}
+names(tog)[1]<-"jbin"
+names(tog)[3]<-"dfi"
+
+```
+
+Save the file needed to plot **Figure 1c**.
+
+```{r}
+save(tog, file="../../data/derived_data/tog.Rdata")
+
