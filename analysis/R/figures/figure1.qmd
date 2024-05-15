@@ -173,16 +173,17 @@ axis(1,at=seq(0.75,24,1.2)[1:length(groups)],labels=c(lab),las=2)
 Finally, plot all three figures together for the publication:
 
 ```{r}
-jpeg(file='../../figures/Figure1.jpeg',width=190, height=95, units='mm', res=600, pointsize=8)
-layout(matrix(c(1,2,3,4,5), nrow=1, ncol=5), widths=lcm(c(4.75,5.16,0.8,1.16,7.125)), heights=lcm(9.5))
+jpeg(file='../../figures/Figure1.jpeg',width=190, height=65, units='mm', res=600, pointsize=10)
+layout(matrix(c(1,2,3,4,5), nrow=1, ncol=5), widths=lcm(c(4.75,5.86,0.8,1.46,6.125)), heights=lcm(c(6.5,5.5,5.5,5.5,6.5)))
 
 #layout(matrix(c(1,2,3), nrow=1, ncol=3), widths=c(5,0.75,1.1), heights=c(4,4,4))
 
 
-plot(si_fCliq,alt,ty="l",col="#d7191c",xlim=c(0,100), lwd=5,yaxs="i",las=1,xaxs="i",cex.axis=1.4,cex.lab=1.4, ylab="Altitude (km)", xlab="Cloud phase frequency (%)")
+#plot(si_fCliq,alt,ty="l",col="#d7191c",xlim=c(0,100), lwd=5,yaxs="i",las=1,xaxs="i",cex.axis=1.4,cex.lab=1.4, ylab="Altitude (km)", xlab="Cloud phase frequency (%)")
+plot(si_fCliq,alt,ty="l",col="#d7191c",xlim=c(0,100), lwd=5,yaxs="i",las=1,xaxs="i",ylab="Altitude (km)", xlab="Cloud phase frequency (%)")
 points(si_fCmpc,alt,ty="l",col="#fdae61", lwd=5)
 points(si_fCice,alt,ty="l",col="#2c7bb6", lwd=5)
-legend(53, 4, legend=c("Liquid", "Mixed","Ice"), col=c("#d7191c", "#fdae61", "#2c7bb6"), lty=1:2, lwd=5)
+legend(58, 4, legend=c("Liquid", "Mixed","Ice"), col=c("#d7191c", "#fdae61", "#2c7bb6"), lty=1:2, lwd=5, cex=0.8)
 text(80,1.5, substitute(paste(bold('(a)'))), cex=1.5)
 
 
@@ -215,10 +216,16 @@ cvals[cvals>=101]<-100
 color<-colors[cvals]
 color<-matrix(color,dim(grid2)[1],dim(grid2)[2])
 
-par(mar=c(4,5,3,0.5))
+par(mar=c(4,5,5,0.5))
 
 image(xax,yax,grid2, col=NA,zlim=zlim,xlab=expression("MERRA-2  T  ("~degree~"C)"),ylab=expression("MERRA-2 specific humidity (kg kg"^-1*")"), xlim=c(xmn,0),ylim=c(0,ymx))
-title(bquote(atop("Estimated aerosol-driven increases in", "cloud glaciation (\u{2202}glaciation"["j"]*", %), 2.5-3.5 km")), cex.main=1) 
+#title(bquote(atop("Estimated aerosol-driven increases in", "cloud glaciation (\u{2202}glaciation"["j"]*", %), 2.5-3.5 km")), cex.main=1) 
+#title(expression("Estimated aerosol-driven increases in", "cloud glaciation (\u{2202}glaciation"["j"]*", %), 2.5-3.5 km"), cex.main=1) 
+#mtext(side=3, line=1, expression(atop("Estimated aerosol-driven increases in", "cloud glaciation (\u{2202}glaciation"["j"]*", %), 2.5-3.5 km"))) 
+mtext(side = 3, line = 1, 
+      expression(atop(NA, atop(textstyle('Estimated aerosol-driven increases in cloud'),
+                               textstyle('glaciation (\u{2202}glaciation'['j']*', %), 2.5-3.5 km') ))), cex=0.8)
+
  
  for(l in 1:dim(grid2)[1]) {
   for(m in 1:dim(grid2)[2]) {
@@ -235,24 +242,23 @@ for(l in 1:dim(grid2)[1]) {
     }
   }
 }
+text(-23,0.0045, substitute(paste(bold('(b)'))), cex=1.5)
 
-
-
-par(mar=c(1,1,1,1))
+par(mar=c(3,1,3,1))
 breaks <- seq(zlim[1],zlim[2],length.out=11)
 image.scale(grid2, col=pal(ncol),zlim=zlim, axis.pos=2,add.axis=F)
 axis(4,at=breaks, las=2)
 box()
 
 par(mfg = c(1,4))
-par(mar=c(1,0.3,1,0))
+par(mar=c(1,3,1,3))
 arrows(0.2,0.5, 0.2, 4.6, code=2, length=0.1, col="skyblue4")
 arrows(0.2,-0.5, 0.2, -4.6, code=2, length=0.1, col="skyblue4")
 text(0.4, 4.8, substitute(paste(italic('Icier'))), col="skyblue4", cex=1)
 text(0.5, -4.8, substitute(paste(italic('Less icy'))), col="skyblue4", cex=1)
 
 par(mfg = c(1,5))
-par(mai=c(1.5,0.9,0.3,0))
+par(mai=c(0.8,0.5,0.3,0))
 num<-quantile(tog$N,0.25)
 len<-4
 #glen<-which(sapply(ladfi_1,nrow)>=len)
@@ -276,6 +282,7 @@ lab<-c("ECMWF T", "MERRA-2 T", "AIRS T","omega",  "AIRS LTS","ECMWF RH", "MERRA-
 barplot(c(unlist(dev)), col=c(rep(1,length(groups1)), "darkorange","hotpink2","grey","grey50","darkorange","grey","grey50","springgreen","deepskyblue"),las=1,ylim=c(0, round(max(unlist(dev))+5) ), ylab="Explained deviance (%)")
 # barplot(c(unlist(dev)), col=c(rep(1,length(groups1)), "hotpink2","grey","grey50","darkorange"),las=1,ylim=c(0, round(max(unlist(dev))+5) ))
 axis(1,at=seq(0.75,24,1.2)[1:length(groups)],labels=c(lab),las=2)
+text(3,25, substitute(paste(bold('(c)'))), cex=1.5)
 
 dev.off()
 ```
