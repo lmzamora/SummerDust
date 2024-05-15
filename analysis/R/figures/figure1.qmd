@@ -16,6 +16,7 @@ For **Figure 1** you first load the following libraries:
 ```{r}
 library(data.table)
 library(scales)
+library(devtools)
 ```
 
 For **Figure 1a** we loaded the following datasets, which represent the fraction of liquid, mixed phase, and ice clouds in the study region/period:
@@ -67,7 +68,7 @@ var3range<-seq(0,0.0145, 0.001)
 Plot the figure:
 
 ```{r}
-source("/analysis/R/figures/image.scale.2.R")
+source_url('https://gist.github.com/menugget/7689145/raw/dac746aa322ca4160a5fe66c70fec16ebe26faf9/image.scale.2.r')
 pal=colorRampPalette(rev(c("deepskyblue4","deepskyblue3","deepskyblue2","grey","orangered","red","darkred")))
 ncol=100
 colors<-pal(ncol)
