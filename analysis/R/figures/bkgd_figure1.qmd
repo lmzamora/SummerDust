@@ -273,7 +273,7 @@ pick<- order(pick2$alln, decreasing = TRUE)
 
 ```
 
-It was necessary to improve signal-to-noise ratios by grouping the data into 10% quantile bins for the change in glaciation (dfi below) and remove points at quantiles with < 100 observations. 
+It was necessary to improve signal-to-noise ratios by grouping the data into 10% quantile bins for the change in glaciation (dfi below) and remove points at quantiles with \< 100 observations.
 
 ```{r}
 int<-quantile(test$dfi,seq(0.1,1,0.1))  
@@ -315,7 +315,7 @@ eval(parse(t=paste0("la",groups[j],"<-rbindlist(la",groups[j],"_1, idcol=T)")))
 
 ```
 
-We added the resulting data into one data table:
+Add the resulting data into one data table:
 
 ```{r}
 tog<-ladfi
@@ -331,4 +331,6 @@ Save the file needed to plot **Figure 1c**.
 
 ```{r}
 save(tog, file="../../data/derived_data/tog.Rdata")
+```
+
 

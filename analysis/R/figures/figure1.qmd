@@ -17,7 +17,6 @@ For **Figure 1** you first load the following libraries:
 library(data.table)
 library(scales)
 library(devtools)
-library(mgcv)
 ```
 
 For **Figure 1a** we loaded the following datasets, which represent the fraction of liquid, mixed phase, and ice clouds in the study region/period:
@@ -95,9 +94,7 @@ cvals[cvals>=101]<-100
 color<-colors[cvals]
 color<-matrix(color,dim(grid2)[1],dim(grid2)[2])
 
-#eval(parse(t=paste0("png('dcP_fdust_",var1,"_",var3,"_p_l3_si.png', width=5, height=4, units='in', res=200)")))
 layout(matrix(c(1,2,3), nrow=1, ncol=3), widths=c(5,0.75,1.1), heights=c(4,4,4))
-# layout.show(3)
 par(mar=c(4,5,3,0.5))
 
 image(xax,yax,grid2, col=NA,zlim=zlim,xlab=expression("MERRA-2  T  ("~degree~"C)"),ylab=expression("MERRA-2 specific humidity (kg kg"^-1*")"), xlim=c(xmn,0),ylim=c(0,ymx))
@@ -120,7 +117,7 @@ for(l in 1:dim(grid2)[1]) {
 }
 
 
-#eval(parse(t=paste0("text(-20,20,'n(cloud profiles) = ",round(sum(del2$alln)/1e6),"M')")))
+
 par(mar=c(1,1,1,1))
 breaks <- seq(zlim[1],zlim[2],length.out=11)
 image.scale(grid2, col=pal(ncol),zlim=zlim, axis.pos=2,add.axis=F)
@@ -133,7 +130,152 @@ arrows(0.2,0.5, 0.2, 4.6, code=2, length=0.1, col="skyblue4")
 arrows(0.2,-0.5, 0.2, -4.6, code=2, length=0.1, col="skyblue4")
 text(0.4, 4.8, substitute(paste(italic('Icier'))), col="skyblue4", cex=1)
 text(0.5, -4.8, substitute(paste(italic('Less icy'))), col="skyblue4", cex=1)
-#dev.off()
+
 
 ```
 
+For **Figure 1c**, load the tog dataset, which represents the output of the GAM, and deviance predicted by each variable:
+
+```{r}
+load("../../data/derived_data/tog.RData")
+```
+
+Plot the figure:
+
+```{r}
+par(mai=c(1.5,0.9,0.3,0))
+num<-quantile(tog$N,0.25)
+len<-4
+#glen<-which(sapply(ladfi_1,nrow)>=len)
+#tlen<-which(tog$jbin %in% glen)
+
+groups<-c("Etemp", "merT", "temp","omega",  "aLTS","ERH", "merRH","aRH", "XRHi", "merwindspeed","merQV", "fdust","SO4","merBC","merOC","merdust","fBC","fOC","DMS","SS")
+groups1<-c("Etemp", "merT", "temp","omega",  "aLTS","ERH", "merRH","aRH", "XRHi", "merwindspeed","merQV") 
+groups2<-c("fdust","SO4","merBC","merOC","merdust","fBC","fOC","DMS","SS") 
+
+dev<-list()
+devbin<-list()
+for(j in 1:length(groups)) {  
+#Plot on dfi
+eval(parse(t=paste0("mod<-gam(tog$dfi~s(tog$d",groups[j],",k=3),w=tog$N,family='gaussian')")))
+# plot(mod)
+# gam.check(mod)
+dev[[j]]<-round(summary(mod)$dev*100,2)
+}
+
+lab<-c("ECMWF T", "MERRA-2 T", "AIRS T","omega",  "AIRS LTS","ECMWF RH", "MERRA-2 RH","AIRS RH", "AIRS RHi", "wind speed","MERRA-2 Qv","FLEXPART dust","SO4","MERRA-2 BC","MERRA-2 OC","MERRA-2 dust","FLEXPART BC","FLEXPART OC","DMS","SS")
+barplot(c(unlist(dev)), col=c(rep(1,length(groups1)), "darkorange","hotpink2","grey","grey50","darkorange","grey","grey50","springgreen","deepskyblue"),las=1,ylim=c(0, round(max(unlist(dev))+5) ), ylab="Explained deviance (%)")
+# barplot(c(unlist(dev)), col=c(rep(1,length(groups1)), "hotpink2","grey","grey50","darkorange"),las=1,ylim=c(0, round(max(unlist(dev))+5) ))
+axis(1,at=seq(0.75,24,1.2)[1:length(groups)],labels=c(lab),las=2)
+
+```
+
+Finally, plot all three figures together for the publication:
+
+```{r}
+jpeg(file='../../figures/Figure1.jpeg',width=190, height=95, units='mm', res=600, pointsize=8)
+layout(matrix(c(1,2,3,4,5), nrow=1, ncol=5), widths=lcm(c(4.75,5.16,0.8,1.16,7.125)), heights=lcm(9.5))
+
+#layout(matrix(c(1,2,3), nrow=1, ncol=3), widths=c(5,0.75,1.1), heights=c(4,4,4))
+
+
+plot(si_fCliq,alt,ty="l",col="#d7191c",xlim=c(0,100), lwd=5,yaxs="i",las=1,xaxs="i",cex.axis=1.4,cex.lab=1.4, ylab="Altitude (km)", xlab="Cloud phase frequency (%)")
+points(si_fCmpc,alt,ty="l",col="#fdae61", lwd=5)
+points(si_fCice,alt,ty="l",col="#2c7bb6", lwd=5)
+legend(53, 4, legend=c("Liquid", "Mixed","Ice"), col=c("#d7191c", "#fdae61", "#2c7bb6"), lty=1:2, lwd=5)
+text(80,1.5, substitute(paste(bold('(a)'))), cex=1.5)
+
+
+
+
+
+source_url('https://gist.github.com/menugget/7689145/raw/dac746aa322ca4160a5fe66c70fec16ebe26faf9/image.scale.2.r')
+pal=colorRampPalette(rev(c("deepskyblue4","deepskyblue3","deepskyblue2","grey","orangered","red","darkred")))
+ncol=100
+colors<-pal(ncol)
+zlim<-c(-5,5)
+seq_values<-seq(from=zlim[1], to=zlim[2],length.out=length(colors)+1)
+res=200
+pmin<-0.05
+
+xmin<-min(del2$var1bin,na.rm=T)
+xmax<-max(del2$var1bin,na.rm=T) 
+ymin<-min(del2$var3bin,na.rm=T) 
+ymax<-max(del2$var3bin,na.rm=T) 
+xax<-var1range[xmin:xmax] + (var1range[2]-var1range[1])/2  #Because findInterval gives low interval boundary
+yax<-var3range[ymin:ymax]+ (var3range[2]-var3range[1])/2  #Because findInterval gives low interval boundary
+xmn<-min(xax)-(var1range[2]-var1range[1])/2
+xmx<-max(xax)
+ymn<-min(yax)
+ymx<-max(yax)
+
+cvals<-findInterval(as.numeric(grid2),seq_values)
+cvals[cvals<=0]<-1
+cvals[cvals>=101]<-100
+color<-colors[cvals]
+color<-matrix(color,dim(grid2)[1],dim(grid2)[2])
+
+par(mar=c(4,5,3,0.5))
+
+image(xax,yax,grid2, col=NA,zlim=zlim,xlab=expression("MERRA-2  T  ("~degree~"C)"),ylab=expression("MERRA-2 specific humidity (kg kg"^-1*")"), xlim=c(xmn,0),ylim=c(0,ymx))
+title(bquote(atop("Estimated aerosol-driven increases in", "cloud glaciation (\u{2202}glaciation"["j"]*", %), 2.5-3.5 km")), cex.main=1) 
+ 
+ for(l in 1:dim(grid2)[1]) {
+  for(m in 1:dim(grid2)[2]) {
+  	if(!is.na(grid2p[l,m])&grid2p[l, m]>=0.05) {
+      points(xax[l],yax[m], pch=1,col=color[l,m],lwd=0.5,cex=sizegrid[l,m])
+    }
+  }
+}
+
+for(l in 1:dim(grid2)[1]) {
+  for(m in 1:dim(grid2)[2]) {
+  	if(!is.na(grid2p[l,m])&grid2p[l, m]<0.05) {
+      points(xax[l],yax[m], pch=16,col=color[l,m],lwd=1.1,cex=sizegrid[l,m])
+    }
+  }
+}
+
+
+
+par(mar=c(1,1,1,1))
+breaks <- seq(zlim[1],zlim[2],length.out=11)
+image.scale(grid2, col=pal(ncol),zlim=zlim, axis.pos=2,add.axis=F)
+axis(4,at=breaks, las=2)
+box()
+
+par(mfg = c(1,4))
+par(mar=c(1,0.3,1,0))
+arrows(0.2,0.5, 0.2, 4.6, code=2, length=0.1, col="skyblue4")
+arrows(0.2,-0.5, 0.2, -4.6, code=2, length=0.1, col="skyblue4")
+text(0.4, 4.8, substitute(paste(italic('Icier'))), col="skyblue4", cex=1)
+text(0.5, -4.8, substitute(paste(italic('Less icy'))), col="skyblue4", cex=1)
+
+par(mfg = c(1,5))
+par(mai=c(1.5,0.9,0.3,0))
+num<-quantile(tog$N,0.25)
+len<-4
+#glen<-which(sapply(ladfi_1,nrow)>=len)
+#tlen<-which(tog$jbin %in% glen)
+
+groups<-c("Etemp", "merT", "temp","omega",  "aLTS","ERH", "merRH","aRH", "XRHi", "merwindspeed","merQV", "fdust","SO4","merBC","merOC","merdust","fBC","fOC","DMS","SS")
+groups1<-c("Etemp", "merT", "temp","omega",  "aLTS","ERH", "merRH","aRH", "XRHi", "merwindspeed","merQV") 
+groups2<-c("fdust","SO4","merBC","merOC","merdust","fBC","fOC","DMS","SS") 
+
+dev<-list()
+devbin<-list()
+for(j in 1:length(groups)) {  
+#Plot on dfi
+eval(parse(t=paste0("mod<-gam(tog$dfi~s(tog$d",groups[j],",k=3),w=tog$N,family='gaussian')")))
+# plot(mod)
+# gam.check(mod)
+dev[[j]]<-round(summary(mod)$dev*100,2)
+}
+
+lab<-c("ECMWF T", "MERRA-2 T", "AIRS T","omega",  "AIRS LTS","ECMWF RH", "MERRA-2 RH","AIRS RH", "AIRS RHi", "wind speed","MERRA-2 Qv","FLEXPART dust","SO4","MERRA-2 BC","MERRA-2 OC","MERRA-2 dust","FLEXPART BC","FLEXPART OC","DMS","SS")
+barplot(c(unlist(dev)), col=c(rep(1,length(groups1)), "darkorange","hotpink2","grey","grey50","darkorange","grey","grey50","springgreen","deepskyblue"),las=1,ylim=c(0, round(max(unlist(dev))+5) ), ylab="Explained deviance (%)")
+# barplot(c(unlist(dev)), col=c(rep(1,length(groups1)), "hotpink2","grey","grey50","darkorange"),las=1,ylim=c(0, round(max(unlist(dev))+5) ))
+axis(1,at=seq(0.75,24,1.2)[1:length(groups)],labels=c(lab),las=2)
+
+dev.off()
+```
