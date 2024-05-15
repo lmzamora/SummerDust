@@ -17,6 +17,7 @@ For **Figure 1** you first load the following libraries:
 library(data.table)
 library(scales)
 library(devtools)
+library(mgcv)
 ```
 
 For **Figure 1a** we loaded the following datasets, which represent the fraction of liquid, mixed phase, and ice clouds in the study region/period:
@@ -136,4 +137,3 @@ text(0.5, -4.8, substitute(paste(italic('Less icy'))), col="skyblue4", cex=1)
 
 ```
 
-For **Figure 1c**, :
