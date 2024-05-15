@@ -95,13 +95,13 @@ color<-colors[cvals]
 color<-matrix(color,dim(grid2)[1],dim(grid2)[2])
 
 #eval(parse(t=paste0("png('dcP_fdust_",var1,"_",var3,"_p_l3_si.png', width=5, height=4, units='in', res=200)")))
-layout(matrix(c(1,2), nrow=1, ncol=2), widths=c(4,1), heights=c(4,4))
-layout.show(2)
-par(mar=c(4,4,2,2))
+layout(matrix(c(1,2,3), nrow=1, ncol=3), widths=c(5,0.75,1.1), heights=c(4,4,4))
+# layout.show(3)
+par(mar=c(4,5,3,0.5))
 
 image(xax,yax,grid2, col=NA,zlim=zlim,xlab=expression("MERRA-2  T  ("~degree~"C)"),ylab=expression("MERRA-2 specific humidity (kg kg"^-1*")"), xlim=c(xmn,0),ylim=c(0,ymx))
 title(bquote(atop("Estimated aerosol-driven increases in", "cloud glaciation (\u{2202}glaciation"["j"]*", %), 2.5-3.5 km")), cex.main=1) 
-
+ 
  for(l in 1:dim(grid2)[1]) {
   for(m in 1:dim(grid2)[2]) {
   	if(!is.na(grid2p[l,m])&grid2p[l, m]>=0.05) {
@@ -119,12 +119,21 @@ for(l in 1:dim(grid2)[1]) {
 }
 
 
-eval(parse(t=paste0("text(-20,20,'n(cloud profiles) = ",round(sum(del2$alln)/1e6),"M')")))
-par(mar=c(1,1,1,3))
+#eval(parse(t=paste0("text(-20,20,'n(cloud profiles) = ",round(sum(del2$alln)/1e6),"M')")))
+par(mar=c(1,1,1,1))
 breaks <- seq(zlim[1],zlim[2],length.out=11)
 image.scale(grid2, col=pal(ncol),zlim=zlim, axis.pos=2,add.axis=F)
 axis(4,at=breaks, las=2)
 box()
+
+par(mfg = c(1,3))
+par(mar=c(1,0.3,1,0))
+arrows(0.2,0.5, 0.2, 4.6, code=2, length=0.1, col="skyblue4")
+arrows(0.2,-0.5, 0.2, -4.6, code=2, length=0.1, col="skyblue4")
+text(0.4, 4.8, substitute(paste(italic('Icier'))), col="skyblue4", cex=1)
+text(0.5, -4.8, substitute(paste(italic('Less icy'))), col="skyblue4", cex=1)
 #dev.off()
 
 ```
+
+For **Figure 1c**, :
