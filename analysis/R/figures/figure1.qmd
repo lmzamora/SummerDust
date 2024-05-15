@@ -99,8 +99,9 @@ layout(matrix(c(1,2), nrow=1, ncol=2), widths=c(4,1), heights=c(4,4))
 layout.show(2)
 par(mar=c(4,4,2,2))
 
-image(xax,yax,grid2, col=NA,zlim=zlim,xlab="MERRA-2 T (C)",ylab="MERRA-2 specific humidity (kg/kg)", xlim=c(xmn,0),ylim=c(0,ymx)) 
- 
+image(xax,yax,grid2, col=NA,zlim=zlim,xlab=expression("MERRA-2  T  ("~degree~"C)"),ylab=expression("MERRA-2 specific humidity (kg kg"^-1*")"), xlim=c(xmn,0),ylim=c(0,ymx))
+title(bquote(atop("Estimated aerosol-driven increases in", "cloud glaciation (\u{2202}glaciation"["j"]*", %), 2.5-3.5 km")), cex.main=1) 
+
  for(l in 1:dim(grid2)[1]) {
   for(m in 1:dim(grid2)[2]) {
   	if(!is.na(grid2p[l,m])&grid2p[l, m]>=0.05) {
