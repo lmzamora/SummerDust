@@ -1,5 +1,5 @@
 ---
-title: "bkgd_figure1b"
+title: "Background for Figures 1b and 1c"
 author: "Lauren Zamora"
 format: html
 editor: visual
@@ -332,5 +332,3 @@ Save the file needed to plot **Figure 1c**.
 ```{r}
 save(tog, file="../../data/derived_data/tog.Rdata")
 ```
-
-

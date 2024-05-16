@@ -19,7 +19,7 @@ library(scales)
 library(devtools)
 ```
 
-For **Figure 1a** we loaded the following datasets, which represent the fraction of liquid, mixed phase, and ice clouds in the study region/period:
+For **Figure 1a** we loaded the following data sets, which represent the fraction of liquid, mixed phase, and ice clouds in the study region/period:
 
 ```{r}
 load("../../data/derived_data/fCliq.RData")

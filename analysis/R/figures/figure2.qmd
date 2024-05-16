@@ -1,0 +1,23 @@
+---
+title: "Create Figure 2"
+author: "Lauren Zamora"
+format: html
+editor: visual
+---
+
+## Figure 2
+
+This figure shows properties over summertime sea ice of single-layer clouds at least partially overlapping with 2.5-3.5 km elevation, from May to September. a, b) Estimated average cooling from cloud changes due to dust aerosols (at BOA and TOA, respectively). Error bars show the vales at the low- and high-end FLEXPART background dust threshold. c) The average FLEXPART and MERRA-2 dust concentrations associated with the clouds. d) Average % of time that the clouds were at temperatures below -10 °C. e) The average solar zenith angle for the clouds at the time of measurement.
+
+## Running Code
+
+For **Figure 2** you first load the following libraries:
+
+```{r}
+library(data.table)
+library(dplyr)
+library(ggplot2)
+library(gridExtra)
+library(RColorBrewer)
+
+```
