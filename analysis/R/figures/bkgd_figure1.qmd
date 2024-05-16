@@ -175,13 +175,35 @@ gridn<-as.matrix(test3)[,-1]
 sizegrid<-gridn/max(gridn,na.rm=T)*4.5
 ```
 
+Add column and row names.
+
+```{r}
+xmin<-min(del2$var1bin,na.rm=T)
+xmax<-max(del2$var1bin,na.rm=T) 
+ymin<-min(del2$var3bin,na.rm=T) 
+ymax<-max(del2$var3bin,na.rm=T) 
+xax<-var1range[xmin:xmax] + (var1range[2]-var1range[1])/2  #Because findInterval gives low interval boundary
+yax<-var3range[ymin:ymax]+ (var3range[2]-var3range[1])/2  #Because findInterval gives low interval boundary
+
+eval(parse(t=paste0("colnames(del2)<-c('",var1,"bin', '",var2,"bin', '",var3,"bin', 'dglaciation', 'dcloud_thickness', 'n',  '",var1,"', '",var2,"', '",var3,"')")))
+
+colnames(grid2)<-paste0("QV", yax) #Mid-point of Qv bin
+rownames(grid2)<-paste0("merT", xax) #Mid-point of merT bin
+
+colnames(grid2p)<-paste0("QV", yax) #Mid-point of Qv bin
+rownames(grid2p)<-paste0("merT", xax) #Mid-point of merT bin
+
+colnames(sizegrid)<-paste0("QV", yax) #Mid-point of Qv bin
+rownames(sizegrid)<-paste0("merT", xax) #Mid-point of merT bin
+```
+
 Save the files needed to plot **Figure 1b**.
 
 ```{r}
-save(del2, file="../../data/derived_data/del2.Rdata")
-save(grid2, file="../../data/derived_data/grid2.Rdata")
-save(grid2p, file="../../data/derived_data/grid2p.Rdata")
-save(sizegrid, file="../../data/derived_data/sizegrid.Rdata")
+write.csv(del2, file="../../data/derived_data/del2.csv")
+write.csv(grid2, file="../../data/derived_data/grid2.csv")
+write.csv(grid2p, file="../../data/derived_data/grid2p.csv")
+write.csv(sizegrid, file="../../data/derived_data/sizegrid.csv")
 rm(la3)
 ```
 
@@ -330,5 +352,6 @@ names(tog)[3]<-"dfi"
 Save the file needed to plot **Figure 1c**.
 
 ```{r}
+colnames(tog)[3]<-"dglaciation"
 fwrite(tog, file="../../data/derived_data/tog.csv")
 ```

@@ -17,6 +17,7 @@ For **Figure 1** you first load the following libraries:
 library(data.table)
 library(scales)
 library(devtools)
+library(mgcv)
 ```
 
 For **Figure 1a** we loaded the following data sets, which represent the fraction of liquid, mixed phase, and ice clouds in the study region/period:
@@ -48,10 +49,16 @@ text(80,1.5, substitute(paste(bold('(a)'))), cex=1.5)
 For **Figure 1b**, load the del2 dataset, which represents the estimated dust-driven increases in cloud glaciation in different meteorological conditions. Also load the corresponding del2p dataset that represents whether these differences were significant (p\< 0.05):
 
 ```{r}
-load("../../data/derived_data/del2.RData")
-load("../../data/derived_data/grid2.RData")
-load("../../data/derived_data/grid2p.RData")
-load("../../data/derived_data/sizegrid.RData")
+#load("../../data/derived_data/del2.RData")
+#load("../../data/derived_data/grid2.RData")
+#load("../../data/derived_data/grid2p.RData")
+#load("../../data/derived_data/sizegrid.RData")
+
+del2<-read.csv("../../data/derived_data/del2.csv")
+grid2<-read.csv("../../data/derived_data/grid2.csv")
+grid2p<-read.csv("../../data/derived_data/grid2p.csv")
+sizegrid<-read.csv("../../data/derived_data/sizegrid.csv")
+
 ```
 
 Set the variables
@@ -77,10 +84,10 @@ seq_values<-seq(from=zlim[1], to=zlim[2],length.out=length(colors)+1)
 res=200
 pmin<-0.05
 
-xmin<-min(del2$var1bin,na.rm=T)
-xmax<-max(del2$var1bin,na.rm=T) 
-ymin<-min(del2$var3bin,na.rm=T) 
-ymax<-max(del2$var3bin,na.rm=T) 
+xmin<-min(del2$merTbin,na.rm=T)
+xmax<-max(del2$merTbin,na.rm=T) 
+ymin<-min(del2$merQVbin,na.rm=T) 
+ymax<-max(del2$merQVbin,na.rm=T) 
 xax<-var1range[xmin:xmax] + (var1range[2]-var1range[1])/2  #Because findInterval gives low interval boundary
 yax<-var3range[ymin:ymax]+ (var3range[2]-var3range[1])/2  #Because findInterval gives low interval boundary
 xmn<-min(xax)-(var1range[2]-var1range[1])/2
@@ -89,8 +96,7 @@ ymn<-min(yax)
 ymx<-max(yax)
 
 cvals<-findInterval(as.numeric(grid2),seq_values)
-cvals[cvals<=0]<-1
-cvals[cvals>=101]<-100
+
 color<-colors[cvals]
 color<-matrix(color,dim(grid2)[1],dim(grid2)[2])
 
