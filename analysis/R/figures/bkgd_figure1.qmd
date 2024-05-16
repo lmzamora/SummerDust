@@ -210,9 +210,9 @@ eval(parse(t=paste0("la2<-lev",j,"[",conditions,"]")))
 Clean up the data a bit by changing cloud phase (CP) values to NA if they are undetermined or uncertain, changing the altitude layer to a numeric value, and cleaning up the sea ice data
 
 ```{r}
-eval(parse(t=paste0("lev",l,"[seaice>1, seaice:=NA]")))
-eval(parse(t=paste0("la2<-lev",l)))
-eval(parse(t=paste0("rm(lev",l,")")))
+eval(parse(t=paste0("lev",j,"[seaice>1, seaice:=NA]")))
+eval(parse(t=paste0("la2<-lev",j)))
+eval(parse(t=paste0("rm(lev",j,")")))
 la2<-la2[eval(parse(text = conditions))]
 ```
 
@@ -330,5 +330,5 @@ names(tog)[3]<-"dfi"
 Save the file needed to plot **Figure 1c**.
 
 ```{r}
-save(tog, file="../../data/derived_data/tog.Rdata")
+fwrite(tog, file="../../data/derived_data/tog.csv")
 ```
