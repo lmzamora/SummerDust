@@ -9,6 +9,10 @@ For **Figure 2** first load the following libraries:
 
 ```{r}
 library(data.table)
+library(ggplot2)
+library(gridExtra)
+library(dplyr)
+library(ggpubr)
 ```
 
 Specify the bin sizes and meteorological parameters to plot by:
@@ -92,7 +96,8 @@ First, get the difference in cloud radiative effect at the surface and TOA assoc
 
 for(j in 5:9) {
 mo<-j
-load("CRE_joined.RData")
+#load("CRE_joined.RData")
+load("/Users/lzamora/Library/CloudStorage/OneDrive-NASA/NASA_Science/8000-5_R+D_project_files/ACMAP3/initial_data/all/CRE_joined.RData")
 conditions <- "ocean==1&seaice>=0.9&single3km==1&monat==mo"
 
 #Specify that we are going to use FLEXPART dust as the aerosol type for determining background conditions, and the FLEXPART dust background cutoff in ng/m3:
@@ -222,7 +227,8 @@ Then get the difference in cloud radiative effect at the surface and TOA associa
 ```{r}
 for(j in 5:9) {
 mo<-j
-load("CRE_joined.RData")
+#load("CRE_joined.RData")
+load("/Users/lzamora/Library/CloudStorage/OneDrive-NASA/NASA_Science/8000-5_R+D_project_files/ACMAP3/initial_data/all/CRE_joined.RData")
 conditions <- "ocean==1&seaice>=0.9&single3km==1&monat==mo"
 
 fdustcutoff<- 215 
@@ -330,7 +336,8 @@ Then get the difference in cloud radiative effect at the surface and TOA associa
 ```{r}
 for(j in 5:9) {
 mo<-j
-load("CRE_joined.RData")
+#load("CRE_joined.RData")
+load("/Users/lzamora/Library/CloudStorage/OneDrive-NASA/NASA_Science/8000-5_R+D_project_files/ACMAP3/initial_data/all/CRE_joined.RData")
 conditions <- "ocean==1&seaice>=0.9&single3km==1&monat==mo"
 
 fdustcutoff<- 31 
@@ -432,5 +439,90 @@ CREtoa_mos_se_lo<-c(CREtoa05se,CREtoa06se,CREtoa07se,CREtoa08se,CREtoa09se)
 
 ```
 
+Get data together and ready for plotting:
+```{r}
+months_lab<-c("May","Jun","Jul","Aug","Sep")
+pal=colorRampPalette((c("white","grey","black")))
+ncol=100
+colors<-pal(ncol)
+
+zlim<-c(0,90)
+seq_values<-seq(from=zlim[1], to=zlim[2],length.out=100)
+cvals<-findInterval(as.numeric(mean_sza_mos),seq_values)
+cvals[cvals<=0]<-1
+cvals[cvals>=101]<-100
+color<-colors[cvals]
+
+
+databoa <- data.frame(
+  level=rep("BOA",5),
+  mono=c(5:9),
+  Month=months_lab,
+  dCRE=-CREboa_mos,
+  hiCRE=pmax(-CREboa_mos_lo,-CREboa_mos,-CREboa_mos_hi),
+  loCRE=pmin(-CREboa_mos_lo,-CREboa_mos,-CREboa_mos_hi),
+  frac_ltn10= frac_ltn10_mos*100,
+  mean_dust= mean_dust_mos,
+  mean_mdust= mean_mdust_mos,
+  sza=mean_sza_mos,
+  ids=1:5,
+  color=colors[cvals]
+)
+
+datatoa <- data.frame(
+  level=rep("TOA",5),
+  mono=c(5:9),
+  Month=months_lab,
+  dCRE=-CREtoa_mos,
+  hiCRE=pmax(-CREtoa_mos_lo,-CREtoa_mos,-CREtoa_mos_hi),
+  loCRE=pmin(-CREtoa_mos_lo,-CREtoa_mos,-CREtoa_mos_hi),
+  frac_ltn10= frac_ltn10_mos*100,
+  mean_dust= mean_dust_mos,
+  mean_mdust= mean_mdust_mos,
+  sza=mean_sza_mos,
+  ids=1:5,
+  color=colors[cvals]
+)
+
+
+```
+
+
 Create the plot:
+```{r}
+#So R doesn't alphabetically order the data
+ppal <- c(
+  "May" = color[1],
+  "Jun" = color[2], 
+  "Jul" = color[3], 
+  "Aug" = color[4],
+  "Sep" = color[5] 
+)
+
+coeff_dust <- 10
+
+jpeg(file='../../figures/Figure2.jpeg', width=65, height=200, units='mm', res=600)
+
+p1<-ggplot(databoa) + geom_bar( aes(x=mono, y=dCRE), stat="identity", fill="skyblue", alpha=0.7)  + theme(axis.title.y=element_text(size=8), axis.title.x=element_text(size=8), panel.background = element_rect(fill = 'white', colour = 'black')) + geom_hline(yintercept=0, col="grey") + geom_errorbar( aes(x=mono, ymin=loCRE, ymax=hiCRE), width=0.2, colour="grey20", alpha=0.9, size=0.8)+ theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank()) + labs(x = "Month \n", y = expression("-\u{2202}CRE, W m"^-2)) + annotate("text", x=7, y=15, label= "BOA", size=4) + annotate("text", x = 8.5, y = 16, label = 'bold("a)")', parse = TRUE)
+
+p2<-ggplot(datatoa) + geom_bar( aes(x=mono, y=dCRE), stat="identity", fill="skyblue", alpha=0.7) + theme(axis.title.y=element_text(size=8), axis.title.x=element_text(size=8), panel.background = element_rect(fill = 'white', colour = 'black'))+ geom_errorbar( aes(x=mono, ymin=loCRE, ymax=hiCRE), width=0.2, colour="grey20", alpha=0.9, size=0.8) + labs(x = "Month \n", y = expression("-\u{2202}CRE, W m"^-2)) + theme(axis.title.y=element_text(angle=90, vjust=1)) +  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank()) + geom_hline(yintercept=0, col="grey")  +
+   lims(y=c(-3,18), x=c(4.5,9.5))  +
+   annotate("text", x=7, y=15, label= "TOA", size=4) +
+   annotate("text", x = 8.5, y = 16, label = 'bold("b)")', parse = TRUE) 
+
+p3<- ggplot(databoa) + geom_line(aes(x = mono, y = mean_dust), col="black",lty=1) + theme(axis.title.y=element_text(size=8), axis.title.x=element_text(size=8), panel.background = element_rect(fill = 'white', colour = 'black'))+ labs(x = "Month", y = expression("Mean FLEXPART dust, ng m"^-3)) + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), axis.ticks.y = element_line(color = "black"), axis.text.y = element_text(color = "black"), axis.title.y = element_text(color = "black"), axis.line.y = element_line(color = "black"))  + lims(y=c(50,400), x=c(4.5,9.5)) +
+   annotate("text", x = 8.5, y = 360, label = 'bold("c)")', parse = TRUE) + geom_line(aes(x = mono, y = mean_mdust/coeff_dust), col="orangered",lty=1) + scale_y_continuous(name = expression("Mean FLEXPART dust, ng m"^-3), sec.axis = sec_axis(~.*coeff_dust, name=expression("Mean MERRA-2 dust, ng m"^-3) )) + theme( axis.title.y = element_text(color = "black", size=8), axis.title.y.right = element_text(color = "orangered", size=8), axis.ticks.y.right = element_line(color = "orangered"), axis.line.y.right = element_line(color = "orangered"), axis.text.y.right = element_text(color = "orangered")) 
+
+p4<- ggplot(databoa) + geom_line(aes(x = mono, y = frac_ltn10), col="deepskyblue3",lty=1) + theme(axis.title.y=element_text(size=8), axis.title.x=element_text(size=8), panel.background = element_rect(fill = 'white', colour = 'black'))+ labs(x = "Month", y = expression("% time T < -10 "*degree*C)) + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), axis.ticks.y = element_line(color = "deepskyblue3"), axis.text.y = element_text(color = "deepskyblue3"), axis.title.y = element_text(color = "deepskyblue3"), axis.line.y = element_line(color = "deepskyblue3")) +lims(y=c(0,100), x=c(4.5,9.5)) +
+   annotate("text", x = 8.5, y = 95, label = 'bold("d)")', parse = TRUE)
+
+p5<- ggplot(databoa) + geom_line(aes(x = mono, y = sza), col="darkgreen",lty=1) + theme(axis.title.y=element_text(size=8), axis.title.x=element_text(size=8), panel.background = element_rect(fill = 'white', colour = 'black'))+ labs(x = "Month", y = "Solar zenith angle") +  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), axis.ticks.y = element_line(color = "darkgreen"), axis.text.y = element_text(color = "darkgreen"), axis.title.y = element_text(color = "darkgreen"), axis.line.y = element_line(color = "darkgreen")) +lims(y=c(0,90), x=c(4.5,9.5)) +
+   annotate("text", x = 8.5, y = 85, label = 'bold("e)")', parse = TRUE)
+
+ggarrange(p1,p2,p3, p4,p5,ncol=1, widths=c(2,1), heights=1, align="v")
+
+
+
+
+```
 
