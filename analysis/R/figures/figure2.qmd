@@ -5,490 +5,28 @@ format: html
 editor: visual
 ---
 
+## Figure 2
+
+This figure shows properties over summertime sea ice of single-layer clouds at least partially overlapping with 2.5-3.5 km elevation, from May to September. a, b) Estimated average cooling from cloud changes due to dust aerosols (-dCREboa and -dCREtoa, respectively). Error bars show the vales at the low- and high-end FLEXPART background dust threshold. c) The average FLEXPART (black) and MERRA-2 (orange) dust concentrations associated with the clouds. d) Average % of time that the clouds were at temperatures below -10 °C. e) The average solar zenith angle for the clouds at the time of measurement.
+
+## Running Code
+
 For **Figure 2** first load the following libraries:
 
 ```{r}
-library(data.table)
 library(ggplot2)
 library(gridExtra)
 library(dplyr)
 library(ggpubr)
 ```
 
-Specify the bin sizes and meteorological parameters to plot by:
-
-```{r}
-merTrange<-seq(-70,30,7.5/2)
-merQVrange<-seq(0,0.0145, 0.001) 
-temprange<-seq(-70,30,7.5/2)
-
-var1range<-merTrange
-var2range<-temprange
-var3range<-merQVrange
-var1<-"merT"
-var2<-"temp"
-var3<-"merQV"
-
-```
-
-Set the altitude in km, j, of the data we want to plot:
-
-```{r}
-j<-3
-```
-
-Specify quality control variables. We focused the analysis on those meteorological bins where there were at least 40 (min) cloud observations in both background and non-background conditions. We also focused on bins where there were at least 5 (min4) unique days of observations to minimize any potential autocorrelation resulting from many observations being taken from the same cloud. Also each meteorological bin had at least 5 (minj) different 400 km2 grids cells with non-zero changes in cloud glaciation. This third criterion made it easier to focus on cases when co-varying meteorology did not already capture the observed variability.
-
-```{r}
-min<-40
-min4<-5
-minj<-5
-```
-
 Load the data:
 
 ```{r}
-load("CRE_joined.RData")
-```
-
-Add function to calculate a weighted standard error, following <https://www.alexstephenson.me/post/2022-04-02-weighted-variance-in-r/>
-
-```{r}
-weighted.average <- function(x, w){
-    ## Sum of the weights 
-    sum.w <- sum(w, na.rm = T)
-    ## Sum of the weighted $x_i$ 
-    xw <- sum(w*x, na.rm = T)
-    
-    ## Return the weighted average 
-    return(xw/sum.w)
-}
-
-weighted.se.mean <- function(x, w, na.rm = T){
-    ## Remove NAs 
-    if (na.rm) {
-      i <- !is.na(x)
-        w <- w[i]
-        x <- x[i]
-    }
-    
-    ## Calculate effective N and correction factor
-    n_eff <- (sum(w))^2/(sum(w^2))
-    correction = n_eff/(n_eff-1)
-    
-    ## Get weighted variance 
-    numerator = sum(w*(x-weighted.average(x,w))^2)
-    denominator = sum(w)
-    
-    ## get weighted standard error of the mean 
-    se_x = sqrt((correction * (numerator/denominator))/n_eff)
-    return(se_x)
-}
-
-```
-
-Because there is very little information on the dust concentrations at which aerosols begin to influence clouds, we also calculated the difference in CRE at the BOA and TOA at a range of dust background threshold values (the 7.5 and 50% quantiles of the FLEXPART dust data between 0.6 and 5.5 km).
-
-First, get the difference in cloud radiative effect at the surface and TOA associated with dust over sea ice, across different months from May (5) -September (9), assuming a background dust threshold of 93 ng m-3 (the 25% quantile).
-
-```{r}
-
-for(j in 5:9) {
-mo<-j
-#load("CRE_joined.RData")
-load("/Users/lzamora/Library/CloudStorage/OneDrive-NASA/NASA_Science/8000-5_R+D_project_files/ACMAP3/initial_data/all/CRE_joined.RData")
-conditions <- "ocean==1&seaice>=0.9&single3km==1&monat==mo"
-
-#Specify that we are going to use FLEXPART dust as the aerosol type for determining background conditions, and the FLEXPART dust background cutoff in ng/m3:
-
-atypes<-c("fdust")
-fdustcutoff<- 93 
-acutoff<-c(fdustcutoff)
-i=1
-a1name<-atypes[i]
-b1<-acutoff[i]
-
-eval(parse(t=paste0("la3<-la4[",conditions,"]")))
-eval(parse(t=paste0('mean_sza_0',mo,'<-mean(la3$SZA,na.rm=T)')))
-eval(parse(t=paste0('mean_dust_0',mo,'<-mean(la3$fdust,na.rm=T)')))
-eval(parse(t=paste0('mean_mdust_0',mo,'<-mean(la3$merdust,na.rm=T)')))
-rm(la4)
-
-# Clean up the data a bit by changing cloud phase (CP) values to NA if they are undetermined or uncertain, changing the altitude layer to a numeric value, and cleaning up the sea ice data
-la3$CP[la3$CP==0]<-NA  #Values are either 1 (ice), 2 (mixed phase), 3 (liquid), or 0 (undetermined). Convert undetermined to NA.
-la3$CP[la3$CPqf==1]<-NA #convert CP values that are uncertain to NAs. 
-la3$alt_layer<-as.numeric(la3$alt_layer)
-la3[seaice>1, seaice:=NA]  #NSIDC sea ice values are from 0 to 1. Higher values indicate quality flags.
-
-#Add some new variables to the data set. Add, for every observation, which meteorological bin the observation was in, if the air and cloud observation was or was not in background dust conditions, and the glaciation state of any observed cloud:
-	la3[, a1:=.SD, .SDcols=a1name]  #The value of aerosol tracer of interest in the given ji bin
-	la3[,var1bin:=findInterval(eval(parse(t=paste0(var1))),var1range)]
-	la3[,var2bin:=findInterval(eval(parse(t=paste0(var2))),var2range)]
-	la3[,var3bin:=findInterval(eval(parse(t=paste0(var3))),var3range)]
-	la3[,test.this:=as.numeric(!(is.na(conv)))] 
-	la3[,all:=ifelse(!is.na(a1),1,0)]
-	la3[,clean:=ifelse(a1<b1,1,0)]
-	la3[,notclean:=ifelse(a1>=b1,1,0)]
-	la3[,cleancloud:=ifelse(clean==1&test.this==1,1,0)]
-	la3[,notcleancloud:=ifelse(notclean==1&test.this==1,1,0)]
-	la3[,cleanncloud:=sum(cleancloud,na.rm=T),by=.(var1bin,var2bin,var3bin)] 	    
-	la3[,notcleanncloud:=sum(notcleancloud,na.rm=T),by=.(var1bin,var2bin,var3bin)]
-	la3[,fi:=(1 - ((CP-1)/2))*100] 
-
-	
-#Add some new variables to the data set that listed at every observation, but that show the sum, sample number, or mean of the variable within that observation's meteorological bin as defined by the 3 variables. For every observation, add relevant information about the characteristics of the meteorological bin it belonged to:
-	la3[,alln:=sum(all,na.rm=T),by=.(var1bin,var2bin,var3bin)] #number of aerosol observations in the ij bin
-	la3[,cleann:=sum(clean,na.rm=T),by=.(var1bin,var2bin,var3bin)] #number of times aerosol conditons are clean in the ij bin
-	la3[,notcleann:=sum(notclean,na.rm=T),by=.(var1bin,var2bin,var3bin)] #number of times aerosol conditions are not clean in the ij bin
-	la3[,cleanncloud:=sum(cleancloud,na.rm=T),by=.(var1bin,var2bin,var3bin)] #number clean clouds in the ij bin
-	la3[,notcleanncloud:=sum(notcleancloud,na.rm=T),by=.(var1bin,var2bin,var3bin)] #number of not clean clouds in the ij bin
-	la3[,uniccf:=length(unique(date[clean==1])), by=.(var1bin,var2bin,var3bin)] #unique clean days in each ij bin
-	la3[,unic:=length(unique(date[cleancloud==1])),by=.(var1bin,var2bin,var3bin)] #unique days with clean clouds in the ij bin
-	la3[,uniacf:=length(unique(date[notclean==1])),by=.(var1bin,var2bin,var3bin)] #unique non clean days in the ij bin
-	la3[,unia:=length(unique(date[notcleancloud==1])),by=.(var1bin,var2bin,var3bin)] #unique days with non clean clouds in the ij bin
-	la3[,dfi:=mean(fi[test.this==1], na.rm=T)-mean(fi[cleancloud==1], na.rm=T), by=.(var1bin,var2bin,var3bin)]# create a variable in la3 "fraction of fully ice-dominated clouds" 
-	la3[,dth:=mean(th[test.this==1], na.rm=T)-mean(th[cleancloud==1], na.rm=T), by=.(var1bin,var2bin,var3bin)]# create a variable in la3 "fraction of fully ice-dominated clouds" 
-
-#Group mean difference in cloud radiative effect at the surface in the SW (dboasw) and LW (dboalw), and same for the top of the atmosphere into meteorological bins and get sample number (alln) within the bins for cases that satisfy the quality control elements.
-test<-la3[unic>=min4&unia>=min4&cleanncloud>=min & notcleanncloud>=min , 
-		.(
-		dboasw=mean(BOAsw[test.this==1],na.rm=T)-mean(BOAsw[cleancloud==1], na.rm=T),
-		dboalw=mean(BOAlw[test.this==1],na.rm=T)-mean(BOAlw[cleancloud==1], na.rm=T),
-		dtoasw=mean(TOAsw[test.this==1],na.rm=T)-mean(TOAsw[cleancloud==1], na.rm=T),
-		dtoalw=mean(TOAlw[test.this==1],na.rm=T)-mean(TOAlw[cleancloud==1], na.rm=T),
-        alln=sum(all,na.rm=T),
-		allnc=sum(clean,na.rm=T)
-		) ,
-		by=.(var1bin, var2bin,var3bin)] 	
-
-#Get sample number in each meteorological bin
-test2<-la3[ , 
-		.(
-        alln=sum(all,na.rm=T)
-		) ,
-		by=.(var1bin, var2bin,var3bin)]
-		
-#Group mean difference in cloud radiative effect at the surface in the SW (dboasw) and LW (dboalw), and same for the top of the atmosphere into meteorological bins and get sample number (alln) within the bins for cases that satisfy the quality control elements. Here, just look at samples where temperatures are below -10 C.
-test3<-la3[unic>=min4&unia>=min4&cleanncloud>=min & notcleanncloud>=min&merT<(-10) , 
-		.(
-        alln=sum(all,na.rm=T)
-		) ,
-		by=.(var1bin, var2bin,var3bin)] 	
-
-#Calculate the amount of analyzed data that were kept after quality control and after quality control and below -10C 
-eval(parse(t=paste0('frac_kept_0',mo,'<-sum(test$alln)/sum(test2$alln)')))	
-eval(parse(t=paste0('frac_ltn10_0',mo,'<-sum(test3$alln)/sum(test$alln)')))			
-		
-#The total cloud radiative effect at the surface and top of the atmosphere is the sum of the SW and LW components.				 	
- setDT(test)
- test$dboatot<-test$dboasw+test$dboalw
- test$dtoatot<-test$dtoasw+test$dtoalw
-
-#SF is the frequency at which non-background conditions occur in that meteorological bin.
-SF<-((test$alln-test$allnc)/(test$alln))
-
-#The change in Arctic-wide cloud radiative effect associated with each aerosol type was calculated similarly to Zamora and Kahn (2020). The values were estimated from the weighted mean of dboatot and dtoatot, weighted by how often each meteorological condition occurred and the frequency at which non-background conditions occur in that bin.
-eval(parse(t=paste0('CREboa0',mo,'<-weighted.mean(test$dboatot*SF, test$alln,na.rm=T)')))
-eval(parse(t=paste0('CREtoa0',mo,'<-weighted.mean(test$dtoatot*SF, test$alln,na.rm=T)')))
-
-#Weighted SE CREboa
-x<-test$dboatot*SF
-x<-x[!is.na(test$dboatot)]
-w<-test$alln
-w<-w[!is.na(test$dboatot)]
-eval(parse(t=paste0('CREboa0',mo,'se<-weighted.se.mean(x,w)')))
-
-
-#Weighted SE CREtoa
-x<-test$dtoatot*SF
-x<-x[!is.na(test$dtoatot)]
-w<-test$alln
-w<-w[!is.na(test$dtoatot)]
-eval(parse(t=paste0('CREtoa0',mo,'se<-weighted.se.mean(x,w)')))
-
-}
-
-mean_sza_mos<-c(mean_sza_05,mean_sza_06,mean_sza_07,mean_sza_08,mean_sza_09)
-mean_mdust_mos<-c(mean_mdust_05,mean_mdust_06,mean_mdust_07,mean_mdust_08,mean_mdust_09)
-mean_dust_mos<-c(mean_dust_05,mean_dust_06,mean_dust_07,mean_dust_08,mean_dust_09)
-frac_kept_mos<-c(frac_kept_05,frac_kept_06,frac_kept_07,frac_kept_08,frac_kept_09)
-frac_ltn10_mos<-c(frac_ltn10_05, frac_ltn10_06, frac_ltn10_07, frac_ltn10_08, frac_ltn10_09)
-CREboa_mos<-c(CREboa05,CREboa06,CREboa07,CREboa08,CREboa09)
-CREtoa_mos<-c(CREtoa05,CREtoa06,CREtoa07,CREtoa08,CREtoa09)
-CREboa_mos_se<-c(CREboa05se,CREboa06se,CREboa07se,CREboa08se,CREboa09se)
-CREtoa_mos_se<-c(CREtoa05se,CREtoa06se,CREtoa07se,CREtoa08se,CREtoa09se)
-
-```
-
-Then get the difference in cloud radiative effect at the surface and TOA associated with dust over sea ice, across different months from May (5) -September (9), assuming a background dust threshold of 215 ng m-3 (the 50% quantile).
-
-```{r}
-for(j in 5:9) {
-mo<-j
-#load("CRE_joined.RData")
-load("/Users/lzamora/Library/CloudStorage/OneDrive-NASA/NASA_Science/8000-5_R+D_project_files/ACMAP3/initial_data/all/CRE_joined.RData")
-conditions <- "ocean==1&seaice>=0.9&single3km==1&monat==mo"
-
-fdustcutoff<- 215 
- atypes<-c("fdust")
- acutoff<-c(fdustcutoff)
-a1name<-atypes[i]
-b1<-acutoff[i]
-
-eval(parse(t=paste0("la3<-la4[",conditions,"]")))
-rm(la4)
-
-la3$CP[la3$CP==0]<-NA  #Values are either 1 (ice), 2 (mixed phase), 3 (liquid), or 0 (undetermined). Convert undetermined to NA.
-la3$CP[la3$CPqf==1]<-NA #convert CP values that are uncertain to NAs. 
-la3$alt_layer<-as.numeric(la3$alt_layer)
-la3[seaice>1, seaice:=NA]  #NSIDC sea ice values are from 0 to 1. Higher values indicate quality flags.
-
-
-	la3[, a1:=.SD, .SDcols=a1name]  #The value of aerosol tracer of interest in the given ji bin
-	la3[,var1bin:=findInterval(eval(parse(t=paste0(var1))),var1range)]
-	la3[,var2bin:=findInterval(eval(parse(t=paste0(var2))),var2range)]
-	la3[,var3bin:=findInterval(eval(parse(t=paste0(var3))),var3range)]
-	la3[,test.this:=as.numeric(!(is.na(conv)))] #is there (1) or is there not (0) any kind of cloud?
-	la3[,all:=ifelse(!is.na(a1),1,0)]
-	la3[,clean:=ifelse(a1<b1,1,0)]
-	la3[,notclean:=ifelse(a1>=b1,1,0)]
-	la3[,cleancloud:=ifelse(clean==1&test.this==1,1,0)]
-	la3[,notcleancloud:=ifelse(notclean==1&test.this==1,1,0)]
-	la3[,cleanncloud:=sum(cleancloud,na.rm=T),by=.(var1bin,var2bin,var3bin)] 	    
-	la3[,notcleanncloud:=sum(notcleancloud,na.rm=T),by=.(var1bin,var2bin,var3bin)]
-	la3[,fi:=(1 - ((CP-1)/2))*100] 
-
-	
-	#For observations within the ij bins at the given altitude
-	la3[,alln:=sum(all,na.rm=T),by=.(var1bin,var2bin,var3bin)] #number of aerosol observations in the ij bin
-	la3[,cleann:=sum(clean,na.rm=T),by=.(var1bin,var2bin,var3bin)] #number of times aerosol conditons are clean in the ij bin
-	la3[,notcleann:=sum(notclean,na.rm=T),by=.(var1bin,var2bin,var3bin)] #number of times aerosol conditions are not clean in the ij bin
-	la3[,cleanncloud:=sum(cleancloud,na.rm=T),by=.(var1bin,var2bin,var3bin)] #number clean clouds in the ij bin
-	la3[,notcleanncloud:=sum(notcleancloud,na.rm=T),by=.(var1bin,var2bin,var3bin)] #number of not clean clouds in the ij bin
-	la3[,uniccf:=length(unique(date[clean==1])), by=.(var1bin,var2bin,var3bin)] #unique clean days in each ij bin
-	la3[,unic:=length(unique(date[cleancloud==1])),by=.(var1bin,var2bin,var3bin)] #unique days with clean clouds in the ij bin
-	la3[,uniacf:=length(unique(date[notclean==1])),by=.(var1bin,var2bin,var3bin)] #unique non clean days in the ij bin
-	la3[,unia:=length(unique(date[notcleancloud==1])),by=.(var1bin,var2bin,var3bin)] #unique days with non clean clouds in the ij bin
-	la3[,dfi:=mean(fi[test.this==1], na.rm=T)-mean(fi[cleancloud==1], na.rm=T), by=.(var1bin,var2bin,var3bin)]# create a variable in la3 "fraction of fully ice-dominated clouds" 
-	la3[,dth:=mean(th[test.this==1], na.rm=T)-mean(th[cleancloud==1], na.rm=T), by=.(var1bin,var2bin,var3bin)]# create a variable in la3 "fraction of fully ice-dominated clouds" 
-
-
-test<-la3[unic>=min4&unia>=min4&cleanncloud>=min & notcleanncloud>=min , 
-		.(
-		dboasw=mean(BOAsw[test.this==1],na.rm=T)-mean(BOAsw[cleancloud==1], na.rm=T),
-		dboalw=mean(BOAlw[test.this==1],na.rm=T)-mean(BOAlw[cleancloud==1], na.rm=T),
-		dtoasw=mean(TOAsw[test.this==1],na.rm=T)-mean(TOAsw[cleancloud==1], na.rm=T),
-		dtoalw=mean(TOAlw[test.this==1],na.rm=T)-mean(TOAlw[cleancloud==1], na.rm=T),
-        alln=sum(all,na.rm=T),
-		allnc=sum(clean,na.rm=T)
-		) ,
-		by=.(var1bin, var2bin,var3bin)] 	
-
-test2<-la3[ , 
-		.(
-        alln=sum(all,na.rm=T)
-		) ,
-		by=.(var1bin, var2bin,var3bin)]
-
-eval(parse(t=paste0('frac_kept_0',mo,'<-sum(test$alln)/sum(test2$alln)')))	
-		
-		
-				 	
- setDT(test)
- test$dboatot<-test$dboasw+test$dboalw
- test$dtoatot<-test$dtoasw+test$dtoalw
-
-SF<-((test$alln-test$allnc)/(test$alln))
-eval(parse(t=paste0('CREboa0',mo,'<-weighted.mean(test$dboatot*SF, test$alln,na.rm=T)')))
-eval(parse(t=paste0('CREtoa0',mo,'<-weighted.mean(test$dtoatot*SF, test$alln,na.rm=T)')))
-
-#Weighted SE CREboa
-x<-test$dboatot*SF
-x<-x[!is.na(test$dboatot)]
-w<-test$alln
-w<-w[!is.na(test$dboatot)]
-eval(parse(t=paste0('CREboa0',mo,'se<-weighted.se.mean(x,w)')))
-
-
-#Weighted SE CREtoa
-x<-test$dtoatot*SF
-x<-x[!is.na(test$dtoatot)]
-w<-test$alln
-w<-w[!is.na(test$dtoatot)]
-eval(parse(t=paste0('CREtoa0',mo,'se<-weighted.se.mean(x,w)')))
-
-}
-
-frac_kept_mos_hi<-c(frac_kept_05,frac_kept_06,frac_kept_07,frac_kept_08,frac_kept_09)
-CREboa_mos_hi<-c(CREboa05,CREboa06,CREboa07,CREboa08,CREboa09)
-CREtoa_mos_hi<-c(CREtoa05,CREtoa06,CREtoa07,CREtoa08,CREtoa09)
-CREboa_mos_se_hi<-c(CREboa05se,CREboa06se,CREboa07se,CREboa08se,CREboa09se)
-CREtoa_mos_se_hi<-c(CREtoa05se,CREtoa06se,CREtoa07se,CREtoa08se,CREtoa09se)
-
-
-```
-
-Then get the difference in cloud radiative effect at the surface and TOA associated with dust over sea ice, across different months from May (5) -September (9), assuming a background dust threshold of 31 ng m-3 (the 7.5% quantile).
-
-```{r}
-for(j in 5:9) {
-mo<-j
-#load("CRE_joined.RData")
-load("/Users/lzamora/Library/CloudStorage/OneDrive-NASA/NASA_Science/8000-5_R+D_project_files/ACMAP3/initial_data/all/CRE_joined.RData")
-conditions <- "ocean==1&seaice>=0.9&single3km==1&monat==mo"
-
-fdustcutoff<- 31 
- atypes<-c("fdust")
- acutoff<-c(fdustcutoff)
-a1name<-atypes[i]
-b1<-acutoff[i]
-
-eval(parse(t=paste0("la3<-la4[",conditions,"]")))
-rm(la4)
-
-la3$CP[la3$CP==0]<-NA  #Values are either 1 (ice), 2 (mixed phase), 3 (liquid), or 0 (undetermined). Convert undetermined to NA.
-la3$CP[la3$CPqf==1]<-NA #convert CP values that are uncertain to NAs. 
-la3$alt_layer<-as.numeric(la3$alt_layer)
-la3[seaice>1, seaice:=NA]  #NSIDC sea ice values are from 0 to 1. Higher values indicate quality flags.
-
-	la3[, a1:=.SD, .SDcols=a1name]  #The value of aerosol tracer of interest in the given ji bin
-	la3[,var1bin:=findInterval(eval(parse(t=paste0(var1))),var1range)]
-	la3[,var2bin:=findInterval(eval(parse(t=paste0(var2))),var2range)]
-	la3[,var3bin:=findInterval(eval(parse(t=paste0(var3))),var3range)]
-	la3[,test.this:=as.numeric(!(is.na(conv)))] #is there (1) or is there not (0) any kind of cloud?
-
-
-	#For individual observations
-	la3[,all:=ifelse(!is.na(a1),1,0)]
-	la3[,clean:=ifelse(a1<b1,1,0)]
-	la3[,notclean:=ifelse(a1>=b1,1,0)]
-	la3[,cleancloud:=ifelse(clean==1&test.this==1,1,0)]
-	la3[,notcleancloud:=ifelse(notclean==1&test.this==1,1,0)]
-	la3[,cleanncloud:=sum(cleancloud,na.rm=T),by=.(var1bin,var2bin,var3bin)] 	    
-	la3[,notcleanncloud:=sum(notcleancloud,na.rm=T),by=.(var1bin,var2bin,var3bin)]
-	la3[,fi:=(1 - ((CP-1)/2))*100] 
-
-	
-	#For observations within the ij bins at the given altitude
-	la3[,alln:=sum(all,na.rm=T),by=.(var1bin,var2bin,var3bin)] #number of aerosol observations in the ij bin
-	la3[,cleann:=sum(clean,na.rm=T),by=.(var1bin,var2bin,var3bin)] #number of times aerosol conditons are clean in the ij bin
-	la3[,notcleann:=sum(notclean,na.rm=T),by=.(var1bin,var2bin,var3bin)] #number of times aerosol conditions are not clean in the ij bin
-	la3[,cleanncloud:=sum(cleancloud,na.rm=T),by=.(var1bin,var2bin,var3bin)] #number clean clouds in the ij bin
-	la3[,notcleanncloud:=sum(notcleancloud,na.rm=T),by=.(var1bin,var2bin,var3bin)] #number of not clean clouds in the ij bin
-	la3[,uniccf:=length(unique(date[clean==1])), by=.(var1bin,var2bin,var3bin)] #unique clean days in each ij bin
-	la3[,unic:=length(unique(date[cleancloud==1])),by=.(var1bin,var2bin,var3bin)] #unique days with clean clouds in the ij bin
-	la3[,uniacf:=length(unique(date[notclean==1])),by=.(var1bin,var2bin,var3bin)] #unique non clean days in the ij bin
-	la3[,unia:=length(unique(date[notcleancloud==1])),by=.(var1bin,var2bin,var3bin)] #unique days with non clean clouds in the ij bin
-	la3[,dfi:=mean(fi[test.this==1], na.rm=T)-mean(fi[cleancloud==1], na.rm=T), by=.(var1bin,var2bin,var3bin)]# create a variable in la3 "fraction of fully ice-dominated clouds" 
-	la3[,dth:=mean(th[test.this==1], na.rm=T)-mean(th[cleancloud==1], na.rm=T), by=.(var1bin,var2bin,var3bin)]# create a variable in la3 "fraction of fully ice-dominated clouds" 
-
-
-test<-la3[unic>=min4&unia>=min4&cleanncloud>=min & notcleanncloud>=min , 
-		.(
-		dboasw=mean(BOAsw[test.this==1],na.rm=T)-mean(BOAsw[cleancloud==1], na.rm=T),
-		dboalw=mean(BOAlw[test.this==1],na.rm=T)-mean(BOAlw[cleancloud==1], na.rm=T),
-		dtoasw=mean(TOAsw[test.this==1],na.rm=T)-mean(TOAsw[cleancloud==1], na.rm=T),
-		dtoalw=mean(TOAlw[test.this==1],na.rm=T)-mean(TOAlw[cleancloud==1], na.rm=T),
-        alln=sum(all,na.rm=T),
-		allnc=sum(clean,na.rm=T)
-		) ,
-		by=.(var1bin, var2bin,var3bin)]
-
-test2<-la3[ , 
-		.(
-        alln=sum(all,na.rm=T)
-		) ,
-		by=.(var1bin, var2bin,var3bin)]
-
-eval(parse(t=paste0('frac_kept_0',mo,'<-sum(test$alln)/sum(test2$alln)')))	
-		
-				 	
- setDT(test)
- test$dboatot<-test$dboasw+test$dboalw
- test$dtoatot<-test$dtoasw+test$dtoalw
-
-SF<-((test$alln-test$allnc)/(test$alln))
-eval(parse(t=paste0('CREboa0',mo,'<-weighted.mean(test$dboatot*SF, test$alln,na.rm=T)')))
-eval(parse(t=paste0('CREtoa0',mo,'<-weighted.mean(test$dtoatot*SF, test$alln,na.rm=T)')))
-
-#Weighted SE CREboa
-x<-test$dboatot*SF
-x<-x[!is.na(test$dboatot)]
-w<-test$alln
-w<-w[!is.na(test$dboatot)]
-eval(parse(t=paste0('CREboa0',mo,'se<-weighted.se.mean(x,w)')))
-
-
-#Weighted SE CREtoa
-x<-test$dtoatot*SF
-x<-x[!is.na(test$dtoatot)]
-w<-test$alln
-w<-w[!is.na(test$dtoatot)]
-eval(parse(t=paste0('CREtoa0',mo,'se<-weighted.se.mean(x,w)')))
-
-}
-
-frac_kept_mos_lo<-c(frac_kept_05,frac_kept_06,frac_kept_07,frac_kept_08,frac_kept_09)
-CREboa_mos_lo<-c(CREboa05,CREboa06,CREboa07,CREboa08,CREboa09)
-CREtoa_mos_lo<-c(CREtoa05,CREtoa06,CREtoa07,CREtoa08,CREtoa09)
-CREboa_mos_se_lo<-c(CREboa05se,CREboa06se,CREboa07se,CREboa08se,CREboa09se)
-CREtoa_mos_se_lo<-c(CREtoa05se,CREtoa06se,CREtoa07se,CREtoa08se,CREtoa09se)
-
-```
-
-Get data together and ready for plotting:
-
-```{r}
-months_lab<-c("May","Jun","Jul","Aug","Sep")
-pal=colorRampPalette((c("white","grey","black")))
-ncol=100
-colors<-pal(ncol)
-
-zlim<-c(0,90)
-seq_values<-seq(from=zlim[1], to=zlim[2],length.out=100)
-cvals<-findInterval(as.numeric(mean_sza_mos),seq_values)
-cvals[cvals<=0]<-1
-cvals[cvals>=101]<-100
-color<-colors[cvals]
-
-
-databoa <- data.frame(
-  level=rep("BOA",5),
-  numeric_month=c(5:9),
-  month=months_lab,
-  dCRE=-CREboa_mos,
-  dCREhi=pmax(-CREboa_mos_lo,-CREboa_mos,-CREboa_mos_hi),
-  dCRElo=pmin(-CREboa_mos_lo,-CREboa_mos,-CREboa_mos_hi),
-  frac_ltn10= frac_ltn10_mos*100,
-  mean_fdust= mean_dust_mos,
-  mean_mdust= mean_mdust_mos,
-  sza=mean_sza_mos,
-  ids=1:5,
-  color=colors[cvals]
-)
-
-datatoa <- data.frame(
-  level=rep("TOA",5),
-  numeric_month=c(5:9),
-  month=months_lab,
-  dCRE=-CREtoa_mos,
-  dCREhi=pmax(-CREtoa_mos_lo,-CREtoa_mos,-CREtoa_mos_hi),
-  dCRElo=pmin(-CREtoa_mos_lo,-CREtoa_mos,-CREtoa_mos_hi),
-  frac_ltn10= frac_ltn10_mos*100,
-  mean_fdust= mean_dust_mos,
-  mean_mdust= mean_mdust_mos,
-  sza=mean_sza_mos,
-  ids=1:5,
-  color=colors[cvals]
-)
-
-boatoa<-rbind(databoa, datatoa)
-```
-
-Save the dataset:
-
-```{r}
-fwrite(boatoa, file="../../data/derived_data/fig2.csv")
+boatoa<-read.csv(file="../../data/derived_data/fig2.csv")
+setDT(boatoa)
+databoa<-boatoa[level=="BOA"]
+datatoa<-boatoa[level=="TOA"]
 ```
 
 Create the plot:
@@ -496,25 +34,25 @@ Create the plot:
 ```{r}
 #So R doesn't alphabetically order the data
 ppal <- c(
-  "May" = color[1],
-  "Jun" = color[2], 
-  "Jul" = color[3], 
-  "Aug" = color[4],
-  "Sep" = color[5] 
+  "May" = databoa$color[1],
+  "Jun" = databoa$color[2], 
+  "Jul" = databoa$color[3], 
+  "Aug" = databoa$color[4],
+  "Sep" = databoa$color[5] 
 )
 
 coeff_dust <- 10
 
 jpeg(file='../../figures/Figure2.jpeg', width=65, height=200, units='mm', res=600)
 
-p1<-ggplot(databoa) + geom_bar( aes(x=numeric_month, y=dCRE), stat="identity", fill="skyblue", alpha=0.7)  + theme(axis.title.y=element_text(size=8), axis.title.x=element_text(size=8), panel.background = element_rect(fill = 'white', colour = 'black')) + geom_hline(yintercept=0, col="grey") + geom_errorbar( aes(x=numeric_month, ymin=loCRE, ymax=hiCRE), width=0.2, colour="grey20", alpha=0.9, size=0.8)+ theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank()) + labs(x = "Month \n", y = expression("-\u{2202}CRE, W m"^-2)) + annotate("text", x=7, y=15, label= "BOA", size=4) + annotate("text", x = 8.5, y = 16, label = 'bold("a)")', parse = TRUE)
+p1<-ggplot(databoa) + geom_bar( aes(x=numeric_month, y=dCRE), stat="identity", fill="skyblue", alpha=0.7)  + theme(axis.title.y=element_text(size=8), axis.title.x=element_text(size=8), panel.background = element_rect(fill = 'white', colour = 'black')) + geom_hline(yintercept=0, col="grey") + geom_errorbar( aes(x=numeric_month, ymin=dCRElo, ymax=dCREhi), width=0.2, colour="grey20", alpha=0.9, size=0.8)+ theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank()) + labs(x = "Month \n", y = expression("-\u{2202}CRE, W m"^-2)) + annotate("text", x=7, y=15, label= "BOA", size=4) + annotate("text", x = 8.5, y = 16, label = 'bold("a)")', parse = TRUE)
 
-p2<-ggplot(datatoa) + geom_bar( aes(x=numeric_month, y=dCRE), stat="identity", fill="skyblue", alpha=0.7) + theme(axis.title.y=element_text(size=8), axis.title.x=element_text(size=8), panel.background = element_rect(fill = 'white', colour = 'black'))+ geom_errorbar( aes(x=numeric_month, ymin=loCRE, ymax=hiCRE), width=0.2, colour="grey20", alpha=0.9, size=0.8) + labs(x = "Month \n", y = expression("-\u{2202}CRE, W m"^-2)) + theme(axis.title.y=element_text(angle=90, vjust=1)) +  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank()) + geom_hline(yintercept=0, col="grey")  +
+p2<-ggplot(datatoa) + geom_bar( aes(x=numeric_month, y=dCRE), stat="identity", fill="skyblue", alpha=0.7) + theme(axis.title.y=element_text(size=8), axis.title.x=element_text(size=8), panel.background = element_rect(fill = 'white', colour = 'black'))+ geom_errorbar( aes(x=numeric_month, ymin=dCRElo, ymax=dCREhi), width=0.2, colour="grey20", alpha=0.9, size=0.8) + labs(x = "Month \n", y = expression("-\u{2202}CRE, W m"^-2)) + theme(axis.title.y=element_text(angle=90, vjust=1)) +  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank()) + geom_hline(yintercept=0, col="grey")  +
    lims(y=c(-3,18), x=c(4.5,9.5))  +
    annotate("text", x=7, y=15, label= "TOA", size=4) +
    annotate("text", x = 8.5, y = 16, label = 'bold("b)")', parse = TRUE) 
 
-p3<- ggplot(databoa) + geom_line(aes(x = numeric_month, y = mean_dust), col="black",lty=1) + theme(axis.title.y=element_text(size=8), axis.title.x=element_text(size=8), panel.background = element_rect(fill = 'white', colour = 'black'))+ labs(x = "Month", y = expression("Mean FLEXPART dust, ng m"^-3)) + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), axis.ticks.y = element_line(color = "black"), axis.text.y = element_text(color = "black"), axis.title.y = element_text(color = "black"), axis.line.y = element_line(color = "black"))  + lims(y=c(50,400), x=c(4.5,9.5)) +
+p3<- ggplot(databoa) + geom_line(aes(x = numeric_month, y = mean_fdust), col="black",lty=1) + theme(axis.title.y=element_text(size=8), axis.title.x=element_text(size=8), panel.background = element_rect(fill = 'white', colour = 'black'))+ labs(x = "Month", y = expression("Mean FLEXPART dust, ng m"^-3)) + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), axis.ticks.y = element_line(color = "black"), axis.text.y = element_text(color = "black"), axis.title.y = element_text(color = "black"), axis.line.y = element_line(color = "black"))  + lims(y=c(50,400), x=c(4.5,9.5)) +
    annotate("text", x = 8.5, y = 360, label = 'bold("c)")', parse = TRUE) + geom_line(aes(x = numeric_month, y = mean_mdust/coeff_dust), col="orangered",lty=1) + scale_y_continuous(name = expression("Mean FLEXPART dust, ng m"^-3), sec.axis = sec_axis(~.*coeff_dust, name=expression("Mean MERRA-2 dust, ng m"^-3) )) + theme( axis.title.y = element_text(color = "black", size=8), axis.title.y.right = element_text(color = "orangered", size=8), axis.ticks.y.right = element_line(color = "orangered"), axis.line.y.right = element_line(color = "orangered"), axis.text.y.right = element_text(color = "orangered")) 
 
 p4<- ggplot(databoa) + geom_line(aes(x = numeric_month, y = frac_ltn10), col="deepskyblue3",lty=1) + theme(axis.title.y=element_text(size=8), axis.title.x=element_text(size=8), panel.background = element_rect(fill = 'white', colour = 'black'))+ labs(x = "Month", y = expression("% time T < -10 "*degree*C)) + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), axis.ticks.y = element_line(color = "deepskyblue3"), axis.text.y = element_text(color = "deepskyblue3"), axis.title.y = element_text(color = "deepskyblue3"), axis.line.y = element_line(color = "deepskyblue3")) +lims(y=c(0,100), x=c(4.5,9.5)) +
@@ -527,5 +65,5 @@ ggarrange(p1,p2,p3, p4,p5,ncol=1, widths=c(2,1), heights=1, align="v")
 
 
 
-
+dev.off()
 ```
