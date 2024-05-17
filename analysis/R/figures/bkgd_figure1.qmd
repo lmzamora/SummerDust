@@ -14,30 +14,44 @@ library(data.table)
 Get percent of clouds in different phases at different altitudes:
 
 ```{r}
- for(i in 1:8) { #For each altitude level of interest:
-  eval(parse(t=paste0("load('/Users/lzamora/Library/CloudStorage/OneDrive-NASA/NASA_Science/8000-5_R+D_project_files/ACMAP3/initial_data/all/old/lev",i,"_v3.RData')")))
-        la2<-eval(parse(t=paste0("lev",i)))
-        eval(parse(t=paste0("rm(lev",i,")")))
-        setDT(la2)
-        la2<-la2[ocean==1&seaice>=0.9,]
-        fCice=length(na.exclude(la2$CP[la2$CP==1])) / length(na.exclude(la2$CP))
-        fCmpc=length(na.exclude(la2$CP[la2$CP==2])) / length(na.exclude(la2$CP))
-        fCliq=length(na.exclude(la2$CP[la2$CP==3])) / length(na.exclude(la2$CP))
-        eval(parse(t=paste0("fCice_lev",i,"<- fCice")))
-        eval(parse(t=paste0("fCmpc_lev",i,"<- fCmpc")))
-        eval(parse(t=paste0("fCliq_lev",i,"<- fCliq")))
-        rm(la2)
+# for(i in 1:8) { #For each altitude level of interest:
+#  eval(parse(t=paste0("load('/Users/lzamora/Library/CloudStorage/OneDrive-NASA/NASA_Science/8000-5_R+D_project_files/ACMAP3/initial_data/all/old/lev",i,"_v3.RData')")))
+#        la2<-eval(parse(t=paste0("lev",i)))
+#        eval(parse(t=paste0("rm(lev",i,")")))
+#        setDT(la2)
+#        la2<-la2[ocean==1&seaice>=0.9,]
+#        fCice=length(na.exclude(la2$CP[la2$CP==1])) / length(na.exclude(la2$CP))
+#        fCmpc=length(na.exclude(la2$CP[la2$CP==2])) / length(na.exclude(la2$CP))
+#       fCliq=length(na.exclude(la2$CP[la2$CP==3])) / length(na.exclude(la2$CP))
+#        eval(parse(t=paste0("fCice_lev",i,"<- fCice")))
+#        eval(parse(t=paste0("fCmpc_lev",i,"<- fCmpc")))
+#        eval(parse(t=paste0("fCliq_lev",i,"<- fCliq")))
+#        rm(la2)
+#}
+load("/Users/lzamora/Library/CloudStorage/OneDrive-NASA/NASA_Science/8000-5_R+D_project_files/ACMAP3/initial_data/all/points_all_orig_aerosols_v7.RData")
+
+phase<-merged2[,c(1:8, 35, 125, 175:182)]
+setDT(phase)
+phase<-phase[ocean==1&seaice>0.9]
+
+for(i in 1:8) { #For each altitude level of interest
+   eval(parse(t=paste0("fCice_lev",i," <- length(na.exclude(phase$CP",i,"[phase$CP",i,"==1]))/length(na.exclude(phase$CP",i,"))*100")))
+   eval(parse(t=paste0("fCmpc_lev",i," <- length(na.exclude(phase$CP",i,"[phase$CP",i,"==2]))/length(na.exclude(phase$CP",i,"))*100")))
+   eval(parse(t=paste0("fCliq_lev",i," <- length(na.exclude(phase$CP",i,"[phase$CP",i,"==3]))/length(na.exclude(phase$CP",i,"))*100")))
 }
-fCice<-c(fCice_lev1, fCice_lev2, fCice_lev3, fCice_lev4, fCice_lev5, fCice_lev6, fCice_lev7, fCice_lev8)*100
-fCmpc<-c(fCmpc_lev1, fCmpc_lev2, fCmpc_lev3, fCmpc_lev4, fCmpc_lev5, fCmpc_lev6, fCmpc_lev7, fCmpc_lev8)*100
-fCliq<-c(fCliq_lev1, fCliq_lev2, fCliq_lev3, fCliq_lev4, fCliq_lev5, fCliq_lev6, fCliq_lev7, fCliq_lev8)*100
+fCice<-c(fCice_lev1, fCice_lev2, fCice_lev3, fCice_lev4, fCice_lev5, fCice_lev6, fCice_lev7, fCice_lev8)
+fCmpc<-c(fCmpc_lev1, fCmpc_lev2, fCmpc_lev3, fCmpc_lev4, fCmpc_lev5, fCmpc_lev6, fCmpc_lev7, fCmpc_lev8)
+fCliq<-c(fCliq_lev1, fCliq_lev2, fCliq_lev3, fCliq_lev4, fCliq_lev5, fCliq_lev6, fCliq_lev7, fCliq_lev8)
+
+altitude<-c(mean(c(0.6,1.5)), 2:8)
+fC<-cbind(altitude,fCice,fCmpc,fCliq)
 
 ```
 
 Save the files needed to plot **Figure 1a**.
 
 ```{r}
-write.csv(del2, file="../../data/derived_data/del2.csv")
+fwrite(fC,file="../../data/derived_data/fC.csv")
 
 ```
 
