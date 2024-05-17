@@ -51,6 +51,9 @@ For **Figure 1b**, load the del2 dataset, which represents the estimated dust-dr
 
 ```{r}
 del2<-read.csv("../../data/derived_data/del2.csv")
+setDT(del2)
+del2p<-read.csv("../../data/derived_data/del2p.csv")
+setDT(del2p)
 #grid2<-read.csv("../../data/derived_data/grid2.csv")
 #grid2<-as.matrix(grid2[,-1])
 #grid2p<-read.csv("../../data/derived_data/grid2p.csv")
