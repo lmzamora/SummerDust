@@ -48,7 +48,7 @@ minj<-5
 Load the data:
 
 ```{r}
-load("CRE_joined.RData")
+load("/Users/lzamora/Library/CloudStorage/OneDrive-NASA/NASA_Science/8000-5_R+D_project_files/ACMAP3/initial_data/all/CRE_joined.RData")
 ```
 
 Add function to calculate a weighted standard error, following <https://www.alexstephenson.me/post/2022-04-02-weighted-variance-in-r/>
@@ -462,9 +462,9 @@ databoa <- data.frame(
   frac_ltn10= frac_ltn10_mos*100,
   mean_fdust= mean_dust_mos,
   mean_mdust= mean_mdust_mos,
-  sza=mean_sza_mos,
-  ids=1:5,
-  color=colors[cvals]
+  sza=mean_sza_mos
+  #ids=1:5,
+  #color=colors[cvals]
 )
 
 datatoa <- data.frame(
@@ -477,9 +477,9 @@ datatoa <- data.frame(
   frac_ltn10= frac_ltn10_mos*100,
   mean_fdust= mean_dust_mos,
   mean_mdust= mean_mdust_mos,
-  sza=mean_sza_mos,
-  ids=1:5,
-  color=colors[cvals]
+  sza=mean_sza_mos
+  #ids=1:5,
+  #color=colors[cvals]
 )
 
 boatoa<-rbind(databoa, datatoa)

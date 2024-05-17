@@ -320,7 +320,7 @@ Add some new variables to the data set. These are listed at every observation, b
 	} 
 ```
 
-Then take the subset of data that meets the quality control parameters and find fraction of clouds used for the attribution step::
+Then take the subset of data that meets the quality control parameters and find fraction of clouds used for the attribution step:
 
 ```{r}
 test<-la2[cleanncloud>=min & notcleanncloud>=min&unic>=min4&unia>=min4&nonzeroCP>=minj,]
@@ -390,8 +390,8 @@ tog<-ladfi
 for(j in 1:length(groups)) {  
 eval(parse(t=paste0("tog$d",groups[j],"<-la",groups[j],"$id",groups[j])))
 }
-names(tog)[1]<-"jbin"
-names(tog)[3]<-"dfi"
+names(tog)[1]<-"jbin" #a meteorological bin identifier, with 1 being the most populous bin and increasing in number down to the least populous meteorological bin.
+names(tog)[3]<-"dfi" #the dglaciation quantile bin
 
 ```
 
