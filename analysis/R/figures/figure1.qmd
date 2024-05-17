@@ -23,24 +23,25 @@ library(mgcv)
 For **Figure 1a** we loaded the following data sets, which represent the fraction of liquid, mixed phase, and ice clouds in the study region/period:
 
 ```{r}
-load("../../data/derived_data/fCliq.RData")
-load("../../data/derived_data/fCmpc.RData")
-load("../../data/derived_data/fCice.RData")
+#load("../../data/derived_data/fCliq.RData")
+#load("../../data/derived_data/fCmpc.RData")
+#load("../../data/derived_data/fCice.RData")
+fC<-read.csv("../../data/derived_data/fC.csv")
 ```
 
 We plotted the fractions at average altitudes of 1-8 km, and found the maximum values for the x-axis of Figure 1a:
 
 ```{r}
-alt<-1:8
-xmax<-max(si_fCliq,si_fCmpc,si_fCice)
+alt<-fC$alt
+xmax<-max(fC$fCliq,fC$fCmpc,fC$fCice)
 ```
 
 Then we looked at the data for Figure 1 a:
 
 ```{r}
-plot(si_fCliq,alt,ty="l",col="#d7191c",xlim=c(0,100), lwd=5,yaxs="i",las=1,xaxs="i",cex.axis=1.4,cex.lab=1.4, ylab="Altitude (km)", xlab="Cloud phase frequency (%)")
-points(si_fCmpc,alt,ty="l",col="#fdae61", lwd=5)
-points(si_fCice,alt,ty="l",col="#2c7bb6", lwd=5)
+plot(fC$fCliq,alt,ty="l",col="#d7191c",xlim=c(0,100), lwd=5,yaxs="i",las=1,xaxs="i",cex.axis=1.4,cex.lab=1.4, ylab="Altitude (km)", xlab="Cloud phase frequency (%)")
+points(fC$fCmpc,alt,ty="l",col="#fdae61", lwd=5)
+points(fC$fCice,alt,ty="l",col="#2c7bb6", lwd=5)
 legend(53, 4, legend=c("Liquid", "Mixed","Ice"), col=c("#d7191c", "#fdae61", "#2c7bb6"), lty=1:2, cex=0.8,lwd=5)
 text(80,1.5, substitute(paste(bold('(a)'))), cex=1.5)
 
@@ -186,13 +187,9 @@ Finally, plot all three figures together for the publication:
 jpeg(file='../../figures/Figure1.jpeg',width=190, height=65, units='mm', res=600, pointsize=10)
 layout(matrix(c(1,2,3,4,5), nrow=1, ncol=5), widths=lcm(c(4.75,5.86,0.8,1.46,6.125)), heights=lcm(c(6.5,5.5,5.5,5.5,6.5)))
 
-#layout(matrix(c(1,2,3), nrow=1, ncol=3), widths=c(5,0.75,1.1), heights=c(4,4,4))
-
-
-#plot(si_fCliq,alt,ty="l",col="#d7191c",xlim=c(0,100), lwd=5,yaxs="i",las=1,xaxs="i",cex.axis=1.4,cex.lab=1.4, ylab="Altitude (km)", xlab="Cloud phase frequency (%)")
-plot(si_fCliq,alt,ty="l",col="#d7191c",xlim=c(0,100), lwd=5,yaxs="i",las=1,xaxs="i",ylab="Altitude (km)", xlab="Cloud phase frequency (%)")
-points(si_fCmpc,alt,ty="l",col="#fdae61", lwd=5)
-points(si_fCice,alt,ty="l",col="#2c7bb6", lwd=5)
+plot(fC$fCliq,alt,ty="l",col="#d7191c",xlim=c(0,100), lwd=5,yaxs="i",las=1,xaxs="i",ylab="Altitude (km)", xlab="Cloud phase frequency (%)")
+points(fC$fCmpc,alt,ty="l",col="#fdae61", lwd=5)
+points(fC$fCice,alt,ty="l",col="#2c7bb6", lwd=5)
 legend(58, 4, legend=c("Liquid", "Mixed","Ice"), col=c("#d7191c", "#fdae61", "#2c7bb6"), lty=1:2, lwd=5, cex=0.8)
 text(80,1.5, substitute(paste(bold('(a)'))), cex=1.5)
 

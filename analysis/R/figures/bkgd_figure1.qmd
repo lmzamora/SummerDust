@@ -11,28 +11,21 @@ For **Figure 1a** first load the following libraries:
 library(data.table)
 ```
 
+Load phase data:
+
+```{r}
+#load("points_all_orig_aerosols_v7.RData")
+#phase<-merged2[,c(1:8, 35, 125, 175:182)]
+#setDT(phase)
+#phase<-phase[ocean==1&seaice>0.9]
+#fwrite(phase,file="../../data/derived_data/phase.csv", na=NA)
+phase<-read.csv("phase.csv")
+setDT(phase)
+```
+
 Get percent of clouds in different phases at different altitudes:
 
 ```{r}
-# for(i in 1:8) { #For each altitude level of interest:
-#  eval(parse(t=paste0("load('/Users/lzamora/Library/CloudStorage/OneDrive-NASA/NASA_Science/8000-5_R+D_project_files/ACMAP3/initial_data/all/old/lev",i,"_v3.RData')")))
-#        la2<-eval(parse(t=paste0("lev",i)))
-#        eval(parse(t=paste0("rm(lev",i,")")))
-#        setDT(la2)
-#        la2<-la2[ocean==1&seaice>=0.9,]
-#        fCice=length(na.exclude(la2$CP[la2$CP==1])) / length(na.exclude(la2$CP))
-#        fCmpc=length(na.exclude(la2$CP[la2$CP==2])) / length(na.exclude(la2$CP))
-#       fCliq=length(na.exclude(la2$CP[la2$CP==3])) / length(na.exclude(la2$CP))
-#        eval(parse(t=paste0("fCice_lev",i,"<- fCice")))
-#        eval(parse(t=paste0("fCmpc_lev",i,"<- fCmpc")))
-#        eval(parse(t=paste0("fCliq_lev",i,"<- fCliq")))
-#        rm(la2)
-#}
-load("/Users/lzamora/Library/CloudStorage/OneDrive-NASA/NASA_Science/8000-5_R+D_project_files/ACMAP3/initial_data/all/points_all_orig_aerosols_v7.RData")
-
-phase<-merged2[,c(1:8, 35, 125, 175:182)]
-setDT(phase)
-phase<-phase[ocean==1&seaice>0.9]
 
 for(i in 1:8) { #For each altitude level of interest
    eval(parse(t=paste0("fCice_lev",i," <- length(na.exclude(phase$CP",i,"[phase$CP",i,"==1]))/length(na.exclude(phase$CP",i,"))*100")))
