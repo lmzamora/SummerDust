@@ -87,7 +87,7 @@ grid2p<-as.matrix(testp)[,-1]
 Get grid point sizes:
 
 ```{r}
-test3<-dcast(del2, var1bin~var3bin,value.var='alln',fun=sum,fill=NA, na.rm=T) 
+test3<-dcast(del2, merTbin~merQVbin,value.var='alln',fun=sum,fill=NA, na.rm=T) 
 gridn<-as.matrix(test3)[,-1]
 sizegrid<-gridn/max(gridn,na.rm=T)*4.5
 ```
