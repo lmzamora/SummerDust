@@ -19,8 +19,8 @@ Load phase data:
 #setDT(phase)
 #phase<-phase[ocean==1&seaice>0.9]
 #fwrite(phase,file="../../data/derived_data/phase.csv", na=NA)
-phase<-read.csv("phase.csv")
-setDT(phase)
+#phase<-read.csv("/Users/lzamora/Library/CloudStorage/OneDrive-NASA/NASA_Science/8000-5_R+D_project_files/ACMAP3/initial_data/all/phase.csv")
+#setDT(phase)
 ```
 
 Get percent of clouds in different phases at different altitudes:
@@ -197,6 +197,9 @@ del2<-del2[!is.na(del2$var1bin),]
 del2<-del2[!is.na(del2$var3bin),]
 del2p<-del2p[!is.na(del2p$var1bin),]
 del2p<-del2p[!is.na(del2p$var3bin),]
+del2p[,merT:=var1range[var1bin]]
+del2p[,temp:=var2range[var2bin]]
+del2p[,merQV:=var3range[var3bin]]
 
 ```
 
