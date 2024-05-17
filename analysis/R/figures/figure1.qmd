@@ -77,10 +77,10 @@ var3range<-seq(0,0.0145, 0.001)
 Average across all AIRS T bins, so that we have a new 2D data set for MERRA-2 temperature and Qv bins that includes the weighted mean of the change in glaciation, weighted by sample number in the bin.
 
 ```{r}
-test<-del2[, weighted.mean(dfi,alln,na.rm=T), by=.(var1bin,var3bin)][, dcast(.SD, var1bin~var3bin)]    
+test<-del2[, weighted.mean(dglaciation,alln,na.rm=T), by=.(merTbin,merQVbin)][, dcast(.SD, merTbin~merQVbin)]    
 
 grid2<-as.matrix(test)[,-1]
-testp<-dcast(del2p, var1bin~var3bin,value.var='dfip',fun=mean,na.rm=T,fill=NA) #this will cause trouble if there is more than 1 real value, but there shouldn't be.
+testp<-dcast(del2p, merTbin~merQVbin,value.var='dglaciationp',fun=mean,na.rm=T,fill=NA) #this will cause trouble if there is more than 1 real value, but there shouldn't be.
 grid2p<-as.matrix(testp)[,-1]
 ```
 
