@@ -100,7 +100,7 @@ Now for **Figure 1b**,
 Load the data.
 
 ```{r}
-eval(parse(t=paste0(" load('../../data/derived_data/lev",j,"_v4c.RData')")))
+eval(parse(t=paste0(" load('/Users/lzamora/Library/CloudStorage/OneDrive-NASA/NASA_Science/8000-5_R+D_project_files/ACMAP3/initial_data/all/lev",j,"_v4c.RData')")))
 ```
 
 Set the conditions for determining the subset of interest (over ocean, over sea ice) and only look at data within those conditions:
@@ -187,6 +187,8 @@ Add in the actual values of the bins for reference:
 del2[,merT:=var1range[var1bin]]
 del2[,temp:=var2range[var2bin]]
 del2[,merQV:=var3range[var3bin]]
+del2p[,merT:=var1range[var1bin]]
+del2p[,merQV:=var3range[var3bin]]
 
 ```
 
@@ -197,9 +199,6 @@ del2<-del2[!is.na(del2$var1bin),]
 del2<-del2[!is.na(del2$var3bin),]
 del2p<-del2p[!is.na(del2p$var1bin),]
 del2p<-del2p[!is.na(del2p$var3bin),]
-del2p[,merT:=var1range[var1bin]]
-del2p[,temp:=var2range[var2bin]]
-del2p[,merQV:=var3range[var3bin]]
 
 ```
 
@@ -246,11 +245,12 @@ rownames(sizegrid)<-paste0("merT", xax) #Mid-point of merT bin
 Save the files needed to plot **Figure 1b**.
 
 ```{r}
-write.csv(del2, file="../../data/derived_data/del2.csv")
-write.csv(grid2, file="../../data/derived_data/grid2.csv")
-write.csv(grid2p, file="../../data/derived_data/grid2p.csv")
-write.csv(sizegrid, file="../../data/derived_data/sizegrid.csv")
-rm(la3)
+fwrite(del2, file="../../data/derived_data/del2.csv",na=NA,quote=F)
+fwrite(del2p, file="../../data/derived_data/del2p.csv",na=NA,quote=F)
+#write.csv(grid2, file="../../data/derived_data/grid2.csv")
+#write.csv(grid2p, file="../../data/derived_data/grid2p.csv")
+#write.csv(sizegrid, file="../../data/derived_data/sizegrid.csv")
+#rm(la3)
 ```
 
 Now for **Figure 1c**,
