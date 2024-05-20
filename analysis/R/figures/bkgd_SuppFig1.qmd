@@ -16,6 +16,7 @@ For **Supplementary Figure 1** first load the following libraries:
 ```{r}
 library(data.table)
 library(geosphere)
+library(dplyr)
 ```
 
 This is a calculation of the Pierson weighted R-squared of mean dust vs. mean CALIPSO dust overlap across the different geographic bins, weighted by the area of the bins. Data are from Zamora et al., 2022. The ftop, fbase and ptop, pbase are the bottom and top altitudes (in km) of the layer in which the FLEXPART/MERRA-2 aerosol data are taken from. These vary because in MERRA-2 the data were based on pressure levels, and in FLEXPART we had to get values relative to sea level, not ground level.
@@ -47,7 +48,7 @@ Minimum number of samples in the geographic area for it to be included in the we
 min.N=40
 ```
 
-Load Zamora et al., 2022 data set 1 (relating the FLEXPART - CALIPSO comparison), look only at data over oceanic areas, between 0.25 and 10 km altitude, and with at least the minimum number of samples. Write out the area of the geographic bins:
+Load Zamora et al., 2022 data set 1 (relating the FLEXPART - CALIPSO comparison). Look only at data over oceanic areas, between 0.25 and 10 km altitude, and with at least the minimum number of samples. Write out the area of the geographic bins:
 
 ```{r}
 load("/Users/lzamora/Library/CloudStorage/OneDrive-NASA/NASA_Science/8000-5_R+D_project_files/ACMAP3/code/data_analysis/Figures/random/fdust_validation/fdust_ma.RData")
@@ -58,7 +59,7 @@ foo<-foo[N>=min.N]
 rm(mall)
 foo[,area:=area.helper(lonbin,latbin,size.lon,size.lat)*1e-6]
 foofo<-foo
-fwrite(foofo,file="../../data/derived_data/SFig1_flexpart.csv",na=NA,quote=F)
+names(foofo)<-c("lonbin","latbin","zbin","n_flex","meandust_flex","mean_overlap_flex","fmid_flex","area")
 ```
 
 Load Zamora et al., 2022 data set 2 (relating the MERRA-2 - CALIPSO comparison), look only at data over oceanic areas, between 0.25 and 10 km:
@@ -70,5 +71,12 @@ foo<-mall[pbase>.25&pbase<10,.(.N,meandust=mean(dust),mean_overlap=mean(CALIPSO_
 rm(mall)
 foo[,area:=area.helper(lonbin,latbin,size.lon,size.lat)*1e-6]
 foomo<-foo
-fwrite(foomo,file="../../data/derived_data/SFig1_merra2.csv",na=NA,quote=F)
+names(foomo)<-c("lonbin","latbin","zbin","n_mer","meandust_mer","mean_overlap_mer","fmid_mer","area")
+```
+
+Join the two data sets together:
+
+```{r}
+sfig1<-full_join(foomo, foofo, by=c("lonbin", "latbin", "zbin","area"))
+fwrite(sfig1,file="../../data/derived_data/SFig1.csv",na=NA,quote=F)
 ```

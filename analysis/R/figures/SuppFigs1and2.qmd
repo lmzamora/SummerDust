@@ -1,0 +1,190 @@
+---
+title: "Supplementary Fig. 1"
+author: "Lauren Zamora"
+format: html
+editor: visual
+---
+
+## Supplementary Figure 1
+
+This figure shows the average frequency of CALIPSO dust aerosol layer occurrences and mean MERRA-2 and FLEXPART dust concentrations at different altitudes, along with the Pierson weighted R-squared for bins with \> 40 samples, weighted by the area of the different geographic bins. The size of the data is related to the geographic bin area. The dashed blue line is a qualitative marker between the lowest and highest observed dust layer frequencies.
+
+## Running Code
+
+For **Supplementary Figures 1 and 2** first load the following libraries:
+
+```{r}
+library(data.table)
+```
+
+This is a calculation of the Pierson weighted R-squared of mean dust vs. mean CALIPSO dust overlap across the different geographic bins, weighted by the area of the bins. Data are from the dataset described in Zamora et al., 2022, although here we focus on the specific months of May to September, and over oceanic areas.
+
+Load the data:
+
+```{r}
+foo<-read.csv("../../data/derived_data/SFig1.csv")
+setDT(foo)
+```
+
+Minimum number of samples in the geographic area for it to be included in the weighted mean:
+
+```{r}
+min.N=40
+```
+
+Get the Pierson weighted R-squared values, weighted by geographic area:
+
+```{r}
+FlexDustLToceanR<-foo[n_flex>=min.N,.(V1=cov.wt(cbind(meandust_flex,mean_overlap_flex),wt=area,cor=T)$cor[1,2]^2,fmid_flex=weighted.mean(fmid_flex, area)),keyby=zbin] 
+MerDustLToceanR<-foo[n_mer>=min.N,.(V1=cov.wt(cbind(meandust_mer,mean_overlap_mer),wt=area,cor=T)$cor[1,2]^2,fmid_mer=weighted.mean(fmid_mer, area)),keyby=zbin] 
+```
+
+Plot the figure:
+
+```{r}
+jpeg(file='../../figures/SuppFig1.jpeg',width=5, height=12, units='in', res=600, pointsize=10)
+par(mfrow=c(5, 2))
+par(mai=c(0.5,0.5,0.3,0.1))
+par(mgp=c(2.6,0.7,0))
+
+fdustcutoff<- 93 
+merdustcutoff<-653
+abpt<-0.005
+
+#FLEXPART plot limits
+xmin<-0.0002
+xmax<-0.18
+ymax<-5000
+ymin<-100
+
+#MERRA-2 plot limits
+mymax<-5000
+mymin<-499
+
+
+min<-0.75
+max<-1.5
+zbino<-3
+ptsize<-foo$area[foo$zbin==zbino]/max(foo$area[foo$zbin==zbino])
+
+plot(foo$mean_overlap_flex[foo$zbin==zbino], foo$meandust_flex[foo$zbin==zbino],cex=ptsize,col=1,pch=1,lwd=0.5, yaxs="i",las=1,xaxs="i",cex.axis=0.9,cex.lab=0.9, xlab="CALIPSO frequency (%)",ylab="Dust (ng/m3)",log="xy",ylim=c(ymin,ymax),xlim=c(xmin,xmax), main="FLEXPART")
+abline(v=abpt,col="deepskyblue",lty=2)
+text(0.0008, 3000, substitute(paste(bold('0.75-1.5 km'))))
+r2<-round(FlexDustLToceanR[zbino,]$V1,2)
+text(0.02, 200, labels=expression(paste("weighted R"^2*" = ")),col="deepskyblue4")
+text(0.02, 150, r2,col="deepskyblue4")
+
+plot(foo$mean_overlap_mer[foo$zbin==zbino],foo$meandust_mer[foo$zbin==zbino],cex=ptsize,col=1,pch=1,lwd=0.5,yaxs="i",las=1,xaxs="i",cex.axis=0.9,cex.lab=0.9, xlab="CALIPSO frequency (%)",ylab="Dust (ng/m3)",log="xy",ylim=c(mymin,mymax),xlim=c(xmin,xmax), main="MERRA-2")
+abline(v=abpt,col="deepskyblue",lty=2)
+r2<-round(MerDustLToceanR[zbino-1,]$V1,2)
+text(0.02, 800, labels=expression(paste("weighted R"^2*" = ")),col="deepskyblue4")
+text(0.02, 700, r2,col="deepskyblue4")
+
+
+
+
+
+
+
+min<-1.5
+max<-2
+zbino<-4
+
+ptsize<-foo$area[foo$zbin==zbino]/max(foo$area[foo$zbin==zbino])
+plot(foo$mean_overlap_flex[foo$zbin==zbino], foo$meandust_flex[foo$zbin==zbino],cex=ptsize,col=1,pch=1,,lwd=0.5, yaxs="i",las=1,xaxs="i",cex.axis=0.9,cex.lab=0.9, xlab="CALIPSO frequency (%)",ylab="Dust (ng/m3)",log="xy",ylim=c(ymin,ymax),xlim=c(xmin,xmax))
+abline(v=abpt,col="deepskyblue",lty=2)
+text(0.0008, 3000, substitute(paste(bold('1.5-2 km'))))
+r2<-round(FlexDustLToceanR[zbino,]$V1,2)
+text(0.02, 200, labels=expression(paste("weighted R"^2*" = ")),col="deepskyblue4")
+text(0.02, 150, r2,col="deepskyblue4")
+
+
+plot(foo$mean_overlap_mer[foo$zbin==zbino], foo$meandust_mer[foo$zbin==zbino],cex=ptsize,col=1,pch=1,lwd=0.5, yaxs="i",las=1,xaxs="i",cex.axis=0.9,cex.lab=0.9, xlab="CALIPSO frequency (%)",ylab="Dust (ng/m3)",log="xy",ylim=c(mymin,mymax),xlim=c(xmin,xmax))
+abline(v=abpt,col="deepskyblue",lty=2)
+r2<-round(MerDustLToceanR[zbino-1,]$V1,2)
+text(0.02, 800, labels=expression(paste("weighted R"^2*" = ")),col="deepskyblue4")
+text(0.02, 700, r2,col="deepskyblue4")
+
+
+
+
+
+
+min<-2
+max<-4
+zbino<-5
+
+ptsize<-foo$area[foo$zbin==zbino]/max(foo$area[foo$zbin==zbino])
+plot(foo$mean_overlap_flex[foo$zbin==zbino], foo$meandust_flex[foo$zbin==zbino],cex=ptsize,col=1,pch=1,lwd=0.5, yaxs="i",las=1,xaxs="i",cex.axis=0.9,cex.lab=0.9, xlab="CALIPSO frequency (%)",ylab="Dust (ng/m3)",log="xy",ylim=c(ymin,ymax),xlim=c(xmin,xmax))
+abline(v=abpt,col="deepskyblue",lty=2)
+text(0.0008, 3000, substitute(paste(bold('2-4 km'))))
+r2<-round(FlexDustLToceanR[zbino,]$V1,2)
+text(0.02, 2000, labels=expression(paste("weighted R"^2*" = ")),col="deepskyblue4")
+text(0.02, 1500, r2,col="deepskyblue4")
+
+
+
+plot(foo$mean_overlap_mer[foo$zbin==zbino], foo$meandust_mer[foo$zbin==zbino],cex=ptsize,col=1,pch=1,lwd=0.5,yaxs="i",las=1,xaxs="i",cex.axis=0.9,cex.lab=0.9, xlab="CALIPSO frequency (%)",ylab="Dust (ng/m3)",log="xy",ylim=c(mymin,mymax),xlim=c(xmin,xmax))
+abline(v=abpt,col="deepskyblue",lty=2)
+r2<-round(MerDustLToceanR[zbino-1,]$V1,2)
+text(0.02, 800, labels=expression(paste("weighted R"^2*" = ")),col="deepskyblue4")
+text(0.02, 700, r2,col="deepskyblue4")
+
+
+
+
+
+min<-4
+max<-6
+zbino<-6
+ptsize<-foo$area[foo$zbin==zbino]/max(foo$area[foo$zbin==zbino])
+plot(foo$mean_overlap_flex[foo$zbin==zbino], foo$meandust_flex[foo$zbin==zbino],cex=ptsize,col=1,pch=1,lwd=0.5, yaxs="i",las=1,xaxs="i",cex.axis=0.9,cex.lab=0.9, xlab="CALIPSO frequency (%)",ylab="Dust (ng/m3)",log="xy",ylim=c(ymin,ymax),xlim=c(xmin,xmax))
+abline(v=abpt,col="deepskyblue",lty=2)
+text(0.0008, 3000, substitute(paste(bold('4-6 km'))))
+r2<-round(FlexDustLToceanR[zbino,]$V1,2)
+text(0.02, 2000, labels=expression(paste("weighted R"^2*" = ")),col="deepskyblue4")
+text(0.02, 1500, r2,col="deepskyblue4")
+
+plot(foo$mean_overlap_mer[foo$zbin==zbino], foo$meandust_mer[foo$zbin==zbino],cex=ptsize,col=1,pch=1,lwd=0.5,yaxs="i",las=1,xaxs="i",cex.axis=0.9,cex.lab=0.9, xlab="CALIPSO frequency (%)",ylab="Dust (ng/m3)",log="xy",ylim=c(mymin,mymax),xlim=c(xmin,xmax))
+abline(v=abpt,col="deepskyblue",lty=2)
+r2<-round(MerDustLToceanR[zbino-1,]$V1,2)
+text(0.02, 800, labels=expression(paste("weighted R"^2*" = ")),col="deepskyblue4")
+text(0.02, 700, r2,col="deepskyblue4")
+
+
+
+
+
+min<-6
+max<-8
+zbino<-7
+
+ptsize<-foo$area[foo$zbin==zbino]/max(foo$area[foo$zbin==zbino])
+plot(foo$mean_overlap_flex[foo$zbin==zbino], foo$meandust_flex[foo$zbin==zbino],cex=ptsize,col=1,pch=1,lwd=0.5, yaxs="i",las=1,xaxs="i",cex.axis=0.9,cex.lab=0.9, xlab="CALIPSO frequency (%)",ylab="Dust (ng/m3)",log="xy",ylim=c(ymin,ymax),xlim=c(xmin,xmax))
+abline(v=abpt,col="deepskyblue",lty=2)
+text(0.0008, 3000, substitute(paste(bold('6-8 km'))))
+r2<-round(FlexDustLToceanR[zbino,]$V1,2)
+text(0.02, 2000, labels=expression(paste("weighted R"^2*" = ")),col="deepskyblue4")
+text(0.02, 1500, r2,col="deepskyblue4")
+
+
+plot(foo$mean_overlap_mer[foo$zbin==zbino], foo$meandust_mer[foo$zbin==zbino],cex=ptsize,col=1,pch=1,lwd=0.5,yaxs="i",las=1,xaxs="i",cex.axis=0.9,cex.lab=0.9, xlab="CALIPSO frequency (%)",ylab="Dust (ng/m3)",log="xy",ylim=c(mymin,mymax),xlim=c(xmin,xmax))
+abline(v=abpt,col="deepskyblue",lty=2)
+r2<-round(MerDustLToceanR[zbino-1,]$V1,2)
+text(0.02, 800, labels=expression(paste("weighted R"^2*" = ")),col="deepskyblue4")
+text(0.02, 700, r2,col="deepskyblue4")
+
+dev.off()
+
+```
+
+
+
+
+## Supplementary Figure 2
+
+This figure is the same as for Supplementary Figure 1 but for data points above the blue dashed line in Supplementary Figure 1 and, for MERRA-2 data, excluding points with FLEXPART dust concentrations in the lower quartile of the data. 
+
+## Running Code
+
+
