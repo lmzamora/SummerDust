@@ -1,0 +1,53 @@
+---
+title: "Supplementary Fig. 3"
+author: "Lauren Zamora"
+format: html
+editor: visual
+---
+
+## Supplementary Figure 3
+
+The same as for Figure 1c, except that background conditions were defined relative to sulfate instead of FLEXPART dust, and we controlled for meteorological bins more closely associated with sulfate meteorological co-variability (MERRA-2 RH, AIRS RHi, and MERRA-2 temperature).
+
+## Running Code
+
+For **Supplementary Figure 3** first load the following libraries:
+
+```{r}
+library(data.table)
+library(mgcv)
+```
+
+For Figure 1c, load the tog dataset, which represents the output of the GAM, and deviance predicted by each variable:
+
+```{r}
+tog<-read.csv("../../data/derived_data/tog_SF3.csv")
+```
+
+
+
+Plot the figure:
+
+```{r}
+jpeg(file='../../figures/SuppFig3.jpeg',width=5, height=4, units='in', res=600, pointsize=10)
+par(mai=c(1.5,0.9,0.3,0))
+num<-quantile(tog$N,0.25)
+len<-4
+
+groups<-c("Etemp", "merT", "temp","omega",  "aLTS","ERH", "merRH","aRH", "XRHi", "merwindspeed","merQV", "fdust","SO4","merBC","merOC","merdust","fBC","fOC","DMS","SS")
+groups1<-c("Etemp", "merT", "temp","omega",  "aLTS","ERH", "merRH","aRH", "XRHi", "merwindspeed","merQV") 
+dev<-list()
+devbin<-list()
+for(j in 1:length(groups)) {  
+eval(parse(t=paste0("mod<-gam(tog$dglaciation~s(tog$d",groups[j],",k=3),w=tog$N,family='gaussian')")))
+# plot(mod)
+# gam.check(mod)
+dev[[j]]<-round(summary(mod)$dev*100,2)
+}
+
+lab<-c("ECMWF T", "MERRA-2 T", "AIRS T","omega",  "AIRS LTS","ECMWF RH", "MERRA-2 RH","AIRS RH", "AIRS RHi", "wind speed","MERRA-2 Qv","FLEXPART dust","SO4","MERRA-2 BC","MERRA-2 OC","MERRA-2 dust","FLEXPART BC","FLEXPART OC","DMS","SS")
+barplot(c(unlist(dev)), col=c(rep(1,length(groups1)), "darkorange","hotpink2","grey","grey50","darkorange","grey","grey50","springgreen","deepskyblue"),las=1,ylim=c(0, round(max(unlist(dev))+5) ), ylab="Explained deviance (%)")
+axis(1,at=seq(0.75,24,1.2)[1:length(groups)],labels=c(lab),las=2)
+dev.off()
+```
+

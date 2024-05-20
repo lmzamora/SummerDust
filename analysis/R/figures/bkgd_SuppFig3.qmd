@@ -9,15 +9,15 @@ For **Supplemental Figure 3** first load the following libraries:
 
 ```{r}
 library(data.table)
-library(mgcv)
+
 ```
 
 Specify the bin sizes and meteorological parameters to plot by:
 
 ```{r}
 Etemprange<-seq(-70,30,7.5/2)
-merRHrange<-seq(0,0.0145, 0.001) 
-XRHirange<-seq(-70,30,7.5/2)
+merRHrange<-seq(-10,200,5) #* 
+XRHirange<-seq(0,300,10)
 
 var1range<-Etemprange
 var2range<-merRHrange
@@ -124,7 +124,6 @@ Add some new variables to the data set. These are listed at every observation, b
 	} 
 ```
 
-
 Then take the subset of data that meets the quality control parameters and find fraction of clouds used for the attribution step:
 
 ```{r}
@@ -146,7 +145,7 @@ pick<- order(pick2$alln, decreasing = TRUE)
 
 ```
 
-It was necessary to improve signal-to-noise ratios by grouping the data into 10% quantile bins for the change in glaciation (dfi below) and remove points at quantiles with < 100 observations.
+It was necessary to improve signal-to-noise ratios by grouping the data into 10% quantile bins for the change in glaciation (dfi below) and remove points at quantiles with \< 100 observations.
 
 ```{r}
 int<-quantile(test$dfi,seq(0.1,1,0.1))  
@@ -188,7 +187,6 @@ eval(parse(t=paste0("la",groups[j],"<-rbindlist(la",groups[j],"_1, idcol=T)")))
 
 ```
 
-
 Add the resulting data into one data table:
 
 ```{r}
@@ -197,15 +195,12 @@ for(j in 1:length(groups)) {
 eval(parse(t=paste0("tog$d",groups[j],"<-la",groups[j],"$id",groups[j])))
 }
 names(tog)[1]<-"jbin" #a meteorological bin identifier, with 1 being the most populous bin and increasing in number down to the least populous meteorological bin.
-names(tog)[3]<-"dfi" #the dglaciation quantile bin
+names(tog)[3]<-"dglaciation" #the dglaciation quantile bin
 
 ```
 
 Save the file needed to plot *Supplemental Figure 3*.
 
 ```{r}
-colnames(tog)[3]<-"dglaciation"
 fwrite(tog, file="../../data/derived_data/tog_SF3.csv",na=NA,quote=F)
 ```
-
-
