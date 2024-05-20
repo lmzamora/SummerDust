@@ -11,7 +11,7 @@ This figure shows, over Arctic sea ice, (a) The likelihood of clouds at differen
 
 ## Running Code
 
-For **Figure 1** you first load the following libraries:
+For **Figure 1** first load the following libraries:
 
 ```{r}
 library(data.table)
