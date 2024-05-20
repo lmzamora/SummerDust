@@ -20,7 +20,7 @@ Title <- "Dust-driven cloud glaciation over summertime Arctic sea ice"
 
 This repository contains the data and code for our paper:
 
-> Zamora, L.M., Kahn, R.A., (2024). _`r Title`_. Name of journal/book <https://doi.org/xxx/xxx>
+> Zamora, L.M., Kahn, R.A., (2024). _`r Title`_. Submitted to Geophysical Research Letters <https://doi.org/xxx/xxx>
 
 Our pre-print is online here:
 

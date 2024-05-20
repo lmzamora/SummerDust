@@ -23,9 +23,6 @@ library(mgcv)
 For **Figure 1a** we loaded the following data sets, which represent the fraction of liquid, mixed phase, and ice clouds in the study region/period:
 
 ```{r}
-#load("../../data/derived_data/fCliq.RData")
-#load("../../data/derived_data/fCmpc.RData")
-#load("../../data/derived_data/fCice.RData")
 fC<-read.csv("../../data/derived_data/fC.csv")
 ```
 
@@ -54,13 +51,6 @@ del2<-read.csv("../../data/derived_data/del2.csv")
 setDT(del2)
 del2p<-read.csv("../../data/derived_data/del2p.csv")
 setDT(del2p)
-#grid2<-read.csv("../../data/derived_data/grid2.csv")
-#grid2<-as.matrix(grid2[,-1])
-#grid2p<-read.csv("../../data/derived_data/grid2p.csv")
-#grid2p<-as.matrix(grid2p[,-1])
-#sizegrid<-read.csv("../../data/derived_data/sizegrid.csv")
-#sizegrid<-as.matrix(sizegrid[,-1])
-
 ```
 
 Set the variables
@@ -80,7 +70,7 @@ Average across all AIRS T bins, so that we have a new 2D data set for MERRA-2 te
 test<-del2[, weighted.mean(dglaciation,alln,na.rm=T), by=.(merTbin,merQVbin)][, dcast(.SD, merTbin~merQVbin)]    
 
 grid2<-as.matrix(test)[,-1]
-testp<-dcast(del2p, merTbin~merQVbin,value.var='dglaciationp',fun=mean,na.rm=T,fill=NA) #this will cause trouble if there is more than 1 real value, but there shouldn't be.
+testp<-dcast(del2p, merTbin~merQVbin,value.var='dglaciationp',fun=mean,na.rm=T,fill=NA) 
 grid2p<-as.matrix(testp)[,-1]
 ```
 
@@ -172,8 +162,6 @@ Plot the figure:
 par(mai=c(1.5,0.9,0.3,0))
 num<-quantile(tog$N,0.25)
 len<-4
-#glen<-which(sapply(ladfi_1,nrow)>=len)
-#tlen<-which(tog$jbin %in% glen)
 
 groups<-c("Etemp", "merT", "temp","omega",  "aLTS","ERH", "merRH","aRH", "XRHi", "merwindspeed","merQV", "fdust","SO4","merBC","merOC","merdust","fBC","fOC","DMS","SS")
 groups1<-c("Etemp", "merT", "temp","omega",  "aLTS","ERH", "merRH","aRH", "XRHi", "merwindspeed","merQV") 
@@ -182,7 +170,6 @@ groups2<-c("fdust","SO4","merBC","merOC","merdust","fBC","fOC","DMS","SS")
 dev<-list()
 devbin<-list()
 for(j in 1:length(groups)) {  
-#Plot on dfi
 eval(parse(t=paste0("mod<-gam(tog$dglaciation~s(tog$d",groups[j],",k=3),w=tog$N,family='gaussian')")))
 # plot(mod)
 # gam.check(mod)
@@ -191,7 +178,6 @@ dev[[j]]<-round(summary(mod)$dev*100,2)
 
 lab<-c("ECMWF T", "MERRA-2 T", "AIRS T","omega",  "AIRS LTS","ECMWF RH", "MERRA-2 RH","AIRS RH", "AIRS RHi", "wind speed","MERRA-2 Qv","FLEXPART dust","SO4","MERRA-2 BC","MERRA-2 OC","MERRA-2 dust","FLEXPART BC","FLEXPART OC","DMS","SS")
 barplot(c(unlist(dev)), col=c(rep(1,length(groups1)), "darkorange","hotpink2","grey","grey50","darkorange","grey","grey50","springgreen","deepskyblue"),las=1,ylim=c(0, round(max(unlist(dev))+5) ), ylab="Explained deviance (%)")
-# barplot(c(unlist(dev)), col=c(rep(1,length(groups1)), "hotpink2","grey","grey50","darkorange"),las=1,ylim=c(0, round(max(unlist(dev))+5) ))
 axis(1,at=seq(0.75,24,1.2)[1:length(groups)],labels=c(lab),las=2)
 
 ```
@@ -241,9 +227,6 @@ color<-matrix(color,dim(grid2)[1],dim(grid2)[2])
 par(mar=c(4,5,5,0.5))
 
 image(xax,yax,grid2, col=NA,zlim=zlim,xlab=expression("MERRA-2  T  ("~degree~"C)"),ylab=expression("MERRA-2 specific humidity (kg kg"^-1*")"), xlim=c(xmn,0),ylim=c(0,ymx))
-#title(bquote(atop("Estimated aerosol-driven increases in", "cloud glaciation (\u{2202}glaciation"["j"]*", %), 2.5-3.5 km")), cex.main=1) 
-#title(expression("Estimated aerosol-driven increases in", "cloud glaciation (\u{2202}glaciation"["j"]*", %), 2.5-3.5 km"), cex.main=1) 
-#mtext(side=3, line=1, expression(atop("Estimated aerosol-driven increases in", "cloud glaciation (\u{2202}glaciation"["j"]*", %), 2.5-3.5 km"))) 
 mtext(side = 3, line = 1, 
       expression(atop(NA, atop(textstyle('Estimated aerosol-driven increases in cloud'),
                                textstyle('glaciation (\u{2202}glaciation'['j']*', %), 2.5-3.5 km') ))), cex=0.8)
@@ -283,8 +266,6 @@ par(mfg = c(1,5))
 par(mai=c(0.8,0.5,0.3,0))
 num<-quantile(tog$N,0.25)
 len<-4
-#glen<-which(sapply(ladfi_1,nrow)>=len)
-#tlen<-which(tog$jbin %in% glen)
 
 groups<-c("Etemp", "merT", "temp","omega",  "aLTS","ERH", "merRH","aRH", "XRHi", "merwindspeed","merQV", "fdust","SO4","merBC","merOC","merdust","fBC","fOC","DMS","SS")
 groups1<-c("Etemp", "merT", "temp","omega",  "aLTS","ERH", "merRH","aRH", "XRHi", "merwindspeed","merQV") 
@@ -293,7 +274,6 @@ groups2<-c("fdust","SO4","merBC","merOC","merdust","fBC","fOC","DMS","SS")
 dev<-list()
 devbin<-list()
 for(j in 1:length(groups)) {  
-#Plot on dfi
 eval(parse(t=paste0("mod<-gam(tog$dglaciation~s(tog$d",groups[j],",k=3),w=tog$N,family='gaussian')")))
 # plot(mod)
 # gam.check(mod)
@@ -302,7 +282,6 @@ dev[[j]]<-round(summary(mod)$dev*100,2)
 
 lab<-c("ECMWF T", "MERRA-2 T", "AIRS T","omega",  "AIRS LTS","ECMWF RH", "MERRA-2 RH","AIRS RH", "AIRS RHi", "wind speed","MERRA-2 Qv","FLEXPART dust","SO4","MERRA-2 BC","MERRA-2 OC","MERRA-2 dust","FLEXPART BC","FLEXPART OC","DMS","SS")
 barplot(c(unlist(dev)), col=c(rep(1,length(groups1)), "darkorange","hotpink2","grey","grey50","darkorange","grey","grey50","springgreen","deepskyblue"),las=1,ylim=c(0, round(max(unlist(dev))+5) ), ylab="Explained deviance (%)")
-# barplot(c(unlist(dev)), col=c(rep(1,length(groups1)), "hotpink2","grey","grey50","darkorange"),las=1,ylim=c(0, round(max(unlist(dev))+5) ))
 axis(1,at=seq(0.75,24,1.2)[1:length(groups)],labels=c(lab),las=2)
 text(3,25, substitute(paste(bold('(c)'))), cex=1.5)
 
