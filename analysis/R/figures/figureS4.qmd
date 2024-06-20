@@ -20,6 +20,7 @@ library(mgcv)
 library(dplyr)
 library(ggplot2)
 library(data.table)
+library(ggpubr)
 ```
 
 Load the tog dataset, which represents the output of the GAM, and deviance predicted by each variable:
@@ -28,65 +29,93 @@ Load the tog dataset, which represents the output of the GAM, and deviance predi
 tog<-read.csv("../../data/derived_data/tog.csv")
 ```
 
-Add the multiple plot function: ggplot objects can be passed in ..., or to plotlist (as a list of ggplot objects) - cols: Number of columns in layout - layout: A matrix specifying the layout. If present, 'cols' is ignored. If the layout is something like matrix(c(1,2,3,3), nrow=2, byrow=TRUE), then plot 1 will go in the upper left, 2 will go in the upper right, and 3 will go all the way across the bottom.
+Add how many samples were in the top 10 most common meteorological bins, and the average T and Qv conditions of the bin. Where the MERRA-2 and AIRS T bins differ, take the average of the two.
 
 ```{r}
-multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
-  require(grid)
+n<-c(614761, 472400 ,389737 ,355275 , 349762 , 274645 , 205167 , 200945 , 161074 ,154076)
+meanT<-c( -13.75+1.875, -17.5+1.875,-21.25+1.875,  -10+1.875, -10+1.875, -17.5+1.875,    -13.75+1.875,    -25+1.875,   -13.75+1.875, mean(c(-17.5+1.875, -13.75+1.875) ))
+meanQV<-c(0.001+0.0005, 0.001+0.0005, 0+0.0005, 0.002+0.0005, 0.001+0.0005 , 0+0.0005 , 0+0.0005 , 0+0.0005 , 0.002+0.0005 , 0.001+0.0005 )
 
-  # Make a list from the ... arguments and plotlist
-  plots <- c(list(...), plotlist)
-
-  numPlots = length(plots)
-
-  # If layout is NULL, then use 'cols' to determine layout
-  if (is.null(layout)) {
-    # Make the panel
-    # ncol: Number of columns of plots
-    # nrow: Number of rows needed, calculated from # of cols
-    layout <- matrix(seq(1, cols * ceiling(numPlots/cols)),
-                    ncol = cols, nrow = ceiling(numPlots/cols))
-  }
-
- if (numPlots==1) {
-    print(plots[[1]])
-
-  } else {
-    # Set up the page
-    grid.newpage()
-    pushViewport(viewport(layout = grid.layout(nrow(layout), ncol(layout))))
-
-    # Make each plot, in the correct location
-    for (i in 1:numPlots) {
-      # Get the i,j matrix positions of the regions that contain this subplot
-      matchidx <- as.data.frame(which(layout == i, arr.ind = TRUE))
-
-      print(plots[[i]], vp = viewport(layout.pos.row = matchidx$row,
-                                      layout.pos.col = matchidx$col))
-    }
-  }
-}
 
 ```
 
-Make the plot:
+Plot all the information from each i,j bin together, along with sample number:
 
 ```{r}
-jpeg(file='../../figures/FigureS4.jpeg',width=190, height=65, units='mm', res=600, pointsize=10)
 
 dglaciation<-tog$dglaciation
 dmerdust<-tog$dmerdust
 dSO4<-tog$dSO4
 final<-data.frame(dglaciation, dmerdust, dSO4)
 
-pdust<-ggplot(final, aes(x = dmerdust, y = dglaciation)) +   stat_binhex() +   scale_fill_gradient(name = "count", trans = "log",  breaks = 10^(0:2)) + theme(axis.title.y=element_text(size=8), axis.title.x=element_text(size=8), panel.background = element_rect(fill = 'white', colour = 'black')) + labs(x = expression(atop(NA, atop(textstyle(' '),textstyle('\u{2202}(MERRA-2 dust)'['i,j']*' (ng m'^-3*')') ))), y = expression(atop(NA, atop(textstyle(' '),textstyle('\u{2202}glaciation'['i,j']*' (%)') )))) + annotate("text", x = -3000, y = 50, label = 'bold("a)")', parse = TRUE) + lims(y=c(-25,50), x=c(-2500,3000)) 
+pdust<-ggplot(final, aes(x = dmerdust, y = dglaciation)) +   stat_binhex() +   scale_fill_gradient(name = "count", trans = "log",  breaks = 10^(0:2)) + theme(axis.title.y=element_text(size=8), axis.title.x=element_text(size=8), panel.background = element_rect(fill = 'white', colour = 'black')) + labs(x = expression(atop(NA, atop(textstyle(' '),textstyle('\u{2202}(MERRA-2 dust)'['i,j']*' (ng m'^-3*')') ))), y = expression(atop(NA, atop(textstyle(' '),textstyle('\u{2202}glaciation'['i,j']*' (%)') )))) + lims(y=c(-25,50), x=c(-2500,3000)) 
 
-pso4<-ggplot(final, aes(x = dSO4, y = dglaciation)) +   stat_binhex() +   scale_fill_gradient(name = "count", trans = "log",  breaks = 10^(0:2)) + theme(axis.title.y=element_text(size=8), axis.title.x=element_text(size=8), panel.background = element_rect(fill = 'white', colour = 'black')) + labs(x = expression(atop(NA, atop(textstyle(' '),textstyle('\u{2202}(MERRA-2 sulfate)'['i,j']*' (ng m'^-3*')') ))), y = expression(atop(NA, atop(textstyle(' '),textstyle('\u{2202}glaciation'['i,j']*' (%)') )))) + annotate("text", x = -300, y = 50, label = 'bold("b)")', parse = TRUE) + lims(y=c(-25,50), x=c(-300,400)) 
+pso4<-ggplot(final, aes(x = dSO4, y = dglaciation)) +   stat_binhex() +   scale_fill_gradient(name = "count", trans = "log",  breaks = 10^(0:2)) + theme(axis.title.y=element_text(size=8), axis.title.x=element_text(size=8), panel.background = element_rect(fill = 'white', colour = 'black')) + labs(x = expression(atop(NA, atop(textstyle(' '),textstyle('\u{2202}(MERRA-2 sulfate)'['i,j']*' (ng m'^-3*')') ))), y = expression(atop(NA, atop(textstyle(' '),textstyle('\u{2202}glaciation'['i,j']*' (%)') )))) + lims(y=c(-25,50), x=c(-300,400)) 
 
-pdust2<-plot(dglaciation,dmerdust)
+jpeg(file='../../figures/FigureS4.jpeg',width=190, height=90, units='mm', res=600, pointsize=10)
 
-multiplot(pdust,pso4, cols=2)
+ggarrange(pdust,pso4, ncol=2, heights=1, align="v")
+
 dev.off()
+```
 
+Plot the relationships in the top 10 most common meteorological bins for both MERRA-2 dust and sulfate variables:
+
+```{r}
+setDT(tog)
+for(i in 1:10){
+  eval(parse(t=paste0('tog',i,'<-tog[jbin==',i,']')))
+}  
+  jbin1dust <- ggplot(tog1, aes(x=dmerdust, y=dglaciation)) + geom_point() + lims(y=c(-25,50), x=c(-2500,3000)) + labs(x = expression(atop(NA, atop(textstyle(' '),textstyle('\u{2202}(MERRA-2 dust)'['i,j']*' (ng m'^-3*')') ))), y = expression(atop(NA, atop(textstyle(' '),textstyle('\u{2202}glaciation'['i,j']*' (%)') )))) + annotate("text", x=-1500, y=30, label= "n=6M\navT=-11.9\navQv=0.0015", size=3)
+  
+    jbin2dust <- ggplot(tog2, aes(x=dmerdust, y=dglaciation)) + geom_point() + lims(y=c(-25,50), x=c(-2500,3000)) + labs(x = expression(atop(NA, atop(textstyle(' '),textstyle('\u{2202}(MERRA-2 dust)'['i,j']*' (ng m'^-3*')') ))), y = expression(atop(NA, atop(textstyle(' '),textstyle('\u{2202}glaciation'['i,j']*' (%)') )))) + annotate("text", x=-1500, y=30, label= "n=5M\navT=-15.6\navQv=0.0015", size=3)
+    
+    jbin3dust <- ggplot(tog3, aes(x=dmerdust, y=dglaciation)) + geom_point() + lims(y=c(-25,50), x=c(-2500,3000)) + labs(x = expression(atop(NA, atop(textstyle(' '),textstyle('\u{2202}(MERRA-2 dust)'['i,j']*' (ng m'^-3*')') ))), y = expression(atop(NA, atop(textstyle(' '),textstyle('\u{2202}glaciation'['i,j']*' (%)') ))))  + annotate("text", x=-1500, y=30, label= "n=4M\navT=-19.4\navQv=0.0005", size=3)
+      
+    jbin4dust <- ggplot(tog4, aes(x=dmerdust, y=dglaciation)) + geom_point() + lims(y=c(-25,50), x=c(-2500,3000)) + labs(x = expression(atop(NA, atop(textstyle(' '),textstyle('\u{2202}(MERRA-2 dust)'['i,j']*' (ng m'^-3*')') ))), y = expression(atop(NA, atop(textstyle(' '),textstyle('\u{2202}glaciation'['i,j']*' (%)') ))))  + annotate("text", x=-1500, y=30, label= "n=4M\navT=-8.1\navQv=0.0025", size=3)
+      
+    jbin5dust <- ggplot(tog5, aes(x=dmerdust, y=dglaciation)) + geom_point() + lims(y=c(-25,50), x=c(-2500,3000)) + labs(x = expression(atop(NA, atop(textstyle(' '),textstyle('\u{2202}(MERRA-2 dust)'['i,j']*' (ng m'^-3*')') ))), y = expression(atop(NA, atop(textstyle(' '),textstyle('\u{2202}glaciation'['i,j']*' (%)') )))) + annotate("text", x=-1500, y=30, label= "n=3M\navT=-8.1\navQv=0.0015", size=3)
+      
+    jbin6dust <- ggplot(tog6, aes(x=dmerdust, y=dglaciation)) + geom_point() + lims(y=c(-25,50), x=c(-2500,3000)) + labs(x = expression(atop(NA, atop(textstyle(' '),textstyle('\u{2202}(MERRA-2 dust)'['i,j']*' (ng m'^-3*')') ))), y = expression(atop(NA, atop(textstyle(' '),textstyle('\u{2202}glaciation'['i,j']*' (%)') ))))  + annotate("text", x=-1500, y=30, label= "n=3M\navT=-15.6\navQv=0.0005", size=3)
+      
+    jbin7dust <- ggplot(tog7, aes(x=dmerdust, y=dglaciation)) + geom_point() + lims(y=c(-25,50), x=c(-2500,3000)) + labs(x = expression(atop(NA, atop(textstyle(' '),textstyle('\u{2202}(MERRA-2 dust)'['i,j']*' (ng m'^-3*')') ))), y = expression(atop(NA, atop(textstyle(' '),textstyle('\u{2202}glaciation'['i,j']*' (%)') ))))  + annotate("text", x=-1500, y=30, label= "n=2M\navT=-11.9\navQv=0.0005", size=3)
+      
+    jbin8dust <- ggplot(tog8, aes(x=dmerdust, y=dglaciation)) + geom_point() + lims(y=c(-25,50), x=c(-2500,3000)) + labs(x = expression(atop(NA, atop(textstyle(' '),textstyle('\u{2202}(MERRA-2 dust)'['i,j']*' (ng m'^-3*')') ))), y = expression(atop(NA, atop(textstyle(' '),textstyle('\u{2202}glaciation'['i,j']*' (%)') ))))  + annotate("text", x=-1500, y=30, label= "n=2M\navT=-23.1\navQv=0.0005", size=3)
+      
+    jbin9dust <- ggplot(tog9, aes(x=dmerdust, y=dglaciation)) + geom_point() + lims(y=c(-25,50), x=c(-2500,3000)) + labs(x = expression(atop(NA, atop(textstyle(' '),textstyle('\u{2202}(MERRA-2 dust)'['i,j']*' (ng m'^-3*')') ))), y = expression(atop(NA, atop(textstyle(' '),textstyle('\u{2202}glaciation'['i,j']*' (%)') )))) + annotate("text", x=-1500, y=30, label= "n=2M\navT=-11.9\navQv=0.0025", size=3)
+      
+    jbin10dust <- ggplot(tog10, aes(x=dmerdust, y=dglaciation)) + geom_point() + lims(y=c(-25,50), x=c(-2500,3000)) + labs(x = expression(atop(NA, atop(textstyle(' '),textstyle('\u{2202}(MERRA-2 dust)'['i,j']*' (ng m'^-3*')') ))), y = expression(atop(NA, atop(textstyle(' '),textstyle('\u{2202}glaciation'['i,j']*' (%)') ))))  + annotate("text", x=-1500, y=30, label= "n=2M\navT=-13.8\navQv=0.0015", size=3)
+    
+    jbin1SO4 <- ggplot(tog1, aes(x=dSO4, y=dglaciation)) + geom_point() + lims(y=c(-25,50), x=c(-300,400))+ labs(x = expression(atop(NA, atop(textstyle(' '),textstyle('\u{2202}(MERRA-2 sulfate)'['i,j']*' (ng m'^-3*')') ))), y = expression(atop(NA, atop(textstyle(' '),textstyle('\u{2202}glaciation'['i,j']*' (%)') ))))
+    
+      jbin2SO4 <- ggplot(tog2, aes(x=dSO4, y=dglaciation)) + geom_point() + lims(y=c(-25,50), x=c(-300,400))+ labs(x = expression(atop(NA, atop(textstyle(' '),textstyle('\u{2202}(MERRA-2 sulfate)'['i,j']*' (ng m'^-3*')') ))), y = expression(atop(NA, atop(textstyle(' '),textstyle('\u{2202}glaciation'['i,j']*' (%)') ))))
+    
+    jbin3SO4 <- ggplot(tog3, aes(x=dSO4, y=dglaciation)) + geom_point() + lims(y=c(-25,50), x=c(-300,400))+ labs(x = expression(atop(NA, atop(textstyle(' '),textstyle('\u{2202}(MERRA-2 sulfate)'['i,j']*' (ng m'^-3*')') ))), y = expression(atop(NA, atop(textstyle(' '),textstyle('\u{2202}glaciation'['i,j']*' (%)') ))))
+      
+    jbin4SO4 <- ggplot(tog4, aes(x=dSO4, y=dglaciation)) + geom_point() + lims(y=c(-25,50), x=c(-300,400))+ labs(x = expression(atop(NA, atop(textstyle(' '),textstyle('\u{2202}(MERRA-2 sulfate)'['i,j']*' (ng m'^-3*')') ))), y = expression(atop(NA, atop(textstyle(' '),textstyle('\u{2202}glaciation'['i,j']*' (%)') ))))
+      
+    jbin5SO4 <- ggplot(tog5, aes(x=dSO4, y=dglaciation)) + geom_point() + lims(y=c(-25,50), x=c(-300,400))+ labs(x = expression(atop(NA, atop(textstyle(' '),textstyle('\u{2202}(MERRA-2 sulfate)'['i,j']*' (ng m'^-3*')') ))), y = expression(atop(NA, atop(textstyle(' '),textstyle('\u{2202}glaciation'['i,j']*' (%)') ))))
+      
+    jbin6SO4 <- ggplot(tog6, aes(x=dSO4, y=dglaciation)) + geom_point() + lims(y=c(-25,50), x=c(-300,400))+ labs(x = expression(atop(NA, atop(textstyle(' '),textstyle('\u{2202}(MERRA-2 sulfate)'['i,j']*' (ng m'^-3*')') ))), y = expression(atop(NA, atop(textstyle(' '),textstyle('\u{2202}glaciation'['i,j']*' (%)') ))))
+      
+    jbin7SO4 <- ggplot(tog7, aes(x=dSO4, y=dglaciation)) + geom_point() + lims(y=c(-25,50), x=c(-300,400))+ labs(x = expression(atop(NA, atop(textstyle(' '),textstyle('\u{2202}(MERRA-2 sulfate)'['i,j']*' (ng m'^-3*')') ))), y = expression(atop(NA, atop(textstyle(' '),textstyle('\u{2202}glaciation'['i,j']*' (%)') ))))
+      
+    jbin8SO4 <- ggplot(tog8, aes(x=dSO4, y=dglaciation)) + geom_point() + lims(y=c(-25,50), x=c(-300,400))+ labs(x = expression(atop(NA, atop(textstyle(' '),textstyle('\u{2202}(MERRA-2 sulfate)'['i,j']*' (ng m'^-3*')') ))), y = expression(atop(NA, atop(textstyle(' '),textstyle('\u{2202}glaciation'['i,j']*' (%)') ))))
+      
+    jbin9SO4 <- ggplot(tog9, aes(x=dSO4, y=dglaciation)) + geom_point() + lims(y=c(-25,50), x=c(-300,400))+ labs(x = expression(atop(NA, atop(textstyle(' '),textstyle('\u{2202}(MERRA-2 sulfate)'['i,j']*' (ng m'^-3*')') ))), y = expression(atop(NA, atop(textstyle(' '),textstyle('\u{2202}glaciation'['i,j']*' (%)') ))))
+      
+    jbin10SO4 <- ggplot(tog10, aes(x=dSO4, y=dglaciation)) + geom_point() + lims(y=c(-25,50), x=c(-300,400))+ labs(x = expression(atop(NA, atop(textstyle(' '),textstyle('\u{2202}(MERRA-2 sulfate)'['i,j']*' (ng m'^-3*')') ))), y = expression(atop(NA, atop(textstyle(' '),textstyle('\u{2202}glaciation'['i,j']*' (%)') ))))
+
+    
+jpeg(file='../../figures/FigureS5.jpeg',width=190, height=1650/3, units='mm', res=600, pointsize=10)
+
+ggarrange(jbin1dust, jbin1SO4,jbin2dust, jbin2SO4, jbin3dust, jbin3SO4, jbin4dust, jbin4SO4, jbin5dust, jbin5SO4, jbin6dust, jbin6SO4, jbin7dust, jbin7SO4, jbin8dust, jbin8SO4, jbin9dust, jbin9SO4, jbin10dust, jbin10SO4, ncol=2, nrow=10, heights=1, align="v")
+
+dev.off()
+```
+
+Plot it all together:
+
+```{r}
 
 ```
