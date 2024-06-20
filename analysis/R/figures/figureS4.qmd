@@ -23,10 +23,11 @@ library(data.table)
 library(ggpubr)
 ```
 
-Load the tog dataset, which represents the output of the GAM, and deviance predicted by each variable:
+Load the tog data set, which represents the output of the GAM, and deviance predicted by each variable, and the tog2 data set, which is the same, except for MERRA-2 temperatures below -10 degrees C:
 
 ```{r}
 tog<-read.csv("../../data/derived_data/tog.csv")
+tog<-read.csv("../../data/derived_data/tog2.csv")
 ```
 
 Add how many samples were in the top 10 most common meteorological bins, and the average T and Qv conditions of the bin. Where the MERRA-2 and AIRS T bins differ, take the average of the two.
@@ -52,9 +53,22 @@ pdust<-ggplot(final, aes(x = dmerdust, y = dglaciation)) +   stat_binhex() +   s
 
 pso4<-ggplot(final, aes(x = dSO4, y = dglaciation)) +   stat_binhex() +   scale_fill_gradient(name = "count", trans = "log",  breaks = 10^(0:2)) + theme(axis.title.y=element_text(size=8), axis.title.x=element_text(size=8), panel.background = element_rect(fill = 'white', colour = 'black')) + labs(x = expression(atop(NA, atop(textstyle(' '),textstyle('\u{2202}(MERRA-2 sulfate)'['i,j']*' (ng m'^-3*')') ))), y = expression(atop(NA, atop(textstyle(' '),textstyle('\u{2202}glaciation'['i,j']*' (%)') )))) + lims(y=c(-25,50), x=c(-300,400)) 
 
-jpeg(file='../../figures/FigureS4.jpeg',width=190, height=90, units='mm', res=600, pointsize=10)
 
-ggarrange(pdust,pso4, ncol=2, heights=1, align="v")
+
+
+dglaciation<-tog2$dglaciation
+dmerdust<-tog2$dmerdust
+dSO4<-tog2$dSO4
+final2<-data.frame(dglaciation, dmerdust, dSO4)
+
+pdust2<-ggplot(final2, aes(x = dmerdust, y = dglaciation)) +   stat_binhex() +   scale_fill_gradient(name = "count", trans = "log",  breaks = 10^(0:2)) + theme(axis.title.y=element_text(size=8), axis.title.x=element_text(size=8), panel.background = element_rect(fill = 'white', colour = 'black')) + labs(x = expression(atop(NA, atop(textstyle(' '),textstyle('\u{2202}(MERRA-2 dust)'['i,j']*' (ng m'^-3*')') ))), y = expression(atop(NA, atop(textstyle(' '),textstyle('\u{2202}glaciation'['i,j']*' (%)') )))) + lims(y=c(-25,50), x=c(-2500,3000)) + annotate("text", x=-1500, y=45, label= expression(paste("T < -10 ",degree~C," ")), size=4)
+
+pso42<-ggplot(final2, aes(x = dSO4, y = dglaciation)) +   stat_binhex() +   scale_fill_gradient(name = "count", trans = "log",  breaks = 10^(0:2)) + theme(axis.title.y=element_text(size=8), axis.title.x=element_text(size=8), panel.background = element_rect(fill = 'white', colour = 'black')) + labs(x = expression(atop(NA, atop(textstyle(' '),textstyle('\u{2202}(MERRA-2 sulfate)'['i,j']*' (ng m'^-3*')') ))), y = expression(atop(NA, atop(textstyle(' '),textstyle('\u{2202}glaciation'['i,j']*' (%)') )))) + lims(y=c(-25,50), x=c(-300,400)) + annotate("text", x=-150, y=45, label= expression(paste("T < -10 ",degree~C," ")), size=4)
+
+
+jpeg(file='../../figures/FigureS5.jpeg',width=190, height=130, units='mm', res=600, pointsize=10)
+
+ggarrange(pdust,pso4, pdust2,pso42, ncol=2, nrow=2, heights=1, align="v")
 
 dev.off()
 ```
@@ -107,7 +121,7 @@ for(i in 1:10){
     jbin10SO4 <- ggplot(tog10, aes(x=dSO4, y=dglaciation)) + geom_point() + lims(y=c(-25,50), x=c(-300,400))+ labs(x = expression(atop(NA, atop(textstyle(' '),textstyle('\u{2202}(MERRA-2 sulfate)'['i,j']*' (ng m'^-3*')') ))), y = expression(atop(NA, atop(textstyle(' '),textstyle('\u{2202}glaciation'['i,j']*' (%)') ))))
 
     
-jpeg(file='../../figures/FigureS5.jpeg',width=190, height=1650/3, units='mm', res=600, pointsize=10)
+jpeg(file='../../figures/FigureS4.jpeg',width=190, height=1650/3, units='mm', res=600, pointsize=10)
 
 ggarrange(jbin1dust, jbin1SO4,jbin2dust, jbin2SO4, jbin3dust, jbin3SO4, jbin4dust, jbin4SO4, jbin5dust, jbin5SO4, jbin6dust, jbin6SO4, jbin7dust, jbin7SO4, jbin8dust, jbin8SO4, jbin9dust, jbin9SO4, jbin10dust, jbin10SO4, ncol=2, nrow=10, heights=1, align="v")
 
