@@ -49,7 +49,7 @@ par(mgp=c(2.6,0.7,0))
 
 fdustcutoff<- 93 
 merdustcutoff<-653
-abpt<-0.005
+abpt<-0.005*100
 
 #FLEXPART plot limits
 xmin<-0.0002*100
