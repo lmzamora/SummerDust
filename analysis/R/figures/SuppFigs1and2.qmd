@@ -52,8 +52,8 @@ merdustcutoff<-653
 abpt<-0.005
 
 #FLEXPART plot limits
-xmin<-0.0002
-xmax<-0.18
+xmin<-0.0002*100
+xmax<-0.18*100
 ymax<-5000
 ymin<-100
 
@@ -67,18 +67,18 @@ max<-1.5
 zbino<-3
 ptsize<-foo$area[foo$zbin==zbino]/max(foo$area[foo$zbin==zbino])
 
-plot(foo$mean_overlap_flex[foo$zbin==zbino], foo$meandust_flex[foo$zbin==zbino],cex=ptsize,col=1,pch=1,lwd=0.5, yaxs="i",las=1,xaxs="i",cex.axis=0.9,cex.lab=0.9, xlab="CALIPSO frequency (%)",ylab="Dust (ng/m3)",log="xy",ylim=c(ymin,ymax),xlim=c(xmin,xmax), main="FLEXPART")
+plot(foo$mean_overlap_flex[foo$zbin==zbino]*100, foo$meandust_flex[foo$zbin==zbino],cex=ptsize,col=1,pch=1,lwd=0.5, yaxs="i",las=1,xaxs="i",cex.axis=0.9,cex.lab=0.9, xlab="CALIPSO frequency (%)",ylab="Dust (ng/m3)",log="xy",ylim=c(ymin,ymax),xlim=c(xmin,xmax), main="FLEXPART")
 abline(v=abpt,col="deepskyblue",lty=2)
-text(0.0008, 3000, substitute(paste(bold('0.75-1.5 km'))))
+text(0.0008*100, 3000, substitute(paste(bold('0.75-1.5 km'))))
 r2<-round(FlexDustLToceanR[zbino,]$V1,2)
-text(0.02, 200, labels=expression(paste("weighted R"^2*" = ")),col="deepskyblue4")
-text(0.02, 150, r2,col="deepskyblue4")
+text(0.02*100, 200, labels=expression(paste("weighted R"^2*" = ")),col="deepskyblue4")
+text(0.02*100, 150, r2,col="deepskyblue4")
 
-plot(foo$mean_overlap_mer[foo$zbin==zbino],foo$meandust_mer[foo$zbin==zbino],cex=ptsize,col=1,pch=1,lwd=0.5,yaxs="i",las=1,xaxs="i",cex.axis=0.9,cex.lab=0.9, xlab="CALIPSO frequency (%)",ylab="Dust (ng/m3)",log="xy",ylim=c(mymin,mymax),xlim=c(xmin,xmax), main="MERRA-2")
+plot(foo$mean_overlap_mer[foo$zbin==zbino]*100,foo$meandust_mer[foo$zbin==zbino],cex=ptsize,col=1,pch=1,lwd=0.5,yaxs="i",las=1,xaxs="i",cex.axis=0.9,cex.lab=0.9, xlab="CALIPSO frequency (%)",ylab="Dust (ng/m3)",log="xy",ylim=c(mymin,mymax),xlim=c(xmin,xmax), main="MERRA-2")
 abline(v=abpt,col="deepskyblue",lty=2)
 r2<-round(MerDustLToceanR[zbino-1,]$V1,2)
-text(0.02, 800, labels=expression(paste("weighted R"^2*" = ")),col="deepskyblue4")
-text(0.02, 700, r2,col="deepskyblue4")
+text(0.02*100, 800, labels=expression(paste("weighted R"^2*" = ")),col="deepskyblue4")
+text(0.02*100, 700, r2,col="deepskyblue4")
 
 
 
@@ -91,19 +91,19 @@ max<-2
 zbino<-4
 
 ptsize<-foo$area[foo$zbin==zbino]/max(foo$area[foo$zbin==zbino])
-plot(foo$mean_overlap_flex[foo$zbin==zbino], foo$meandust_flex[foo$zbin==zbino],cex=ptsize,col=1,pch=1,,lwd=0.5, yaxs="i",las=1,xaxs="i",cex.axis=0.9,cex.lab=0.9, xlab="CALIPSO frequency (%)",ylab="Dust (ng/m3)",log="xy",ylim=c(ymin,ymax),xlim=c(xmin,xmax))
+plot(foo$mean_overlap_flex[foo$zbin==zbino]*100, foo$meandust_flex[foo$zbin==zbino],cex=ptsize,col=1,pch=1,,lwd=0.5, yaxs="i",las=1,xaxs="i",cex.axis=0.9,cex.lab=0.9, xlab="CALIPSO frequency (%)",ylab="Dust (ng/m3)",log="xy",ylim=c(ymin,ymax),xlim=c(xmin,xmax))
 abline(v=abpt,col="deepskyblue",lty=2)
-text(0.0008, 3000, substitute(paste(bold('1.5-2 km'))))
+text(0.0008*100, 3000, substitute(paste(bold('1.5-2 km'))))
 r2<-round(FlexDustLToceanR[zbino,]$V1,2)
-text(0.02, 200, labels=expression(paste("weighted R"^2*" = ")),col="deepskyblue4")
-text(0.02, 150, r2,col="deepskyblue4")
+text(0.02*100, 200, labels=expression(paste("weighted R"^2*" = ")),col="deepskyblue4")
+text(0.02*100, 150, r2,col="deepskyblue4")
 
 
-plot(foo$mean_overlap_mer[foo$zbin==zbino], foo$meandust_mer[foo$zbin==zbino],cex=ptsize,col=1,pch=1,lwd=0.5, yaxs="i",las=1,xaxs="i",cex.axis=0.9,cex.lab=0.9, xlab="CALIPSO frequency (%)",ylab="Dust (ng/m3)",log="xy",ylim=c(mymin,mymax),xlim=c(xmin,xmax))
+plot(foo$mean_overlap_mer[foo$zbin==zbino]*100, foo$meandust_mer[foo$zbin==zbino],cex=ptsize,col=1,pch=1,lwd=0.5, yaxs="i",las=1,xaxs="i",cex.axis=0.9,cex.lab=0.9, xlab="CALIPSO frequency (%)",ylab="Dust (ng/m3)",log="xy",ylim=c(mymin,mymax),xlim=c(xmin,xmax))
 abline(v=abpt,col="deepskyblue",lty=2)
 r2<-round(MerDustLToceanR[zbino-1,]$V1,2)
-text(0.02, 800, labels=expression(paste("weighted R"^2*" = ")),col="deepskyblue4")
-text(0.02, 700, r2,col="deepskyblue4")
+text(0.02*100, 800, labels=expression(paste("weighted R"^2*" = ")),col="deepskyblue4")
+text(0.02*100, 700, r2,col="deepskyblue4")
 
 
 
@@ -115,20 +115,20 @@ max<-4
 zbino<-5
 
 ptsize<-foo$area[foo$zbin==zbino]/max(foo$area[foo$zbin==zbino])
-plot(foo$mean_overlap_flex[foo$zbin==zbino], foo$meandust_flex[foo$zbin==zbino],cex=ptsize,col=1,pch=1,lwd=0.5, yaxs="i",las=1,xaxs="i",cex.axis=0.9,cex.lab=0.9, xlab="CALIPSO frequency (%)",ylab="Dust (ng/m3)",log="xy",ylim=c(ymin,ymax),xlim=c(xmin,xmax))
+plot(foo$mean_overlap_flex[foo$zbin==zbino]*100, foo$meandust_flex[foo$zbin==zbino],cex=ptsize,col=1,pch=1,lwd=0.5, yaxs="i",las=1,xaxs="i",cex.axis=0.9,cex.lab=0.9, xlab="CALIPSO frequency (%)",ylab="Dust (ng/m3)",log="xy",ylim=c(ymin,ymax),xlim=c(xmin,xmax))
 abline(v=abpt,col="deepskyblue",lty=2)
-text(0.0008, 3000, substitute(paste(bold('2-4 km'))))
+text(0.0008*100, 3000, substitute(paste(bold('2-4 km'))))
 r2<-round(FlexDustLToceanR[zbino,]$V1,2)
-text(0.02, 2000, labels=expression(paste("weighted R"^2*" = ")),col="deepskyblue4")
-text(0.02, 1500, r2,col="deepskyblue4")
+text(0.02*100, 2000, labels=expression(paste("weighted R"^2*" = ")),col="deepskyblue4")
+text(0.02*100, 1500, r2,col="deepskyblue4")
 
 
 
-plot(foo$mean_overlap_mer[foo$zbin==zbino], foo$meandust_mer[foo$zbin==zbino],cex=ptsize,col=1,pch=1,lwd=0.5,yaxs="i",las=1,xaxs="i",cex.axis=0.9,cex.lab=0.9, xlab="CALIPSO frequency (%)",ylab="Dust (ng/m3)",log="xy",ylim=c(mymin,mymax),xlim=c(xmin,xmax))
+plot(foo$mean_overlap_mer[foo$zbin==zbino]*100, foo$meandust_mer[foo$zbin==zbino],cex=ptsize,col=1,pch=1,lwd=0.5,yaxs="i",las=1,xaxs="i",cex.axis=0.9,cex.lab=0.9, xlab="CALIPSO frequency (%)",ylab="Dust (ng/m3)",log="xy",ylim=c(mymin,mymax),xlim=c(xmin,xmax))
 abline(v=abpt,col="deepskyblue",lty=2)
 r2<-round(MerDustLToceanR[zbino-1,]$V1,2)
-text(0.02, 800, labels=expression(paste("weighted R"^2*" = ")),col="deepskyblue4")
-text(0.02, 700, r2,col="deepskyblue4")
+text(0.02*100, 800, labels=expression(paste("weighted R"^2*" = ")),col="deepskyblue4")
+text(0.02*100, 700, r2,col="deepskyblue4")
 
 
 
@@ -138,18 +138,18 @@ min<-4
 max<-6
 zbino<-6
 ptsize<-foo$area[foo$zbin==zbino]/max(foo$area[foo$zbin==zbino])
-plot(foo$mean_overlap_flex[foo$zbin==zbino], foo$meandust_flex[foo$zbin==zbino],cex=ptsize,col=1,pch=1,lwd=0.5, yaxs="i",las=1,xaxs="i",cex.axis=0.9,cex.lab=0.9, xlab="CALIPSO frequency (%)",ylab="Dust (ng/m3)",log="xy",ylim=c(ymin,ymax),xlim=c(xmin,xmax))
+plot(foo$mean_overlap_flex[foo$zbin==zbino]*100, foo$meandust_flex[foo$zbin==zbino],cex=ptsize,col=1,pch=1,lwd=0.5, yaxs="i",las=1,xaxs="i",cex.axis=0.9,cex.lab=0.9, xlab="CALIPSO frequency (%)",ylab="Dust (ng/m3)",log="xy",ylim=c(ymin,ymax),xlim=c(xmin,xmax))
 abline(v=abpt,col="deepskyblue",lty=2)
-text(0.0008, 3000, substitute(paste(bold('4-6 km'))))
+text(0.0008*100, 3000, substitute(paste(bold('4-6 km'))))
 r2<-round(FlexDustLToceanR[zbino,]$V1,2)
-text(0.02, 2000, labels=expression(paste("weighted R"^2*" = ")),col="deepskyblue4")
-text(0.02, 1500, r2,col="deepskyblue4")
+text(0.02*100, 2000, labels=expression(paste("weighted R"^2*" = ")),col="deepskyblue4")
+text(0.02*100, 1500, r2,col="deepskyblue4")
 
-plot(foo$mean_overlap_mer[foo$zbin==zbino], foo$meandust_mer[foo$zbin==zbino],cex=ptsize,col=1,pch=1,lwd=0.5,yaxs="i",las=1,xaxs="i",cex.axis=0.9,cex.lab=0.9, xlab="CALIPSO frequency (%)",ylab="Dust (ng/m3)",log="xy",ylim=c(mymin,mymax),xlim=c(xmin,xmax))
+plot(foo$mean_overlap_mer[foo$zbin==zbino]*100, foo$meandust_mer[foo$zbin==zbino],cex=ptsize,col=1,pch=1,lwd=0.5,yaxs="i",las=1,xaxs="i",cex.axis=0.9,cex.lab=0.9, xlab="CALIPSO frequency (%)",ylab="Dust (ng/m3)",log="xy",ylim=c(mymin,mymax),xlim=c(xmin,xmax))
 abline(v=abpt,col="deepskyblue",lty=2)
 r2<-round(MerDustLToceanR[zbino-1,]$V1,2)
-text(0.02, 800, labels=expression(paste("weighted R"^2*" = ")),col="deepskyblue4")
-text(0.02, 700, r2,col="deepskyblue4")
+text(0.02*100, 800, labels=expression(paste("weighted R"^2*" = ")),col="deepskyblue4")
+text(0.02*100, 700, r2,col="deepskyblue4")
 
 
 
@@ -160,30 +160,27 @@ max<-8
 zbino<-7
 
 ptsize<-foo$area[foo$zbin==zbino]/max(foo$area[foo$zbin==zbino])
-plot(foo$mean_overlap_flex[foo$zbin==zbino], foo$meandust_flex[foo$zbin==zbino],cex=ptsize,col=1,pch=1,lwd=0.5, yaxs="i",las=1,xaxs="i",cex.axis=0.9,cex.lab=0.9, xlab="CALIPSO frequency (%)",ylab="Dust (ng/m3)",log="xy",ylim=c(ymin,ymax),xlim=c(xmin,xmax))
+plot(foo$mean_overlap_flex[foo$zbin==zbino]*100, foo$meandust_flex[foo$zbin==zbino],cex=ptsize,col=1,pch=1,lwd=0.5, yaxs="i",las=1,xaxs="i",cex.axis=0.9,cex.lab=0.9, xlab="CALIPSO frequency (%)",ylab="Dust (ng/m3)",log="xy",ylim=c(ymin,ymax),xlim=c(xmin,xmax))
 abline(v=abpt,col="deepskyblue",lty=2)
-text(0.0008, 3000, substitute(paste(bold('6-8 km'))))
+text(0.0008*100, 3000, substitute(paste(bold('6-8 km'))))
 r2<-round(FlexDustLToceanR[zbino,]$V1,2)
-text(0.02, 2000, labels=expression(paste("weighted R"^2*" = ")),col="deepskyblue4")
-text(0.02, 1500, r2,col="deepskyblue4")
+text(0.02*100, 2000, labels=expression(paste("weighted R"^2*" = ")),col="deepskyblue4")
+text(0.02*100, 1500, r2,col="deepskyblue4")
 
 
-plot(foo$mean_overlap_mer[foo$zbin==zbino], foo$meandust_mer[foo$zbin==zbino],cex=ptsize,col=1,pch=1,lwd=0.5,yaxs="i",las=1,xaxs="i",cex.axis=0.9,cex.lab=0.9, xlab="CALIPSO frequency (%)",ylab="Dust (ng/m3)",log="xy",ylim=c(mymin,mymax),xlim=c(xmin,xmax))
+plot(foo$mean_overlap_mer[foo$zbin==zbino]*100, foo$meandust_mer[foo$zbin==zbino],cex=ptsize,col=1,pch=1,lwd=0.5,yaxs="i",las=1,xaxs="i",cex.axis=0.9,cex.lab=0.9, xlab="CALIPSO frequency (%)",ylab="Dust (ng/m3)",log="xy",ylim=c(mymin,mymax),xlim=c(xmin,xmax))
 abline(v=abpt,col="deepskyblue",lty=2)
 r2<-round(MerDustLToceanR[zbino-1,]$V1,2)
-text(0.02, 800, labels=expression(paste("weighted R"^2*" = ")),col="deepskyblue4")
-text(0.02, 700, r2,col="deepskyblue4")
+text(0.02*100, 800, labels=expression(paste("weighted R"^2*" = ")),col="deepskyblue4")
+text(0.02*100, 700, r2,col="deepskyblue4")
 
 dev.off()
 
 ```
 
-
-
-
 ## Supplementary Figure 2
 
-This figure is the same as for Supplementary Figure 1 but for data points above the blue dashed line in Supplementary Figure 1 and, for MERRA-2 data, excluding points with FLEXPART dust concentrations in the lower quartile of the data. 
+This figure is the same as for Supplementary Figure 1 but for data points above the blue dashed line in Supplementary Figure 1 and, for MERRA-2 data, excluding points with FLEXPART dust concentrations in the lower quartile of the data.
 
 ## Running Code
 
@@ -212,8 +209,8 @@ fdustcutoff<- 93
 merdustcutoff<-653
 
 #FLEXPART plot limits
-xmin<-abpt
-xmax<-0.18
+xmin<-abpt*100
+xmax<-0.18*100
 ymax<-5000
 ymin<-100
 
@@ -226,17 +223,17 @@ max<-1.5
 zbin<-3
 
 ptsize<-merged2$area[merged2$zbin==zbin]/max(merged2$area[merged2$zbin==zbin], na.rm=T)
-plot(merged2$mean_overlap_flex[merged2$zbin==zbin], merged2$meandust_flex[merged2$zbin==zbin],cex=ptsize,col=1,pch=1,lwd=0.5, yaxs="i",las=1,xaxs="i",cex.axis=0.9,cex.lab=0.9, xlab="CALIPSO frequency (%)",ylab="Dust (ng/m3)",log="xy",ylim=c(ymin,ymax),xlim=c(xmin,xmax), main="FLEXPART")
-text(0.0008, 3000, substitute(paste(bold('0.75-1.5 km'))))
+plot(merged2$mean_overlap_flex[merged2$zbin==zbin]*100, merged2$meandust_flex[merged2$zbin==zbin],cex=ptsize,col=1,pch=1,lwd=0.5, yaxs="i",las=1,xaxs="i",cex.axis=0.9,cex.lab=0.9, xlab="CALIPSO frequency (%)",ylab="Dust (ng/m3)",log="xy",ylim=c(ymin,ymax),xlim=c(xmin,xmax), main="FLEXPART")
+text(1, 3000, substitute(paste(bold('0.75-1.5 km'))))
 r2<-round(FlexDustLToceanR_high$V1[zbin-2],2)
-text(0.02, 200, labels=expression(paste("weighted R"^2*" = ")),col="deepskyblue4")
-text(0.02, 150, r2,col="deepskyblue4")
+text(0.02*100, 200, labels=expression(paste("weighted R"^2*" = ")),col="deepskyblue4")
+text(0.02*100, 150, r2,col="deepskyblue4")
 
 
-plot(merged2$mean_overlap_mer[merged2$zbin==zbin] , merged2$meandust_mer[merged2$zbin==zbin],cex=ptsize,col=1,pch=1,lwd=0.5,yaxs="i",las=1,xaxs="i",cex.axis=0.9,cex.lab=0.9, xlab="CALIPSO frequency (%)",ylab="Dust (ng/m3)",log="xy",ylim=c(mymin,mymax),xlim=c(xmin,xmax), main="MERRA-2")
+plot(merged2$mean_overlap_mer[merged2$zbin==zbin]*100, merged2$meandust_mer[merged2$zbin==zbin],cex=ptsize,col=1,pch=1,lwd=0.5,yaxs="i",las=1,xaxs="i",cex.axis=0.9,cex.lab=0.9, xlab="CALIPSO frequency (%)",ylab="Dust (ng/m3)",log="xy",ylim=c(mymin,mymax),xlim=c(xmin,xmax), main="MERRA-2")
 r2<-round(MerDustLToceanR_high$V1[zbin-2],2)
-text(0.02, 750, labels=expression(paste("weighted R"^2*" = ")),col="deepskyblue4")
-text(0.02, 625, r2,col="deepskyblue4")
+text(0.02*100, 750, labels=expression(paste("weighted R"^2*" = ")),col="deepskyblue4")
+text(0.02*100, 625, r2,col="deepskyblue4")
 
 
 
@@ -249,16 +246,16 @@ max<-2
 zbin<-4
 
 ptsize<-merged2$area[merged2$zbin==zbin]/max(merged2$area[merged2$zbin==zbin], na.rm=T)
-plot(merged2$mean_overlap_flex[merged2$zbin==zbin], merged2$meandust_flex[merged2$zbin==zbin],cex=ptsize,col=1,pch=1,lwd=0.5, yaxs="i",las=1,xaxs="i",cex.axis=0.9,cex.lab=0.9, xlab="CALIPSO frequency (%)",ylab="Dust (ng/m3)",log="xy",ylim=c(ymin,ymax),xlim=c(xmin,xmax))
-text(0.0008, 3000, substitute(paste(bold('0.75-1.5 km'))))
+plot(merged2$mean_overlap_flex[merged2$zbin==zbin]*100, merged2$meandust_flex[merged2$zbin==zbin],cex=ptsize,col=1,pch=1,lwd=0.5, yaxs="i",las=1,xaxs="i",cex.axis=0.9,cex.lab=0.9, xlab="CALIPSO frequency (%)",ylab="Dust (ng/m3)",log="xy",ylim=c(ymin,ymax),xlim=c(xmin,xmax))
+text(1, 3000, substitute(paste(bold('0.75-1.5 km'))))
 r2<-round(FlexDustLToceanR_high$V1[zbin-2],2)
-text(0.02, 200, labels=expression(paste("weighted R"^2*" = ")),col="deepskyblue4")
-text(0.02, 150, r2,col="deepskyblue4")
+text(0.02*100, 200, labels=expression(paste("weighted R"^2*" = ")),col="deepskyblue4")
+text(0.02*100, 150, r2,col="deepskyblue4")
 
-plot(merged2$mean_overlap_mer[merged2$zbin==zbin], merged2$meandust_mer[merged2$zbin==zbin],cex=ptsize,col=1,pch=1,lwd=0.5,yaxs="i",las=1,xaxs="i",cex.axis=0.9,cex.lab=0.9, xlab="CALIPSO frequency (%)",ylab="Dust (ng/m3)",log="xy",ylim=c(mymin,mymax),xlim=c(xmin,xmax))
+plot(merged2$mean_overlap_mer[merged2$zbin==zbin]*100, merged2$meandust_mer[merged2$zbin==zbin],cex=ptsize,col=1,pch=1,lwd=0.5,yaxs="i",las=1,xaxs="i",cex.axis=0.9,cex.lab=0.9, xlab="CALIPSO frequency (%)",ylab="Dust (ng/m3)",log="xy",ylim=c(mymin,mymax),xlim=c(xmin,xmax))
 r2<-round(MerDustLToceanR_high$V1[zbin-2],2)
-text(0.02, 750, labels=expression(paste("weighted R"^2*" = ")),col="deepskyblue4")
-text(0.02, 625, r2,col="deepskyblue4")
+text(0.02*100, 750, labels=expression(paste("weighted R"^2*" = ")),col="deepskyblue4")
+text(0.02*100, 625, r2,col="deepskyblue4")
 
 
 
@@ -268,16 +265,16 @@ max<-4
 zbin<-5
 
 ptsize<-merged2$area[merged2$zbin==zbin]/max(merged2$area[merged2$zbin==zbin], na.rm=T)
-plot(merged2$mean_overlap_flex[merged2$zbin==zbin], merged2$meandust_flex[merged2$zbin==zbin],cex=ptsize,col=1,pch=1,lwd=0.5, yaxs="i",las=1,xaxs="i",cex.axis=0.9,cex.lab=0.9, xlab="CALIPSO frequency (%)",ylab="Dust (ng/m3)",log="xy",ylim=c(ymin,ymax),xlim=c(xmin,xmax))
-text(0.0008, 3000, substitute(paste(bold('0.75-1.5 km'))))
+plot(merged2$mean_overlap_flex[merged2$zbin==zbin]*100, merged2$meandust_flex[merged2$zbin==zbin],cex=ptsize,col=1,pch=1,lwd=0.5, yaxs="i",las=1,xaxs="i",cex.axis=0.9,cex.lab=0.9, xlab="CALIPSO frequency (%)",ylab="Dust (ng/m3)",log="xy",ylim=c(ymin,ymax),xlim=c(xmin,xmax))
+text(1, 3000, substitute(paste(bold('0.75-1.5 km'))))
 r2<-round(FlexDustLToceanR_high$V1[zbin-2],2)
-text(0.02, 200, labels=expression(paste("weighted R"^2*" = ")),col="deepskyblue4")
-text(0.02, 150, r2,col="deepskyblue4")
+text(0.02*100, 200, labels=expression(paste("weighted R"^2*" = ")),col="deepskyblue4")
+text(0.02*100, 150, r2,col="deepskyblue4")
 
-plot(merged2$mean_overlap_mer[merged2$zbin==zbin], merged2$meandust_mer[merged2$zbin==zbin],cex=ptsize,col=1,pch=1,lwd=0.5,yaxs="i",las=1,xaxs="i",cex.axis=0.9,cex.lab=0.9, xlab="CALIPSO frequency (%)",ylab="Dust (ng/m3)",log="xy",ylim=c(mymin,mymax),xlim=c(xmin,xmax))
+plot(merged2$mean_overlap_mer[merged2$zbin==zbin]*100, merged2$meandust_mer[merged2$zbin==zbin],cex=ptsize,col=1,pch=1,lwd=0.5,yaxs="i",las=1,xaxs="i",cex.axis=0.9,cex.lab=0.9, xlab="CALIPSO frequency (%)",ylab="Dust (ng/m3)",log="xy",ylim=c(mymin,mymax),xlim=c(xmin,xmax))
 r2<-round(MerDustLToceanR_high$V1[zbin-2],2)
-text(0.02, 750, labels=expression(paste("weighted R"^2*" = ")),col="deepskyblue4")
-text(0.02, 625, r2,col="deepskyblue4")
+text(0.02*100, 750, labels=expression(paste("weighted R"^2*" = ")),col="deepskyblue4")
+text(0.02*100, 625, r2,col="deepskyblue4")
 
 
 min<-4
@@ -285,16 +282,16 @@ max<-6
 zbin<-6
 
 ptsize<-merged2$area[merged2$zbin==zbin]/max(merged2$area[merged2$zbin==zbin], na.rm=T)
-plot(merged2$mean_overlap_flex[merged2$zbin==zbin], merged2$meandust_flex[merged2$zbin==zbin],cex=ptsize,col=1,pch=1,lwd=0.5, yaxs="i",las=1,xaxs="i",cex.axis=0.9,cex.lab=0.9, xlab="CALIPSO frequency (%)",ylab="Dust (ng/m3)",log="xy",ylim=c(ymin,ymax),xlim=c(xmin,xmax))
-text(0.0008, 3000, substitute(paste(bold('0.75-1.5 km'))))
+plot(merged2$mean_overlap_flex[merged2$zbin==zbin]*100, merged2$meandust_flex[merged2$zbin==zbin],cex=ptsize,col=1,pch=1,lwd=0.5, yaxs="i",las=1,xaxs="i",cex.axis=0.9,cex.lab=0.9, xlab="CALIPSO frequency (%)",ylab="Dust (ng/m3)",log="xy",ylim=c(ymin,ymax),xlim=c(xmin,xmax))
+text(1, 3000, substitute(paste(bold('0.75-1.5 km'))))
 r2<-round(FlexDustLToceanR_high$V1[zbin-2],2)
-text(0.02, 200, labels=expression(paste("weighted R"^2*" = ")),col="deepskyblue4")
-text(0.02, 150, r2,col="deepskyblue4")
+text(0.02*100, 200, labels=expression(paste("weighted R"^2*" = ")),col="deepskyblue4")
+text(0.02*100, 150, r2,col="deepskyblue4")
 
-plot(merged2$mean_overlap_mer[merged2$zbin==zbin], merged2$meandust_mer[merged2$zbin==zbin],cex=ptsize,col=1,pch=1,lwd=0.5,yaxs="i",las=1,xaxs="i",cex.axis=0.9,cex.lab=0.9, xlab="CALIPSO frequency (%)",ylab="Dust (ng/m3)",log="xy",ylim=c(mymin,mymax),xlim=c(xmin,xmax))
+plot(merged2$mean_overlap_mer[merged2$zbin==zbin]*100, merged2$meandust_mer[merged2$zbin==zbin],cex=ptsize,col=1,pch=1,lwd=0.5,yaxs="i",las=1,xaxs="i",cex.axis=0.9,cex.lab=0.9, xlab="CALIPSO frequency (%)",ylab="Dust (ng/m3)",log="xy",ylim=c(mymin,mymax),xlim=c(xmin,xmax))
 r2<-round(MerDustLToceanR_high$V1[zbin-2],2)
-text(0.02, 750, labels=expression(paste("weighted R"^2*" = ")),col="deepskyblue4")
-text(0.02, 625, r2,col="deepskyblue4")
+text(0.02*100, 750, labels=expression(paste("weighted R"^2*" = ")),col="deepskyblue4")
+text(0.02*100, 625, r2,col="deepskyblue4")
 
 
 min<-6
@@ -302,20 +299,19 @@ max<-8
 zbin<-7
 
 ptsize<-merged2$area[merged2$zbin==zbin]/max(merged2$area[merged2$zbin==zbin], na.rm=T)
-plot(merged2$mean_overlap_flex[merged2$zbin==zbin], merged2$meandust_flex[merged2$zbin==zbin],cex=ptsize,col=1,pch=1,lwd=0.5, yaxs="i",las=1,xaxs="i",cex.axis=0.9,cex.lab=0.9, xlab="CALIPSO frequency (%)",ylab="Dust (ng/m3)",log="xy",ylim=c(ymin,ymax),xlim=c(xmin,xmax))
-text(0.0008, 3000, substitute(paste(bold('0.75-1.5 km'))))
+plot(merged2$mean_overlap_flex[merged2$zbin==zbin]*100, merged2$meandust_flex[merged2$zbin==zbin],cex=ptsize,col=1,pch=1,lwd=0.5, yaxs="i",las=1,xaxs="i",cex.axis=0.9,cex.lab=0.9, xlab="CALIPSO frequency (%)",ylab="Dust (ng/m3)",log="xy",ylim=c(ymin,ymax),xlim=c(xmin,xmax))
+text(1, 3000, substitute(paste(bold('0.75-1.5 km'))))
 r2<-round(FlexDustLToceanR_high$V1[zbin-2],2)
-text(0.02, 200, labels=expression(paste("weighted R"^2*" = ")),col="deepskyblue4")
-text(0.02, 150, r2,col="deepskyblue4")
+text(0.02*100, 200, labels=expression(paste("weighted R"^2*" = ")),col="deepskyblue4")
+text(0.02*100, 150, r2,col="deepskyblue4")
 
-plot(merged2$mean_overlap_mer[merged2$zbin==zbin], merged2$meandust_mer[merged2$zbin==zbin],cex=ptsize,col=1,pch=1,lwd=0.5,yaxs="i",las=1,xaxs="i",cex.axis=0.9,cex.lab=0.9, xlab="CALIPSO frequency (%)",ylab="Dust (ng/m3)",log="xy",ylim=c(mymin,mymax),xlim=c(xmin,xmax))
+plot(merged2$mean_overlap_mer[merged2$zbin==zbin]*100, merged2$meandust_mer[merged2$zbin==zbin],cex=ptsize,col=1,pch=1,lwd=0.5,yaxs="i",las=1,xaxs="i",cex.axis=0.9,cex.lab=0.9, xlab="CALIPSO frequency (%)",ylab="Dust (ng/m3)",log="xy",ylim=c(mymin,mymax),xlim=c(xmin,xmax))
 r2<-round(MerDustLToceanR_high$V1[zbin-2],2)
-text(0.02, 750, labels=expression(paste("weighted R"^2*" = ")),col="deepskyblue4")
-text(0.02, 625, r2,col="deepskyblue4")
+text(0.02*100, 750, labels=expression(paste("weighted R"^2*" = ")),col="deepskyblue4")
+text(0.02*100, 625, r2,col="deepskyblue4")
 
 
 dev.off()
 
 
 ```
-
