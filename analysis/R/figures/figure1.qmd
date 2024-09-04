@@ -170,7 +170,7 @@ groups2<-c("fdust","SO4","merBC","merOC","merdust","fBC","fOC","DMS","SS")
 dev<-list()
 devbin<-list()
 for(j in 1:length(groups)) {  
-eval(parse(t=paste0("mod<-gam(tog$dglaciation~s(tog$d",groups[j],",k=3),w=tog$N,family='gaussian')")))
+eval(parse(t=paste0("mod<-gam(tog$dglaciation~s(tog$d",groups[j],",k=3),w=tog$N,family=scat(), method='ML')")))
 # plot(mod)
 # gam.check(mod)
 dev[[j]]<-round(summary(mod)$dev*100,2)

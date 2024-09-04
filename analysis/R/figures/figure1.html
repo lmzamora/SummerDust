@@ -107,7 +107,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="running-code" class="level2">
 <h2 class="anchored" data-anchor-id="running-code">Running Code</h2>
-<p>For <strong>Figure 1</strong> you first load the following libraries:</p>
+<p>For <strong>Figure 1</strong> first load the following libraries:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(data.table)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(scales)</span>
@@ -265,7 +265,7 @@ a sub-multiple or multiple of the number of rows [9]</code></pre>
 <span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>dev<span class="ot">&lt;-</span><span class="fu">list</span>()</span>
 <span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a>devbin<span class="ot">&lt;-</span><span class="fu">list</span>()</span>
 <span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(j <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(groups)) {  </span>
-<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a><span class="fu">eval</span>(<span class="fu">parse</span>(<span class="at">t=</span><span class="fu">paste0</span>(<span class="st">"mod&lt;-gam(tog$dglaciation~s(tog$d"</span>,groups[j],<span class="st">",k=3),w=tog$N,family='gaussian')"</span>)))</span>
+<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a><span class="fu">eval</span>(<span class="fu">parse</span>(<span class="at">t=</span><span class="fu">paste0</span>(<span class="st">"mod&lt;-gam(tog$dglaciation~s(tog$d"</span>,groups[j],<span class="st">",k=3),w=tog$N,family=scat(), method='ML')"</span>)))</span>
 <span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a><span class="co"># plot(mod)</span></span>
 <span id="cb21-14"><a href="#cb21-14" aria-hidden="true" tabindex="-1"></a><span class="co"># gam.check(mod)</span></span>
 <span id="cb21-15"><a href="#cb21-15" aria-hidden="true" tabindex="-1"></a>dev[[j]]<span class="ot">&lt;-</span><span class="fu">round</span>(<span class="fu">summary</span>(mod)<span class="sc">$</span>dev<span class="sc">*</span><span class="dv">100</span>,<span class="dv">2</span>)</span>
