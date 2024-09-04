@@ -1,17 +1,17 @@
 ---
-title: "figureS4"
+title: "figureS5"
 author: "Lauren Zamora"
 format: html
 editor: visual
 ---
 
-## Figure S4
+## Figure S5
 
 This figure shows the within i, j bin relationships between del_glaciation and del\_(MERRA-2 dust) and del\_(MERRA-2 SO4).
 
 ## Running Code
 
-For **Figure S4** first load the following libraries:
+For **Figure S5** first load the following libraries:
 
 ```{r}
 library(hexbin)
@@ -27,7 +27,7 @@ Load the tog data set, which represents the output of the GAM, and deviance pred
 
 ```{r}
 tog<-read.csv("../../data/derived_data/tog.csv")
-tog<-read.csv("../../data/derived_data/tog2.csv")
+tog2<-read.csv("../../data/derived_data/tog2.csv")
 ```
 
 Add how many samples were in the top 10 most common meteorological bins, and the average T and Qv conditions of the bin. Where the MERRA-2 and AIRS T bins differ, take the average of the two.
@@ -128,8 +128,4 @@ ggarrange(jbin1dust, jbin1SO4,jbin2dust, jbin2SO4, jbin3dust, jbin3SO4, jbin4dus
 dev.off()
 ```
 
-Plot it all together:
 
-```{r}
-
-```
