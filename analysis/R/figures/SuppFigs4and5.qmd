@@ -21,6 +21,7 @@ library(dplyr)
 library(ggplot2)
 library(data.table)
 library(ggpubr)
+library(gridExtra)
 ```
 
 Load the tog data set, which represents the output of the GAM, and deviance predicted by each variable, and the tog2 data set, which is the same, except for MERRA-2 temperatures below -10 degrees C:
@@ -40,7 +41,7 @@ meanQV<-c(0.001+0.0005, 0.001+0.0005, 0+0.0005, 0.002+0.0005, 0.001+0.0005 , 0+0
 
 ```
 
-Plot all the information from each i,j bin together, along with sample number:
+Get plots for all the information from each i,j bin together, along with sample number:
 
 ```{r}
 
@@ -49,9 +50,9 @@ dmerdust<-tog$dmerdust
 dSO4<-tog$dSO4
 final<-data.frame(dglaciation, dmerdust, dSO4)
 
-pdust<-ggplot(final, aes(x = dmerdust, y = dglaciation)) +   stat_binhex() +   scale_fill_gradient(name = "count", trans = "log",  breaks = 10^(0:2)) + theme(axis.title.y=element_text(size=8), axis.title.x=element_text(size=8), panel.background = element_rect(fill = 'white', colour = 'black')) + labs(x = expression(atop(NA, atop(textstyle(' '),textstyle('\u{2202}(MERRA-2 dust)'['i,j']*' (ng m'^-3*')') ))), y = expression(atop(NA, atop(textstyle(' '),textstyle('\u{2202}glaciation'['i,j']*' (%)') )))) + lims(y=c(-25,50), x=c(-2500,3000)) 
+pdust<-ggplot(final, aes(x = dmerdust, y = dglaciation)) +   stat_binhex() +   scale_fill_gradient(name = "count", trans = "log",  breaks = 10^(0:2)) + theme(text=element_text(size=14), panel.background = element_rect(fill = 'white', colour = 'black')) + labs(x = expression(atop(NA, atop(textstyle(' '),textstyle('\u{2202}(MERRA-2 dust)'['i,j']*' (ng m'^-3*')') ))), y = expression(atop(NA, atop(textstyle(' '),textstyle('\u{2202}glaciation'['i,j']*' (%)') )))) + lims(y=c(-25,50), x=c(-2500,3000)) + annotate('text', x=2000, y=-20, label=expression(bold('(a)')), size=6)
 
-pso4<-ggplot(final, aes(x = dSO4, y = dglaciation)) +   stat_binhex() +   scale_fill_gradient(name = "count", trans = "log",  breaks = 10^(0:2)) + theme(axis.title.y=element_text(size=8), axis.title.x=element_text(size=8), panel.background = element_rect(fill = 'white', colour = 'black')) + labs(x = expression(atop(NA, atop(textstyle(' '),textstyle('\u{2202}(MERRA-2 sulfate)'['i,j']*' (ng m'^-3*')') ))), y = expression(atop(NA, atop(textstyle(' '),textstyle('\u{2202}glaciation'['i,j']*' (%)') )))) + lims(y=c(-25,50), x=c(-300,400)) 
+pso4<-ggplot(final, aes(x = dSO4, y = dglaciation)) +   stat_binhex() +   scale_fill_gradient(name = "count", trans = "log",  breaks = 10^(0:2)) + theme(text=element_text(size=14), panel.background = element_rect(fill = 'white', colour = 'black')) + labs(x = expression(atop(NA, atop(textstyle(' '),textstyle('\u{2202}(MERRA-2 sulfate)'['i,j']*' (ng m'^-3*')') ))), y = expression(atop(NA, atop(textstyle(' '),textstyle('\u{2202}glaciation'['i,j']*' (%)') )))) + lims(y=c(-25,50), x=c(-300,400)) + annotate('text', x=200, y=-20, label=expression(bold('(b)')), size=6) 
 
 
 
@@ -61,17 +62,65 @@ dmerdust<-tog2$dmerdust
 dSO4<-tog2$dSO4
 final2<-data.frame(dglaciation, dmerdust, dSO4)
 
-pdust2<-ggplot(final2, aes(x = dmerdust, y = dglaciation)) +   stat_binhex() +   scale_fill_gradient(name = "count", trans = "log",  breaks = 10^(0:2)) + theme(axis.title.y=element_text(size=8), axis.title.x=element_text(size=8), panel.background = element_rect(fill = 'white', colour = 'black')) + labs(x = expression(atop(NA, atop(textstyle(' '),textstyle('\u{2202}(MERRA-2 dust)'['i,j']*' (ng m'^-3*')') ))), y = expression(atop(NA, atop(textstyle(' '),textstyle('\u{2202}glaciation'['i,j']*' (%)') )))) + lims(y=c(-25,50), x=c(-2500,3000)) + annotate("text", x=-1500, y=45, label= expression(paste("T < -10 ",degree~C," ")), size=4)
+pdust2<-ggplot(final2, aes(x = dmerdust, y = dglaciation)) +   stat_binhex() +   scale_fill_gradient(name = "count", trans = "log",  breaks = 10^(0:2)) + theme(text=element_text(size=14), panel.background = element_rect(fill = 'white', colour = 'black')) + labs(x = expression(atop(NA, atop(textstyle(' '),textstyle('\u{2202}(MERRA-2 dust)'['i,j']*' (ng m'^-3*')') ))), y = expression(atop(NA, atop(textstyle(' '),textstyle('\u{2202}glaciation'['i,j']*' (%)') )))) + lims(y=c(-25,50), x=c(-2500,3000)) + annotate("text", x=-1500, y=45, label= expression(paste("T < -10 ",degree~C," "))) + annotate('text', x=2000, y=-20, label=expression(bold('(c)')), size=6)
 
-pso42<-ggplot(final2, aes(x = dSO4, y = dglaciation)) +   stat_binhex() +   scale_fill_gradient(name = "count", trans = "log",  breaks = 10^(0:2)) + theme(axis.title.y=element_text(size=8), axis.title.x=element_text(size=8), panel.background = element_rect(fill = 'white', colour = 'black')) + labs(x = expression(atop(NA, atop(textstyle(' '),textstyle('\u{2202}(MERRA-2 sulfate)'['i,j']*' (ng m'^-3*')') ))), y = expression(atop(NA, atop(textstyle(' '),textstyle('\u{2202}glaciation'['i,j']*' (%)') )))) + lims(y=c(-25,50), x=c(-300,400)) + annotate("text", x=-150, y=45, label= expression(paste("T < -10 ",degree~C," ")), size=4)
+pso42<-ggplot(final2, aes(x = dSO4, y = dglaciation)) +   stat_binhex() +   scale_fill_gradient(name = "count", trans = "log",  breaks = 10^(0:2)) + theme(text=element_text(size=14), panel.background = element_rect(fill = 'white', colour = 'black')) + labs(x = expression(atop(NA, atop(textstyle(' '),textstyle('\u{2202}(MERRA-2 sulfate)'['i,j']*' (ng m'^-3*')') ))), y = expression(atop(NA, atop(textstyle(' '),textstyle('\u{2202}glaciation'['i,j']*' (%)') )))) + lims(y=c(-25,50), x=c(-300,400)) + annotate("text", x=-150, y=45, label= expression(paste("T < -10 ",degree~C," "))) + annotate('text', x=200, y=-20, label=expression(bold('(d)')), size=6)
 
 
-jpeg(file='../../figures/FigureS5.jpeg',width=190, height=130, units='mm', res=600, pointsize=10)
+```
 
-ggarrange(pdust,pso4, pdust2,pso42, ncol=2, nrow=2, heights=1, align="v")
+Get plots for the splines from the GAMs. Also show the effective degrees of freedom for the smooths (edf), the two scaling parameters of the scaled t distribution (spar), and the p-values (p).
+
+```{r}
+groups<-c("Etemp", "merT", "temp","omega",  "aLTS","ERH", "merRH","aRH", "XRHi", "merwindspeed","merQV", "fdust","SO4","merBC","merOC","merdust","fBC","fOC","DMS","SS")
+  j=16 
+  eval(parse(t=paste0("mod<-gam(tog$dglaciation~s(tog$d",groups[j],",k=3),w=tog$N,family=scat(), method='ML')")))
+  edf<-round(summary(mod)$edf,2)
+  pval<-summary(mod)$s.table[,4]
+  pval<-format.pval(pval,digits=2,eps=2e-16)
+  spar1<-round(eval(parse(t=sub("Scaled t","c",summary(mod)$family[1])))[1],2)
+  spar2<-round(eval(parse(t=sub("Scaled t","c",summary(mod)$family[1])))[2],2)
+  
+plot1<- function() {
+ plot(mod, scheme=1,cex.axis=0.8,cex.lab=0.8, ylab=expression('Effect on \u{2202}glaciation'['i,j']*' (%)'), xlab=expression('\u{2202}(MERRA-2 dust)'['i,j']*' (ng m'^-3*')'),ylim=c(-10,35))
+  text(-1500,30,paste('edf =', edf),col="deepskyblue4",cex=0.75, adj=0)
+  text(-1500,25,paste('p =', pval),col="deepskyblue4",cex=0.75, adj=0)
+  text(-1500,20,paste('spar =', spar1,',', spar2),col="deepskyblue4",cex=0.75, adj=0)
+  text(1500,-5, substitute(paste(bold('(e)'))), cex=1.15)
+}
+
+plot2<- function() {
+  j=13
+  eval(parse(t=paste0("mod<-gam(tog$dglaciation~s(tog$d",groups[j],",k=3),w=tog$N,family=scat(), method='ML')")))
+  edf<-round(summary(mod)$edf,2)
+  pval<-summary(mod)$s.table[,4]
+  pval<-format.pval(pval,digits=2,eps=2e-16)
+  spar1<-round(eval(parse(t=sub("Scaled t","c",summary(mod)$family[1])))[1],2)
+  spar2<-round(eval(parse(t=sub("Scaled t","c",summary(mod)$family[1])))[2],2)
+
+  plot(mod, scheme=1,cex.axis=0.8,cex.lab=0.8, ylab=expression('Effect on \u{2202}glaciation'['i,j']*' (%)'), xlab=expression('\u{2202}(MERRA-2 sulfate)'['i,j']*' (ng m'^-3*')'),ylim=c(-10,35))
+  text(-150,30,paste('edf =', edf),col="deepskyblue4",cex=0.75, adj=0)
+  text(-150,25,paste('p =', pval),col="deepskyblue4",cex=0.75, adj=0)
+  text(-150,20,paste('spar =', spar1,',', spar2),col="deepskyblue4",cex=0.75, adj=0)
+  text(200,-5, substitute(paste(bold('(f)'))), cex=1.15)
+  
+plot1<-plot1    + labs(x = expression(atop(NA, atop(textstyle(' '),textstyle('\u{2202}(MERRA-2 dust)'['i,j']*' (ng m'^-3*')') ))), y = expression(atop(NA, atop(textstyle(' '),textstyle('\u{2202}glaciation'['i,j']*' (%)') ))))
+plot2<-plot2    + labs(x = expression(atop(NA, atop(textstyle(' '),textstyle('\u{2202}(MERRA-2 sulfate)'['i,j']*' (ng m'^-3*')') ))), y = expression(atop(NA, atop(textstyle(' '),textstyle('\u{2202}glaciation'['i,j']*' (%)') ))))
+}
+```
+
+Plot all the information from each i,j bin together, along with sample number (top 2 rows) along with the splines (bottom 2 rows):
+
+```{r}
+jpeg(file='../../figures/FigureS5.jpeg',units='mm', res=600, width=275, height=300, pointsize=15)
+
+ggarrange(pdust,pso4, pdust2,pso42, plot1b,plot2b,ncol=2,nrow=3)
 
 dev.off()
+
 ```
+
+## Figure S5
 
 Plot the relationships in the top 10 most common meteorological bins for both MERRA-2 dust and sulfate variables:
 
@@ -127,5 +176,3 @@ ggarrange(jbin1dust, jbin1SO4,jbin2dust, jbin2SO4, jbin3dust, jbin3SO4, jbin4dus
 
 dev.off()
 ```
-
-
