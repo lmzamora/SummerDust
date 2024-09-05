@@ -120,7 +120,7 @@ dev.off()
 
 ```
 
-## Figure S5
+## Figure S4
 
 Plot the relationships in the top 10 most common meteorological bins for both MERRA-2 dust and sulfate variables:
 
@@ -176,3 +176,12 @@ ggarrange(jbin1dust, jbin1SO4,jbin2dust, jbin2SO4, jbin3dust, jbin3SO4, jbin4dus
 
 dev.off()
 ```
+
+Then, to better understand the initial number of knots for the GAMs, count the number of different unique values of the dust and sulfate predictors.
+
+
+```{r}
+length(unique(tog$dSO4))
+length(unique(tog$dmerdust))
+```
+
