@@ -42,9 +42,9 @@ MerDustLToceanR<-foo[n_mer>=min.N,.(V1=cov.wt(cbind(meandust_mer,mean_overlap_me
 Plot the figure:
 
 ```{r}
-jpeg(file='../../figures/SuppFig1.jpeg',width=5, height=12, units='in', res=600, pointsize=10)
+jpeg(file='../../figures/SuppFig1.jpeg',width=5, height=12, units='in', res=600, pointsize=14)
 par(mfrow=c(5, 2))
-par(mai=c(0.5,0.5,0.3,0.1))
+par(mai=c(0.6,0.6,0.3,0.1))
 par(mgp=c(2.6,0.7,0))
 
 fdustcutoff<- 93 
@@ -200,16 +200,16 @@ MerDustLToceanR_high<-merged2[n_mer>=min.N,.(V1=cov.wt(cbind(meandust_mer,mean_o
 Plot the figure:
 
 ```{r}
-jpeg(file='../../figures/SuppFig2.jpeg',width=5, height=12, units='in', res=600, pointsize=10)
+jpeg(file='../../figures/SuppFig2.jpeg',width=5, height=12, units='in', res=600, pointsize=14)
 par(mfrow=c(5, 2))
-par(mai=c(0.5,0.5,0.3,0.1))
+par(mai=c(0.6,0.6,0.3,0.1))
 par(mgp=c(2.6,0.7,0))
 
 fdustcutoff<- 93 
 merdustcutoff<-653
 
 #FLEXPART plot limits
-xmin<-abpt*100
+xmin<-abpt
 xmax<-0.18*100
 ymax<-5000
 ymin<-100
