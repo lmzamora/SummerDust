@@ -5,25 +5,37 @@
 
 [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh///master?urlpath=rstudio)
 
-This repository contains the data and code for our paper:
+This repository contains the data and code for this paper:
 
-> Zamora, L.M., Kahn, R.A., (2024). *Dust-driven cloud glaciation over
-> summertime Arctic sea ice*. Name of journal/book
-> <https://doi.org/xxx/xxx>
+> Zamora, L.M., Kahn, R.A., (2024). *First observational evidence
+> indicating that dust-driven cloud phase changes cool the surface over
+> summertime Arctic sea ice*. Submitted to Geophysical Research Letters
+> <https://doi.org/10.22541/essoar.171707875.51201912/v1>
 
 Our pre-print is online here:
 
-> Zamora, L.M., Kahn, R.A., (2024). *Dust-driven cloud glaciation over
-> summertime Arctic sea ice*. Name of journal/book, Accessed 10 May
-> 2024. Online at <https://doi.org/xxx/xxx>
+> Zamora, L.M., Kahn, R.A., (2024). *First observational evidence
+> indicating that dust-driven cloud phase changes cool the surface over
+> summertime Arctic sea ice*. Submitted to Geophysical Research Letters,
+> Accessed 11 Sep 2024. Online at
+> <https://doi.org/10.22541/essoar.171707875.51201912/v1>
+
+Data and code is online here:
+
+> Lauren Zamora, & Ralph Kahn., (2024). Aerosol, Cloud, and
+> Meteorological Data Over Arctic Sea Ice (May-September, 2008-2010,
+> 2012-2015). Arctic Data Center. Online at
+> <https://doi.org/10.18739/A29S1KN0T>
 
 ### How to cite
 
 Please cite this compendium as:
 
 > Zamora, L.M., Kahn, R.A. (2024), (2024). *Compendium of R code and
-> data for Dust-driven cloud glaciation over summertime Arctic sea ice*.
-> Accessed 10 May 2024. Online at <https://doi.org/xxx/xxx>
+> data for First observational evidence indicating that dust-driven
+> cloud phase changes cool the surface over summertime Arctic sea ice*.
+> Accessed 11 Sep 2024. Online at
+> <https://doi.org/10.5281/zenodo.11247136>
 
 ## Contents
 
