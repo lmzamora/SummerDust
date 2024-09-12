@@ -17,7 +17,7 @@ Our pre-print is online here:
 > Zamora, L.M., Kahn, R.A., (2024). *First observational evidence
 > indicating that dust-driven cloud phase changes cool the surface over
 > summertime Arctic sea ice*. Submitted to Geophysical Research Letters,
-> Accessed 11 Sep 2024. Online at
+> Accessed 12 Sep 2024. Online at
 > <https://doi.org/10.22541/essoar.171707875.51201912/v1>
 
 Data and code is online here:
@@ -34,7 +34,7 @@ Please cite this compendium as:
 > Zamora, L.M., Kahn, R.A. (2024), (2024). *Compendium of R code and
 > data for First observational evidence indicating that dust-driven
 > cloud phase changes cool the surface over summertime Arctic sea ice*.
-> Accessed 11 Sep 2024. Online at
+> Accessed 12 Sep 2024. Online at
 > <https://doi.org/10.5281/zenodo.11247136>
 
 ## Contents
